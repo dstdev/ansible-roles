@@ -1,0 +1,11 @@
+---
+# tasks file for restic
+- name: install restic
+  package:
+    name: restic
+    state: present
+  tags:
+    - restic
+
+# do it with crestic instead
+# https://pypi.org/project/crestic/

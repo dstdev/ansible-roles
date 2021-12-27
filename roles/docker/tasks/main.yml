@@ -1,0 +1,50 @@
+---
+# tasks file for docker
+- name: install dependencies
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg
+    - lsb-release
+  tags:
+    - docker
+
+- name: add GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  tags:
+    - docker
+
+- name: add docker repository to apt
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable"
+    state: present
+  tags:
+    - docker
+
+- name: install docker
+  apt:
+    name: "{{item}}"
+    state: latest
+    update_cache: yes
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+
+  tags:
+    - docker
+
+- name: Ensure docker has started
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  tags:
+    - docker

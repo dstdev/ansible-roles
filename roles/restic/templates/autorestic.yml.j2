@@ -1,0 +1,28 @@
+version: 2
+
+locations:
+{% for location, values in autorestic_locations.items() %}
+  {{location}}:
+    from: {{values.from}}
+    to:
+{% for t in values.to %}
+      - {{t}}
+{% endfor %}
+{%endfor%}
+
+
+backends:
+{% for backend, values in autorestic_backends.items() %}
+  {{backend}}:
+    type: {{values.type}}
+    path: {{values.path}}
+    key: {{values.key | mandatory}}
+{% if 'env' in values %}
+    env:
+{% for e, ev in values.env.items() %}
+      {{e}}: {{ev}}
+{% endfor %}
+{% endif %}
+{%endfor %}
+
+

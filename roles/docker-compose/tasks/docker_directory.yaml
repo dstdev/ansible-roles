@@ -1,0 +1,24 @@
+- name: create docker directories
+  file:
+    path: "{{item.path}}"
+    owner: "{{item.owner}}"
+    group: "{{item.group}}"
+    state: directory
+  loop: "{{compose_item.data_dirs}}"
+  tags:
+    - docker_compose
+
+- name: docker-compose
+  community.docker.docker_compose:
+    project_name: "{{compose_item.project_name}}"
+    definition: "{{compose_item.definition}}"
+    state: "{{compose_item.state|default('present')}}"
+    pull: yes
+  register: output
+  tags:
+    - docker_compose
+
+- ansible.builtin.assert:
+    that: "{{compose_item.asserts}}"
+  tags:
+    - docker_compose

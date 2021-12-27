@@ -1,0 +1,12 @@
+---
+# tasks file for mounts
+- name: configure mount
+  include_tasks: mount.yaml
+  loop: "{{mounts}}"
+  loop_control:
+    loop_var: mount
+  tags:
+    - mounts
+
+
+ 

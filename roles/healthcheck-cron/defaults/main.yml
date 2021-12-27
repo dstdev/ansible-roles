@@ -1,0 +1,4 @@
+---
+# defaults file for healtcheck-cron
+health_check_base_url: https://health.kail.io
+health_check_cron: []

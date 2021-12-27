@@ -1,0 +1,32 @@
+[log]
+  level = "INFO"
+
+[serversTransport]
+  insecureSkipVerify = true
+
+[providers]
+  [providers.docker]
+    endpoint = "unix:///var/run/docker.sock"
+    exposedByDefault = false 
+
+
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+
+    [entryPoints.web.http]
+      [entryPoints.web.http.redirections]
+        [entryPoints.web.http.redirections.entryPoint]
+          to = "websecure"
+          scheme = "https"
+
+  [entryPoints.websecure]
+    address = ":443"
+
+[certificatesResolvers.letsencrypt.acme]
+email = "{{traefik_admin_email}}"
+  storage = "/etc/traefik/acme/acme.json"
+  [certificatesResolvers.letsencrypt.acme.httpChallenge]
+    # used during the challenge
+    entryPoint = "web"
+

@@ -1,0 +1,18 @@
+---
+- name: create mount directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{mount.path}}"
+  tags:
+    - mounts
+
+- name: Mount
+  ansible.posix.mount:
+    path: "{{mount.path}}"
+    state: mounted
+    fstype: "{{mount.fstype}}"
+    opts: "{{mount.opts}}"
+    src: "{{mount.src}}"
+  tags:
+    - mounts
+

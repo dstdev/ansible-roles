@@ -1,0 +1,8 @@
+---
+# tasks file for x2go-server
+# debian
+- include: debian.yaml
+  when: ansible_distribution == 'Debian'
+  tags:
+    - x2goserver
+

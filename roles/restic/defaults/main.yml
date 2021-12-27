@@ -1,0 +1,5 @@
+---
+# defaults file for restic
+autorestic_version: "1.5.1"
+autorestic_os: "linux"
+autorestic_arch: "amd64"

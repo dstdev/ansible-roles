@@ -1,0 +1,52 @@
+---
+- name: clone spack repository
+  git:
+    repo: "{{spack_repo}}"
+    dest: "{{spack_root}}"
+  when: spack_headnode | bool
+
+- name: Copy spack sh config
+  template:  
+    src: templates/z-spack.sh
+    dest: /etc/profile.d/z-spack.sh
+
+- name: copy spack csh config
+  template:  
+    src: templates/z-spack.csh
+    dest: /etc/profile.d/z-spack.csh
+
+- name: enable lmod bash
+  lineinfile:
+    path: /etc/sysconfig/modules/lmod/cm-lmod-init.sh
+    regexp: ENABLE_LMOD
+    line: "export ENABLE_LMOD=1"
+
+- name: enable lmod csh
+  lineinfile:
+    path: /etc/sysconfig/modules/lmod/cm-lmod-init.csh
+    regexp: ENABLE_LMOD
+    line: 'setenv ENABLE_LMOD "1"'
+
+- name: Copy spack configuration file
+  template:
+    src: templates/config.yaml
+    dest: "{{spack_root}}/etc/spack/config.yaml"
+    backup: yes
+    force: no
+  when: spack_headnode | bool
+
+- name: Copy spack module configuration file
+  copy:
+    src: files/modules.yaml
+    dest: "{{spack_root}}/etc/spack/modules.yaml"
+    backup: yes
+    force: no
+  when: spack_headnode | bool
+
+
+- name: Copy spack package configuration file
+  copy:
+    src: files/packages.yaml
+    dest: "{{spack_root}}/etc/spack/packages.yaml"
+    force: no
+  when: spack_headnode | bool

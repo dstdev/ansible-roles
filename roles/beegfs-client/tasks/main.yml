@@ -1,0 +1,76 @@
+---
+# tasks file for bgfs-client
+- name: Add BeeGFS
+  yum_repository:
+    name: beegfs
+    description: BeeGFS 
+    baseurl: https://www.beegfs.io/release/beegfs_7.2.3/dists/rhel7
+    gpgcheck: yes
+    gpgkey: https://www.beegfs.io/release/beegfs_7.2.3/gpg/RPM-GPG-KEY-beegfs
+
+- name: Install BeeGFS YUM packages
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
+  package: 
+    name: "{{item}}"
+    state: present
+  loop:
+    - beegfs-client-compat
+    - beegfs-helperd
+    - beegfs-debuginfo
+    - beegfs-common
+    - beegfs-utils-devel
+    - beegfs-client-devel
+    - beegfs-client
+    - beegfs-utils
+    - kernel-devel
+
+- name: Autobuild configuration file
+  copy: 
+    src: files/beegfs-client-autobuild.conf
+    dest: /etc/beegfs/beegfs-client-autobuild.conf
+  notify: 
+    - rebuild beegfs client
+
+- name: Client configuration file
+  template:
+    src: templates/beegfs-client.conf.j2
+    dest: /etc/beegfs/beegfs-client.conf
+  notify:
+    - restart beegfs client
+
+- name: Client helperd file
+  copy:
+    src: files/beegfs-helperd.conf
+    dest: /etc/beegfs/beegfs-helperd.conf
+  notify:
+    - restart beegfs helperd
+
+- name: create mount point
+  file:
+    path: "{{beegfs_mount_point}}"
+    state: directory
+
+- name: Copy mount configuration file
+  template:
+    src: templates/beegfs-mount.conf.j2
+    dest: /etc/beegfs/beegfs-mount.conf
+  notify:
+    - restart beegfs client
+
+- name: Enable services
+  service: 
+    name: "{{item}}"
+    state: started
+    enable: yes
+  when: not ansible_is_chroot
+  loop:
+    - beegfs-client
+    - beegfs-helperd
+
+- name: Enable services
+  shell: "systemctl enable  {{item}}"
+  when: ansible_is_chroot
+  loop:
+    - beegfs-client
+    - beegfs-helperd

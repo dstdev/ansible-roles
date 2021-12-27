@@ -1,0 +1,4 @@
+---
+# vars file for bgfs-client
+beegfs_management_host: "beegfs"
+beegfs_mount_point: "/mnt/beegfs"

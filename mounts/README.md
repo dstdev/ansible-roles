@@ -1,22 +1,51 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+Creates a mount path and mounts a filesystem.  Optionally, may format the filesystem if not already so.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+None
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+All variables are listed below, along with the default values (see `defaults/main.yml`):
+
+    mounts: []
+
+The `mounts` variable is a list of dictionaries.  Each items defines the `path`, `fstype`, `opts`, and `src`.  And should mimic the options found in `/etc/fstab`. 
+
+If `mkfs` is set to 'yes', then a mkfs command will be run if it is a formattable filesystem and it doesn't match the existing filesystem.  This is a dangerous operation and should only be used with extreme care. It must have a valid filesystem type, and the src must be  a local block device.
+
+- btrfs
+- ext2
+- ext3
+- ext4
+- ext4dev
+- f2fs
+- lvm
+- ocfs2
+- reiserfs
+- xfs
+- vfat
+- swap
+- ufs
+
+Example:
+
+    mounts:
+      - path: /mnt/something
+        fstype: nfs
+        opts: defaults
+        src: 192.168.1.1:/something
+        mkfs: no
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
@@ -25,14 +54,4 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+         - mounts

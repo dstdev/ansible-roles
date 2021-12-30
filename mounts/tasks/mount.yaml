@@ -6,6 +6,15 @@
   tags:
     - mounts
 
+- name: format filesystem
+  community.general.filesystem:
+    fstype: "{{mount.fstype}}"
+    state: "present"
+  when: mount.mkfs
+  tags:
+    - mounts
+
+
 - name: Mount
   ansible.posix.mount:
     path: "{{mount.path}}"

@@ -1,5 +1,7 @@
 ---
 # defaults file for restic
-autorestic_version: "1.5.1"
-autorestic_os: "linux"
-autorestic_arch: "amd64"
+restic_s3_bucket: ""
+restic_s3_aws_id: ""
+restic_s3_aws_key: ""
+restic_password: ""
+restic_password_file_path: "/root/.restic"

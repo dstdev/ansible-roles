@@ -7,5 +7,26 @@
   tags:
     - restic
 
-# do it with crestic instead
-# https://pypi.org/project/crestic/
+- name: create password file
+  template:
+    src: templates/password_file.j2
+    dest: "{{restic_password_file_path}}"
+    owner: root
+    group: root
+  tags:
+    - restic
+
+- name: create drestic wrapper
+  template:
+    src: templates/drestic.j2
+    dest: /usr/local/sbin/drestic
+    owner: root
+    group: root
+    mode: "0500"
+  tags:
+    - restic
+
+- name: Check to initialize restic
+  shell: "/usr/local/sbin/drestic snapshots || /usr/local/sbin/drestic init"
+  tags:
+    - restic

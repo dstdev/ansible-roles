@@ -1,0 +1,17 @@
+[DEFAULT]
+destemail = {{fail2ban_dest_email}}
+sender = fail2ban@datainscience.com
+sendername = Fail2ban
+mta = sendmail
+
+{% if fail2ban_ssh_auth_log_path %}
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+findtime = 300
+bantime = 3600
+ignoreip = 127.0.0.1
+{% endif %}

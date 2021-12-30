@@ -1,0 +1,57 @@
+---
+# tasks file for fail2ban
+- name: Install fail2ban
+  package:
+    name: fail2ban
+    state: present
+  tags:
+    - fail2ban
+
+- name: enable and start fail2ban service
+  service:
+    name: fail2ban
+    state: started
+    enabled: yes
+  tags:
+    - fail2ban
+
+- name: copy action.d files
+  copy:
+    src: templates/iptables-common.local.j2
+    dest: "{{fail2ban_data_dir}}/action.d/iptables-common.local"
+    owner: root
+    group: root
+  notify: 
+    - restart fail2ban
+  tags:
+    - fail2ban
+
+- name: copy action.d files
+  template:
+    src: templates/jail.d/jail.local.j2
+    dest: "{{fail2ban_data_dir}}/jail.d/jail.local"
+    owner: root
+    group: root
+  notify: 
+    - restart fail2ban
+  tags:
+    - fail2ban
+
+
+- name: copy bitwarden template files
+  template:
+    src: "templates/{{item}}.j2"
+    dest: "{{fail2ban_data_dir}}/{{item}}"
+    owner: root
+    group: root
+  notify: 
+    - restart fail2ban
+  when: fail2ban_vaultwarden_log_path
+  loop:
+    - filter.d/bitwarden-admin.local
+    - filter.d/bitwarden.local
+    - jail.d/bitwarden-admin.local
+    - jail.d/bitwarden.local
+  tags:
+    - fail2ban
+

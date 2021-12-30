@@ -1,0 +1,6 @@
+---
+# defaults file for fail2ban
+fail2ban_data_dir: /etc/fail2ban
+fail2ban_dest_email: akail@datainscience.com
+fail2ban_vaultwarden_log_path: ""
+fail2ban_ssh_auth_log_path: "/var/log/auth.log"

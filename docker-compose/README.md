@@ -1,7 +1,7 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+This role is used to develop
 
 Requirements
 ------------
@@ -11,12 +11,51 @@ Any pre-requisites that may not be covered by Ansible itself or the role should 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Available variables are listed below, along with default values (see `defaults/main.yml`):
+
+    docker_compose_definitions: []
+    docker_compose_networks: []
+
+
+The `docker_compose_networks` variables is a list of all the docker networks that should exist on the system.  Each entry in the list is a dictionary with a single key `name`
+
+    docker_compose_networks:
+      - name: traefik_proxy
+
+The `docker_compose_definitions` is also a list of definitions for each set of docker compose files.  It describes the data directories which should be created, an assert to verify the containers have started, and the docker compose definition.
+
+The `data_dirs variable` is a list of dictionaries with the path to the directory, and the owner and group.  These directories will be created and permissions set if they do not exist.  `project_name` is passed to the docker compose ansible module.  `asserts` are used by the role to verify the container has started and takes the form "service_name.container_name". .  The `definitions` variable contains the full nested yaml for the dockercompose file.  It can usually take a 1-2-1 paste from a docker_compose file.
+
+    docker_compose_definitions:
+      - name: traefik
+        data_dirs:
+          - path: /data/apps/traefik2
+            owner: root
+            group: root
+        project_name: traefik
+        asserts:
+          - "traefik.traefik"
+        definitions:
+          version: '2'
+          services:
+            traefik:
+              image: 'traefik:v2.2'
+              restart: unless-stopped
+              container_name: traefik
+              volumes:
+                - /var/run/docker.sock:/var/run/docker.sock
+              networks:
+                - traefik_proxy
+              ports:
+                - "80:80"
+                - "443:443"
+                - "9180:8080"
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- DST Internal docker role
 
 Example Playbook
 ----------------
@@ -25,14 +64,5 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - docker-compose
 
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).

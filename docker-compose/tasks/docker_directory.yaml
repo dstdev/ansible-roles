@@ -18,7 +18,12 @@
   tags:
     - docker_compose
 
+- ansible.builtin.debug:
+    var: output
+
 - ansible.builtin.assert:
-    that: "{{compose_item.asserts}}"
+    that: "output.services.{{item}}.state.running"
   tags:
     - docker_compose
+  loop: {{compose_item.asserts}}
+

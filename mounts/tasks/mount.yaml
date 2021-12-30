@@ -9,6 +9,7 @@
 - name: format filesystem
   community.general.filesystem:
     fstype: "{{mount.fstype}}"
+    dev: "{{mount.src}}"
     state: "present"
   when: mount.mkfs
   tags:

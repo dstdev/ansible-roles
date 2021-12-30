@@ -1,2 +1,4 @@
 ---
 # defaults file for traefik
+traefik_data_dir: /etc/traefik
+traefik_admin_email: "akail@datainscience.com"

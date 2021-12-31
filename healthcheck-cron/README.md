@@ -12,11 +12,11 @@ An existing healthchecks server with existing checks and preferaably an integrat
 Role Variables
 --------------
 
-    # defaults file for healtcheck-cron
-    health_check_base_url: https://health.datainscience.com
-    health_check_cron: []
+| Name | Default Value | Description |
+| ---- | ----- | ----------- |
+| health_check_base_url | https://health.datainscience.com | Fully Qualified Domain Name of healtchecks server |
+| health_check_cron | [] |  List of health checks to run |
 
-`health_check_cron` variable is a list of dictionaries describing the cron job
 
 Full Example
 
@@ -29,12 +29,16 @@ Full Example
         command: docker image prune -f -a
         id: a7e6e69a-d8e2-4e9d-9d08-2a0c17322f2e
 
+Item definition
 
-* minute: default '0'
-* hour: default '*'
-* day: default '*'
-* weekday: default '*'
-* id: healtcheck uuid
+| Name | Default Value | Description |
+| ---- | ----- | ----------- |
+| minute | '0' | Cron minute |
+| hour | '*' | Cron hour |
+| day | '*' | Cron day |
+| weekday | '*' | Cron weekday |
+| command | Required | Command to run
+| id | Required | healtcheck uuid |
 
 Example Playbook
 ----------------

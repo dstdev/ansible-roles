@@ -1,22 +1,34 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+This role is used to install and configure [spack](spack.io).
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+None
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+| Name | Default Value | Description |
+| ---- | ----- | ----------- |
+| spack_repo | https://github.com/spack/spack.git | Spack github repo |
+| spack_root | /opt/spack | Location to install spack repository |
+| spack_default_module_paths | {{spack_root}}/share/spack/modules/ | List of default module paths |
+| spack_app_root | "{{spack_root}}/opt/" | Root directory to install applications |
+| spack_module_root | "{{spack_root}}/share/spack/modules" | Module file root directory |
+| spack_scratch_dir | /tmp | Scratch directory use during compilation |
+| spack_headnode | false | If system is headnode.  If true/yes, git repo is install here |
+| spack_unuse_module_paths | [] | Module paths to unuse, such as defaults from lmod install |
+| spack_root_only_module_paths | [] | Module paths to only make available to root user|
+| spack_default_modules | "" | Default modules to load |
+| spack_prefix_lines | [] | Line to add to to of profile scripts |
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
@@ -46,15 +58,3 @@ A headnode where a single install can be defined using the spack_headnode variab
 
     [headnode]
     edge-hpc-mgt-101 spack_headnode=true
-
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
-

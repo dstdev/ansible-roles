@@ -13,8 +13,10 @@ Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-    docker_compose_definitions: []
-    docker_compose_networks: []
+| Name | Default Value | Description |
+| ---- | ----- | ----------- |
+| docker_compose_definitions | Dictionary defining each compose stack |
+| docker_compose_networks | Empty List | List of networks to create |
 
 
 The `docker_compose_networks` variables is a list of all the docker networks that should exist on the system.  Each entry in the list is a dictionary with a single key `name`

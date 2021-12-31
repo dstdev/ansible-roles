@@ -53,8 +53,8 @@
 
 - name: Copy mount configuration file
   template:
-    src: templates/beegfs-mount.conf.j2
-    dest: /etc/beegfs/beegfs-mount.conf
+    src: templates/beegfs-mounts.conf.j2
+    dest: /etc/beegfs/beegfs-mounts.conf
   notify:
     - restart beegfs client
 

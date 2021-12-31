@@ -2,3 +2,5 @@
 # defaults file for traefik
 traefik_data_dir: /etc/traefik
 traefik_admin_email: "akail@datainscience.com"
+traefik_enable_dashboard: no
+traefik_debug_level: "INFO"

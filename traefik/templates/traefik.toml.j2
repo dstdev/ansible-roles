@@ -1,9 +1,16 @@
 [log]
-  level = "INFO"
+level = "{{traefik_debug_level}}"
 
 [serversTransport]
   insecureSkipVerify = true
 
+{% if traefik_enable_dashboard %}
+[api]
+  insecure = true
+  dashboard = true
+{% endif %}
+
+traefik_enable_dashboard
 [providers]
   [providers.docker]
     endpoint = "unix:///var/run/docker.sock"

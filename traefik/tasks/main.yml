@@ -46,6 +46,7 @@
   tags:
     - traefik
 
+# TODO: Move to straight docker, not docker-compose
 - name: docker-compose
   community.docker.docker_compose:
     project_name: traefik

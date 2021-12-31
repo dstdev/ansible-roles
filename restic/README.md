@@ -15,12 +15,13 @@ Requires AWS credentials for backing up.  Can use an IAM role for s3 backups
 Role Variables
 --------------
 
-    # defaults file for restic
-    restic_s3_bucket: ""
-    restic_s3_aws_id: ""
-    restic_s3_aws_key: ""
-    restic_password: ""
-    restic_password_file_path: "/root/.restic"
+| Name | Default Value | Description |
+| ---- | ----- | ----------- |
+| restic_s3_bucket| Required | s3 bucket name |
+| restic_s3_aws_id| Required | AWS Credential ID |
+| restic_s3_aws_key| Required |  AWS Credential Key |
+| restic_password| Required | Password to encrypt restic snapshots |
+| restic_password_file_path | "/root/.restic" | Default location to install restic password file|
 
 
 Example Playbook

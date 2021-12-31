@@ -7,18 +7,12 @@ the system after too many failed login attempts
 Role Variables
 --------------
 
-    # defaults file for fail2ban
-    fail2ban_data_dir: /etc/fail2ban
-    fail2ban_dest_email: akail@datainscience.com
-    # vault warden specific
-    fail2ban_vaultwarden_log_path: ""
-    # ssh path
-    fail2ban_ssh_auth_log_path: "/var/log/auth.log"
-
-The default variables should be left along for `fail2ban_data_dir` and `fail2ban_ssh_auth_log_path` as
-those are normal for the system.  
-
-If vaultwarden is needed, set the vaultwarden log path to wherever it is stored on the host
+| Name | Default Value | Description |
+| ---- | ----- | ----------- |
+| fail2ban_data_dir | /etc/fail2ban | Directory where configuration files will be installed |
+| fail2ban_dest_email | akail@datainscience.com | Email to sent alerts too |
+| fail2ban_vaultwarden_log_path | "" | If vaultwarden is installed, point this to log file and it will enable the filter |
+| fail2ban_ssh_auth_log_path | "/var/log/auth.log" | ssh log path, should not need to be changed.|
 
 
 Example Playbook

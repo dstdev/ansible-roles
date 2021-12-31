@@ -1,8 +1,25 @@
 ---
 # tasks file for x2go-server
-# debian
+- name: gather os specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version}}.yaml"
+        - "{{ ansible_distribution }}.yaml"
+      paths:
+        - '{{role_path}}/vars'
+  tags:
+    - x2goserver
+
+- name: Install packages
+  package:
+    name: "{{item}}"
+    state: present
+  loop: "{{x2goserver_packages}}"
+  tags:
+    - x2goserver
+
 - include: debian.yaml
   when: ansible_distribution == 'Debian'
   tags:
     - x2goserver
-

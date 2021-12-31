@@ -1,2 +1,4 @@
 ---
 # defaults file for dst
+common_dst_user_password: {{ undef(hint="You must specify a password for dst user") }}
+common_dst_user_uid: 10000

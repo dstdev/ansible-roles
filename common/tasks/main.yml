@@ -1,12 +1,12 @@
 ---
 # tasks file for dst
-- name: Allow 'hpcadmin' group to have passwordless sudo
+- name: Allow 'hpcadmin' group to have password sudo
   lineinfile:
     dest: /etc/sudoers.d/hpcadmin
     create: yes
     state: present
     regexp: '^%hpcadmin'
-    line: '%hpcadmin ALL=(ALL) NOPASSWD: ALL'
+    line: '%hpcadmin ALL=(ALL) PASSWD: ALL'
     validate: visudo -cf %s
 
 - name: create hpcadmin group
@@ -17,34 +17,11 @@
 - name: create dst user
   user:
     name: dst
-    password: "{{dst_password}}"
+    password: "{{common_dst_user_password}}"
     groups:
       - hpcadmin
     state: present
     shell: /bin/bash
     createhome: yes
     home: /usr/local/dst
-
-- name: Allow 'dst' dst to have sudo
-  lineinfile:
-    dest: /etc/sudoers.d/hpcadmin
-    create: yes
-    state: present
-    regexp: '^dst'
-    line: 'dst ALL=(ALL) ALL'
-
-    validate: visudo -cf %s
-
-
-
-# want to remove these files so that we can remotely login
-- name: remove local env references
-  file:
-    path: "/usr/local/dst/{{item}}"
-    state: absent
-  loop:
-    - .bashrc
-    - .kshrc
-    - .bash_profile
-    - .bash_logout
-    - .emacs
+    uid: "{{common_dst_user_uid}}"

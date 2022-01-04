@@ -1,5 +1,15 @@
 ---
 # tasks file for dst
+# TODO: Always runs a repo/apt update at the beginning, if it hasn't been run in a while
+#
+- name: Update apt cache if out of date
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_distribution == 'Debian'
+  tags:
+    - common
+
 - name: Allow 'hpcadmin' group to have password sudo
   lineinfile:
     dest: /etc/sudoers.d/hpcadmin
@@ -8,11 +18,15 @@
     regexp: '^%hpcadmin'
     line: '%hpcadmin ALL=(ALL) PASSWD: ALL'
     validate: visudo -cf %s
+  tags:
+    - common
 
 - name: create hpcadmin group
   group:
     name: hpcadmin
     state: present
+  tags:
+    - common
 
 - name: create dst user
   user:
@@ -25,3 +39,26 @@
     createhome: yes
     home: /usr/local/dst
     uid: "{{common_dst_user_uid}}"
+  tags:
+    - common
+
+- name: create users
+  user:
+    name: "{{item.name}}"
+    state: "{{item.state|default('present')}}"
+    groups:
+      - hpcadmin
+    createhome: yes
+    expires: -1
+  loop: "{{common_dst_users}}"
+  tags:
+    - common
+
+- name: Add entries to ssh configs
+  ansible.posix.authorized_key:
+    user: "{{item.name}}"
+    state: present
+    key: "{{item.authorized_key}}"
+  loop: "{{common_dst_users}}"
+  tags:
+    - common

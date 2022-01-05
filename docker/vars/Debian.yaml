@@ -1,0 +1,4 @@
+docker_compose_packages:
+  - python3-docker
+  - python3-dockerpty
+  - python3-yaml

@@ -1,5 +1,17 @@
 ---
 # tasks file for docker
+- name: gather os specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version}}.yaml"
+        - "{{ ansible_distribution }}.yaml"
+      paths:
+        - '{{role_path}}/vars'
+  tags:
+    - docker
+
+
 - name: install dependencies
   apt:
     name: "{{item}}"
@@ -46,5 +58,12 @@
     name: docker
     state: started
     enabled: yes
+  tags:
+    - docker
+- name: install packages for docker module
+  package:
+    name: "{{item}}"
+    state: present
+  loop: "{{docker_compose_packages}}"
   tags:
     - docker

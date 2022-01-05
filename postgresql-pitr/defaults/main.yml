@@ -1,0 +1,7 @@
+---
+# defaults file for postresql-pitr
+pitr_postgresql_data_dir: "/var/lib/postgresql/data"
+pitr_postgresql_archive_dir: '{{ undef(hint("You must define your local archive directory before use"))}}'
+pitr_postgresql_pg_hba_file: "{{pitr_postgresql_data_dir}}/pg_hba.conf"
+pitr_postgresql_postgresql_file: "{{pitr_postgresql_data_dir}}/postgresql.conf"
+pitr_cron_command: 'docker exec -it $(docker ps -f "name=postgres" -q) pg_basebackup -U postgres -D -Ft -z  {{pitr_postgresql_archive_dir}}'

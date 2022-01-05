@@ -1,0 +1,75 @@
+---
+# tasks file for datalake
+- name: Create data directory
+  file:
+    path: "{{datalake_postgres_data}}"
+    state: directory
+    owner: 999
+    group: 999
+  tags:
+    - datalake
+
+- name: Create archive directory
+  file:
+    path: "{{datalake_postgres_archive}}"
+    state: directory
+    owner: 999
+    group: 999
+  tags:
+    - datalake
+
+- name: Install psycopg2
+  package:
+    name: python3-psycopg2
+    state: present
+  tags:
+    - datalake
+
+- name: Install postgresql local clients
+  package:
+    name: "{{item}}"
+    state: present
+  tags:
+    - datalake
+  loop:
+    - postgresql-client
+    - python3-pip
+
+
+- name: Create postgresql docker container
+  community.docker.docker_container:
+    name: postgres
+    image: "postgres:{{datalake_postgres_version}}"
+    restart_policy: always
+    network_mode: "host"
+    env:
+      POSTGRES_PASSWORD: "{{datalake_postgres_password}}" 
+      POSTGRES_DB: "{{datalake_postgres_database}}" 
+      POSTGRES_USER: "{{datalake_postgres_user}}" 
+    volumes:
+      - "{{datalake_postgres_data}}:/var/lib/postgresql/data"
+      - "{{datalake_postgres_archive}}:/archive"
+  tags:
+    - datalake
+
+- name: Create dst user
+  community.postgresql.postgresql_user:
+    login_password: "{{datalake_postgres_password}}"
+    login_host: localhost
+    login_user: "{{datalake_postgres_user}}" 
+    name: dst
+    state: present
+    password: "{{'cwkGrgMhyvF9hEAzWo7L75TT' | password_hash('md5')}}"
+  tags:
+    - datalake
+
+- name: Create dst_data database
+  community.postgresql.postgresql_db:
+    login_password: "{{datalake_postgres_password}}"
+    login_host: localhost
+    login_user: "{{datalake_postgres_user}}" 
+    name: dst_data
+  tags:
+    - datalake
+
+

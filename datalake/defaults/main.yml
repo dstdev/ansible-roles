@@ -1,0 +1,8 @@
+---
+# defaults file for datalake
+datalake_postgres_data: "/data/apps/postgres"
+datalake_postgres_archive: "/data/apps/archive"
+datalake_postgres_version: 14
+datalake_postgres_user: postgres
+datalake_postgres_password: '{{ undef(hint("You must define your password for datalake database"))}}'
+datalake_postgres_database: dst_data

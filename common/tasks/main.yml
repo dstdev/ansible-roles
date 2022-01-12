@@ -62,3 +62,20 @@
   loop: "{{common_dst_users}}"
   tags:
     - common
+
+- name: Set system hostname
+  ansible.builtin.hostname:
+    name: "{{common_hostname}}"
+  when: common_hostname
+  tags:
+    - common
+
+# Avoids some sudo warning when changing the hostname
+- name: Set system hostname in etc hosts
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "127.0.0.1 {{common_hostname}}"
+    insertbefore: "127.0.0.1 localhost"
+  when: common_hostname
+  tags:
+    - common

@@ -1,0 +1,17 @@
+---
+# defaults file for postgresql-server
+postgres_data_dir: /data/apps/postgres
+postgres_archive_dir: /data/apps/archive
+postgres_user_id: '999'
+postgres_group_id: '999'
+postgres_version: 14
+postgres_user: postgres
+postgres_password: '{{ undef(hint("You must define your password for the postgresql database"))}}'
+postgres_database: postgres
+postgres_databases: []
+postgres_enable_pitr: false
+postgres_container_name: postgres
+postgres_pitr_cron_rotation: weekly
+postgres_pitr_cron_command: 'docker exec -it $(docker ps -f "name=postgres" -q) pg_basebackup -U postgres -Ft -z -D {{postgresql_archive_dir}}'
+postgres_pitr_cron_healthcheck_uuid: false
+health_check_base_url: 'https://health.datainscience.com'

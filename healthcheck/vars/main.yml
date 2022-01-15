@@ -1,0 +1,3 @@
+---
+# vars file for healthcheck
+healthcheck_schedule: "{{healthcheck_minute}} {{healthcheck_hour}} {{healthcheck_day}} {{healthcheck_month}} {{healthcheck_weekday}}"

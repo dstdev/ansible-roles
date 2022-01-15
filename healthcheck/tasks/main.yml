@@ -12,6 +12,8 @@
     desc: "{{healthcheck_description}}"
     schedule: "{{healthcheck_schedule}}"
   register: output
+  tags:
+    - always
 
 - name: Create cronjob
   ansible.builtin.cron:
@@ -22,3 +24,5 @@
     month: "{{healthcheck_month}}"
     weekday: "{{healthcheck_weekday}}"
     job: "{{healthcheck_job}} && curl -fsS -m 10 --retry 5 -o /dev/null {{healthcheck_url}}/ping/{{output.uuid}}"
+  tags:
+    - always

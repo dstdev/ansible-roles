@@ -67,3 +67,19 @@
   loop: "{{docker_compose_packages}}"
   tags:
     - docker
+
+## Create cleanup cronjob
+- name: Create a test check
+  include_role:
+    name: healthcheck
+  vars:
+    healthcheck_cron_name: Datalake docker pruning
+    healthcheck_description: Cronjob to regularly clean up old docker images
+    healthcheck_job: docker image prune -f -a 
+    healthcheck_minute: '0'
+    healthcheck_hour: '0'
+    healthcheck_weekday: '1'
+    healthcheck_tags:
+      - docker
+  tags:
+    - docker_health

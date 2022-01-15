@@ -79,3 +79,15 @@
   when: common_hostname
   tags:
     - common
+
+- name: Self healthcheck
+  include_role:
+    name: healthcheck
+  vars:
+    healthcheck_cron_name: "{{ansible_hostname}} self ping"
+    healthcheck_description: "{{ansible_hostname}} self ping"
+    healthcheck_minute: 0
+    healthcheck_job: ls /
+ 
+  tags:
+    - common

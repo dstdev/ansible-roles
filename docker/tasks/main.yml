@@ -73,7 +73,7 @@
   include_role:
     name: healthcheck
   vars:
-    healthcheck_cron_name: Datalake docker pruning
+    healthcheck_cron_name: "{{ansible_hostname}} docker pruning"
     healthcheck_description: Cronjob to regularly clean up old docker images
     healthcheck_job: docker image prune -f -a 
     healthcheck_minute: '0'

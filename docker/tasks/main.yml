@@ -69,7 +69,7 @@
     - docker
 
 ## Create cleanup cronjob
-- name: Create a test check
+- name: Create weekly docker prune cron job
   include_role:
     name: healthcheck
   vars:

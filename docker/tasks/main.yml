@@ -82,4 +82,4 @@
     healthcheck_tags:
       - docker
   tags:
-    - docker_health
+    - docker

@@ -5,3 +5,4 @@ restic_s3_aws_id: '{{ undef(hint("You must define your AWS ID for restic"))}}'
 restic_s3_aws_key: '{{ undef(hint("You must define your AWS Key for restic"))}}'
 restic_password: '{{ undef(hint("You must define your password for restic"))}}'
 restic_password_file_path: "/root/.restic"
+restic_backups: []

@@ -1,0 +1,8 @@
+---
+# defaults file for bitwarden
+bitwarden_data_dir: /data/apps/vaultwarden
+bitwarden_site_root: bw.datainscience.com
+bitwarden_traefik_enable: no
+bitwarden_traefik_network: traefik_proxy
+bitwarden_image_version: latest
+bitwarden_admin_token: '{{ undef(hint("You must define bitwarden administrator token"))}}'

@@ -1,0 +1,4 @@
+---
+# vars file for bitwarden
+bitwarden_docker_labels: {}
+bitwarden_docker_networks: []

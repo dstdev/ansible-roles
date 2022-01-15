@@ -1,0 +1,64 @@
+---
+# tasks file for bitwarden
+- name: create bitwarden data diretory
+  file:
+    path: "{{bitwarden_data_dir}}"
+    owner: root
+    group: root
+    state: directory
+  tags:
+    - bitwarden
+
+- name: Set bitwarden docker labels
+  ansible.builtin.set_fact:
+    bitwarden_docker_labels: 
+      traefik.docker.network: "traefik_proxy"
+      traefik.enable: "true"
+      traefik.http.middlewares.redirect-https.redirectScheme.scheme: "https"
+      traefik.http.middlewares.redirect-https.redirectScheme.permanent: "true"
+      traefik.http.routers.bitwarden-ui-https.rule: "Host(`{{bitwarden_site_root}}`)"
+      traefik.http.routers.bitwarden-ui-https.entrypoints: "websecure"
+      traefik.http.routers.bitwarden-ui-https.tls: "true"
+      traefik.http.routers.bitwarden-ui-https.tls.certresolver: "letsencrypt"
+      traefik.http.routers.bitwarden-ui-https.service: "bitwarden-ui"
+      traefik.http.routers.bitwarden-ui-http.rule: "Host(`{{bitwarden_site_root}}`)"
+      traefik.http.routers.bitwarden-ui-http.entrypoints: "web"
+      traefik.http.routers.bitwarden-ui-http.middlewares: "redirect-https"
+      traefik.http.routers.bitwarden-ui-http.service: "bitwarden-ui"
+      traefik.http.services.bitwarden-ui.loadbalancer.server.port: "80"
+      traefik.http.routers.bitwarden-websocket-https.rule: "Host(`{{bitwarden_site_root}}`) && Path(`/notifications/hub`)"
+      traefik.http.routers.bitwarden-websocket-https.entrypoints: "websecure"
+      traefik.http.routers.bitwarden-websocket-https.tls: "true"
+      traefik.http.routers.bitwarden-websocket-https.tls.certresolver: "letsencrypt"
+      traefik.http.routers.bitwarden-websocket-https.service: "bitwarden-websocket"
+      traefik.http.routers.bitwarden-websocket-http.rule: "Host(`{{bitwarden_site_root}}`) && Path(`/notifications/hub`)"
+      traefik.http.routers.bitwarden-websocket-http.entrypoints: "web"
+      traefik.http.routers.bitwarden-websocket-http.middlewares: "redirect-https"
+      traefik.http.routers.bitwarden-websocket-http.service: "bitwarden-websocket"
+      traefik.http.services.bitwarden-websocket.loadbalancer.server.port: "3012"
+    bitwarden_docker_networks:
+      - name: traefik_proxy
+  when: bitwarden_traefik_enable
+  tags:
+    - bitwarden
+
+- name: Start docker container
+  community.docker.docker_container:
+    name: vaultwarden
+    image: "vaultwarden/server:{{bitwarden_image_version}}"
+    state: started
+    restart_policy: always
+    env:
+      SIGNUPS_ALLOWED: 'true'
+      SHOW_PASSWORD_HINT: 'false'
+      LOG_FILE: 'data/bitwarden.log'
+      ADMIN_TOKEN: "{{bitwarden_admin_token}}"
+    volumes:
+      - "{{bitwarden_data_dir}}:/data"
+    labels: "{{bitwarden_docker_labels}}"
+    networks: "{{bitwarden_docker_networks}}"
+    log_options:
+      max-size: "10m"
+      max-files: "3"
+  tags:
+    - bitwarden

@@ -1,0 +1,4 @@
+---
+# vars file for healtcheck-server
+healthchecks_docker_labels: {}
+healthchecks_docker_networks: []

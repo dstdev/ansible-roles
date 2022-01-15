@@ -1,0 +1,60 @@
+---
+# tasks file for healtcheck-server
+- name: create healthcheck data diretory
+  file:
+    path: "{{healthchecks_data_dir}}"
+    owner: "{{healthchecks_data_dir_puid}}"
+    group: "{{healthchecks_data_dir_guid}}"
+    state: directory
+  tags:
+    - healthchecks_server
+
+- name: Set labels
+  ansible.builtin.set_fact:
+    healthchecks_docker_labels: 
+      traefik.enable: "true"
+      traefik.http.routers.health.entrypoints: "websecure"
+      traefik.http.routers.health.rule: "Host(`{{healthchecks_site_root}}`)"
+      traefik.http.routers.health.tls: "true"
+      traefik.http.routers.health.tls.certresolver: letsencrypt
+      traefik.http.services.health.loadbalancer.server.port: "8000"
+      traefik.docker.network: traefik_proxy
+    healthchecks_docker_networks:
+      - name: traefik_proxy
+  when: healthchecks_traefik_enable
+  tags:
+    - healthchecks_server
+
+- ansible.builtin.debug:
+    msg: "{{healthchecks_docker_labels}}"
+  tags:
+    - healthchecks_server
+
+- ansible.builtin.debug:
+    msg: "{{healthchecks_docker_networks}}"
+  tags:
+    - healthchecks_server
+
+- name: Start docker container
+  community.docker.docker_container:
+    name: healtchecks
+    image: "linuxserver/healthchecks:{{healthchecks_image_version}}"
+    state: started
+    restart_policy: always
+    env:
+      PUID: "{{healthchecks_data_dir_puid}}"
+      PGID: "{{healthchecks_data_dir_guid}}"
+      SITE_ROOT: "{{healthchecks_site_root}}"
+      SITE_NAME: "{{healthchecks_site_name}}"
+      SUPERUSER_EMAIL: "{{healthchecks_superuser_email}}"
+      SUPERUSER_PASSWORD: "{{healthchecks_superuser_password}}"
+    volumes:
+      - "{{healthchecks_data_dir}}:/config"
+      - /etc/resolv.conf:/etc/resolv.conf
+    labels: "{{healthchecks_docker_labels}}"
+    networks: "{{healthchecks_docker_networks}}"
+    log_options:
+      max-size: "10m"
+      max-files: "3"
+  tags:
+    - healthchecks_server

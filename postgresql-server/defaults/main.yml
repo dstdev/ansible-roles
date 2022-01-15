@@ -11,6 +11,3 @@ postgres_database: postgres
 postgres_databases: []
 postgres_enable_pitr: false
 postgres_container_name: postgres
-postgres_pitr_cron_rotation: weekly
-postgres_pitr_cron_healthcheck_uuid: false
-health_check_base_url: 'https://health.datainscience.com'

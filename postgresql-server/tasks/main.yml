@@ -114,10 +114,18 @@
     - postgresql
 
 - name: Create cron job for backup rotation
-  ansible.builtin.cron:
-    name: "postgresql_pitr_backup" 
-    special_time: weekly
-    job: "{{postgres_pitr_cron_command}} {%if postgres_pitr_cron_healthcheck_uuid %}&& curl -fsS -m 10 --retry 5 -o /dev/null -k {{health_check_base_url}}/ping/{{postgres_pitr_cron_healthcheck_uuid}}{%endif%}"
-    user: "root"
+  include_role:
+    name: healthcheck
+  vars:
+    healthcheck_cron_name: "Postgresql backup for {{ansible_hostname}}"
+    healthcheck_description: "Weekly cronjob for Postgresql backup for {{ansible_hostname}}"
+    healthcheck_job: "{{postgres_pitr_cron_command}}" 
+    healthcheck_minute: '0'
+    healthcheck_hour: '0'
+    healthcheck_weekday: '1'
+    healthcheck_tags:
+      - postgresql
+      - backup
+  when: postgres_enable_pitr
   tags:
     - postgresql

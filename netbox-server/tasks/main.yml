@@ -35,6 +35,8 @@
     image: "redis:{{netbox_redis_version}}"
     hostname: "{{netbox_redis_container_name}}"
     restart_policy: always
+    network_mode:  "{{netbox_docker_network}}"
+    container_default_behavior: 'no_defaults'
     networks:
       - name: "{{netbox_docker_network}}"
   tags:
@@ -80,7 +82,9 @@
     #image: "lscr.io/linuxerver/netbox:{{netbox_netbox_version}}"
     hostname: "{{netbox_app_container_name}}"
     restart_policy: always
+    network_mode: 'default'
     networks: "{{netbox_docker_networks}}"
+    container_default_behavior: 'no_defaults'
     env:
       TZ: US/Eastern
       SUPERUSER_EMAIL: "{{netbox_superuser_email}}"

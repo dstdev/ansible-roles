@@ -1,0 +1,16 @@
+---
+# defaults file for netbox-server
+netbox_root_dir: /data/apps/netbox
+
+# Only needed for multiple instances running on the same host
+netbox_docker_suffix: ""
+
+# Image versions
+netbox_postgres_version: "12-alpine"
+netbox_redis_version: "alpine"
+netbox_netbox_version: "latest"
+
+netbox_postgres_password: '{{ undef(hint("You must define your password for the netbox postgresql database"))}}'
+netbox_traefik_enable: true
+netbox_traefik_network: traefik_proxy
+netbox_fqdn: "dcim.datainscience.com"

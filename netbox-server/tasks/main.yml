@@ -1,0 +1,100 @@
+---
+# tasks file for netbox-server
+- name: Create netbox app directory
+  file:
+    path: "{{netbox_config_dir}}"
+    state: directory
+  tags:
+    - netbox-server
+
+- name: Create netbox network
+  community.docker.docker_network:
+    name: "{{netbox_docker_network}}"
+  tags:
+    - netbox-server
+
+- name: Create netbox postgresql docker container
+  include_role:
+    name: postgresql-server
+  vars:
+    postgres_root_dir: "{{netbox_postgres_dir}}"
+    postgres_version: "{{netbox_postgres_version}}"
+    postgres_user: netbox
+    postgres_password: '{{netbox_postgres_password}}'
+    postgres_database: netbox
+    postgres_container_name: "{{netbox_postgres_container_name}}"
+    postgres_network_mode: "default"
+    postgres_networks:
+      - name: "{{netbox_docker_network}}"
+  tags:
+    - netbox-server
+
+- name: Create netbox redis container
+  community.docker.docker_container:
+    name: "{{netbox_redis_container_name}}"
+    image: "redis:{{netbox_redis_version}}"
+    hostname: "{{netbox_redis_container_name}}"
+    restart_policy: always
+    networks:
+      - name: "{{netbox_docker_network}}"
+  tags:
+    - netbox-server
+
+# TODO: Need to have the router name include suffix
+#
+- name: Set traefik_labels
+  ansible.builtin.set_fact:
+    netbox_docker_labels: "{{ netbox_docker_labels | default({}) | combine ({ item.key : item.value }) }}"
+  with_items:
+    - { 'key': 'traefik.enable' , 'value': "true" }
+    - { 'key': 'traefik.http.services.netbox{{netbox_docker_suffix}}.loadbalancer.server.port' , 'value': "8000" }
+    - { 'key': 'traefik.http.routers.netbox{{netbox_docker_suffix}}.entrypoints' , 'value': "websecure" }
+    - { 'key': 'traefik.http.routers.netbox{{netbox_docker_suffix}}.rule' , 'value': "Host(`{{netbox_fqdn}}`)" }
+    - { 'key': 'traefik.http.routers.netbox{{netbox_docker_suffix}}.tls' , 'value': "true" }
+    - { 'key': 'traefik.http.routers.netbox{{netbox_docker_suffix}}.tls.certresolver' , 'value': 'letsencrypt' }
+    - { 'key': 'traefik.http.services.netbox{{netbox_docker_suffix}}.loadbalancer.server.port' , 'value': "8000" }
+    - { 'key': 'traefik.docker.network' , 'value': "{{netbox_traefik_network}}" }
+  when: netbox_traefik_enable
+  tags:
+    - netbox-server
+
+- debug:
+    msg: "{{netbox_docker_labels}}"
+  tags:
+    - netbox-server
+
+- name: Set labels
+  ansible.builtin.set_fact:
+    netbox_docker_networks:
+      - name: "{{netbox_traefik_network}}"
+      - name: "{{netbox_docker_network}}"
+  when: netbox_traefik_enable
+  tags:
+    - netbox-server
+
+
+- name: Create netbox container
+  community.docker.docker_container:
+    name: "{{netbox_app_container_name}}"
+    image: "linuxserver/netbox:{{netbox_netbox_version}}"
+    #image: "lscr.io/linuxerver/netbox:{{netbox_netbox_version}}"
+    hostname: "{{netbox_app_container_name}}"
+    restart_policy: always
+    networks: "{{netbox_docker_networks}}"
+    env:
+      TZ: US/Eastern
+      SUPERUSER_EMAIL: "{{netbox_superuser_email}}"
+      SUPERUSER_PASSWORD: "{{netbox_superuser_password}}"
+      ALLOWED_HOST: "{{ netbox_fqdn }}"
+      DB_NAME: netbox
+      DB_USER: netbox
+      DB_PASSWORD: "{{netbox_postgres_password}}"
+      DB_HOST: "{{netbox_postgres_container_name}}"
+      REDIS_HOST: "{{netbox_redis_container_name}}"
+    volumes:
+      - "{{netbox_config_dir}}:/config"
+    labels: "{{netbox_docker_labels}}"
+  tags:
+    - netbox-server
+
+

@@ -1,0 +1,11 @@
+---
+# vars file for netbox-server
+netbox_docker_network: "netbox{{netbox_docker_suffix}}"
+netbox_docker_networks:
+  - "{{netbox_docker_network}}"
+netbox_postgres_container_name: "netbox_postgres{{netbox_docker_suffix}}"
+netbox_app_container_name: "netbox_app{{netbox_docker_suffix}}"
+netbox_redis_container_name: "netbox_redis{{netbox_docker_suffix}}"
+
+netbox_config_dir: "{{netbox_root_dir}}/app"
+netbox_postgres_dir: "{{netbox_root_dir}}/postgres"

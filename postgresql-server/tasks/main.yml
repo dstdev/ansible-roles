@@ -25,18 +25,21 @@
   file:
     path: "{{postgres_archive_dir}}"
     state: directory
-    owner: 999
-    group: 999
+    owner: "{{postgres_user_id}}"
+    group: "{{postgres_group_id}}"
   tags:
     - postgresql
 
+# net network mode and network
 
 - name: Create postgresql docker container
   community.docker.docker_container:
-    name: postgres
+    name: "{{postgres_container_name}}"
     image: "postgres:{{postgres_version}}"
     restart_policy: always
-    network_mode: "host"
+    network_mode: "{{postgres_network_mode}}"
+    networks: "{{postgres_networks}}"
+    hostname: "{{postgres_container_name}}"
     env:
       POSTGRES_PASSWORD: "{{postgres_password}}" 
       POSTGRES_DB: "{{postgres_database}}" 
@@ -117,7 +120,7 @@
   include_role:
     name: healthcheck
   vars:
-    healthcheck_cron_name: "Postgresql backup for {{ansible_hostname}}"
+    healthcheck_cron_name: "Postgresql backup for {{ansible_hostname}} at {{postgres_data_dir}}"
     healthcheck_description: "Weekly cronjob for Postgresql backup for {{ansible_hostname}}"
     healthcheck_job: "{{postgres_pitr_cron_command}}" 
     healthcheck_minute: '0'

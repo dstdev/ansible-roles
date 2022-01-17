@@ -42,8 +42,6 @@
   tags:
     - netbox-server
 
-# TODO: Need to have the router name include suffix
-#
 - name: Set traefik_labels
   ansible.builtin.set_fact:
     netbox_docker_labels: "{{ netbox_docker_labels | default({}) | combine ({ item.key : item.value }) }}"

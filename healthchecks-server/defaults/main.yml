@@ -4,6 +4,7 @@ healthchecks_data_dir: /data/apps/healthchecks
 healthchecks_data_dir_puid: "1000"
 healthchecks_data_dir_guid: "1000"
 healthchecks_site_root: health.datainscience.com
+healthchecks_http_protocol: "https"
 healthchecks_site_name: DST Health Check System
 healthchecks_superuser_email: admin@datainscience.com
 healthchecks_superuser_password: admin

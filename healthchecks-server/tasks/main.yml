@@ -50,7 +50,7 @@
       SUPERUSER_PASSWORD: "{{healthchecks_superuser_password}}"
     volumes:
       - "{{healthchecks_data_dir}}:/config"
-      - /etc/resolv.conf:/etc/resolv.conf
+      - /etc/resolv.conf:/etc/resolv.con
     labels: "{{healthchecks_docker_labels}}"
     networks: "{{healthchecks_docker_networks}}"
     log_options:
@@ -58,3 +58,10 @@
       max-files: "3"
   tags:
     - healthchecks_server
+
+- name: Set ping healthpoint
+  lineinfile:
+    path: "{{healthchecks_data_dir}}/local_settings.py"
+    line: 'PING_ENDPOINT = "{{healthchecks_http_protocol}}://{{healthchecks_site_root}}"'
+    state: present
+

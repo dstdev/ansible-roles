@@ -4,3 +4,4 @@ common_dst_user_password: '{{ undef(hint="You must specify a password for dst us
 common_dst_user_uid: 10000
 common_dst_users: []
 common_hostname: false
+common_timezone: "US/Eastern"

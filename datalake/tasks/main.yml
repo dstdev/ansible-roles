@@ -40,3 +40,40 @@
     - datalake
     - datalake_python
 
+- name: Copy scripts down
+  ansible.builtin.git:
+    repo: git@github.com:dstdev/dst-automations.git
+    key_file: /root/.ssh/id_ed25519
+    accept_hostkey: yes
+    dest: /opt/dst-automations
+    force: yes
+  tags:
+    - datalake
+
+- name: Create environment file for automations
+  template:
+    src: templates/env.j2
+    dest: /opt/dst-automations/.env
+    owner: root
+    group: root
+
+  tags:
+    - datalake
+
+- name: Create cron jobs for all automations
+  include_role:
+    name: cronjob
+  vars:
+    cronjob_cron_name: "Automation script on {{ansible_hostname}} {{item.name}}"
+    cronjob_description: "Cronjob for {{item.script}}"
+    cronjob_job: "DST_ENV_FILE=/opt/dst-automations/.env /opt/venv/bin/python /opt/dst-automations/scripts/{{item.script}}" 
+    cronjob_minute: '{{item.minute | default("*")}}'
+    cronjob_hour: '{{item.hour | default("*")}}'
+    cronjob_day: '{{item.day | default("*")}}'
+    cronjob_month: '{{item.month | default("*")}}'
+    cronjob_weekday: '{{item.weekday | default("*")}}'
+    cronjob_tags:
+      - automation
+  loop: "{{datalake_cronjobs}}"
+  tags:
+    - datalake

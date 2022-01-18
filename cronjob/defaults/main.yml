@@ -1,17 +1,18 @@
 ---
 # defaults file for healthcheck
-healthcheck_url: "https://health.datainscience.com"
-healthcheck_project_api_key: '{{ undef(hint("You must define your healthchecks.io project api key"))}}'
+cronjob_healthcheck_url: "https://health.datainscience.com"
+cronjob_healthcheck_project_api_key: '{{ undef(hint("You must define your healthchecks.io project api key"))}}'
 
-healthcheck_cron_name: '{{ undef(hint("You must define your health checks name"))}}'
+cronjob_cron_name: '{{ undef(hint("You must define your health checks name"))}}'
+cronjob_description: '{{ undef(hint("You must define your health checks description"))}}'
 
-healthcheck_minute: '*'
-healthcheck_hour: '*'
-healthcheck_day: '*'
-healthcheck_month: '*'
-healthcheck_weekday: '*'
+cronjob_minute: '*'
+cronjob_hour: '*'
+cronjob_day: '*'
+cronjob_month: '*'
+cronjob_weekday: '*'
 # in seconds
-healthcheck_grace: "60"
-healthcheck_tags: []
+cronjob_grace: "60"
+cronjob_tags: []
 
-healthcheck_job: '{{ undef(hint("You must define your health checks job"))}}'
+cronjob_job: '{{ undef(hint("You must define your health checks job"))}}'

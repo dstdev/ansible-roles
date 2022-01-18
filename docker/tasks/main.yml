@@ -71,15 +71,15 @@
 ## Create cleanup cronjob
 - name: Create weekly docker prune cron job
   include_role:
-    name: healthcheck
+    name: cronjob
   vars:
-    healthcheck_cron_name: "{{ansible_hostname}} docker pruning"
-    healthcheck_description: Cronjob to regularly clean up old docker images
-    healthcheck_job: docker image prune -f -a 
-    healthcheck_minute: '0'
-    healthcheck_hour: '0'
-    healthcheck_weekday: '1'
-    healthcheck_tags:
+    cronjob_cron_name: "{{ansible_hostname}} docker pruning"
+    cronjob_description: Cronjob to regularly clean up old docker images
+    cronjob_job: docker image prune -f -a 
+    cronjob_minute: '0'
+    cronjob_hour: '0'
+    cronjob_weekday: '1'
+    cronjob_tags:
       - docker
   tags:
     - docker

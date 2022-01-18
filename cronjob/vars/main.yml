@@ -1,3 +1,3 @@
 ---
-# vars file for healthcheck
-healthcheck_schedule: "{{healthcheck_minute}} {{healthcheck_hour}} {{healthcheck_day}} {{healthcheck_month}} {{healthcheck_weekday}}"
+# vars file for cronjob
+cronjob_schedule: "{{cronjob_minute}} {{cronjob_hour}} {{cronjob_day}} {{cronjob_month}} {{cronjob_weekday}}"

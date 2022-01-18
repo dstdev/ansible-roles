@@ -82,12 +82,12 @@
 
 - name: Self healthcheck
   include_role:
-    name: healthcheck
+    name: cronjob
   vars:
-    healthcheck_cron_name: "{{ansible_hostname}} self ping"
-    healthcheck_description: "{{ansible_hostname}} self ping"
-    healthcheck_minute: 0
-    healthcheck_job: ls /
+    cronjob_cron_name: "{{ansible_hostname}} self ping"
+    cronjob_description: "{{ansible_hostname}} self ping"
+    cronjob_minute: 0
+    cronjob_job: ls /
  
   tags:
     - common

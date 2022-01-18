@@ -112,22 +112,22 @@
     path: "{{postgres_postgresql_file}}"
     regexp: "^archive_command"
     insertbefore: "^#archive_command"
-    line: "archive_command = 'test ! -f {{postgres_archive_dir}}/%f && cp %p {{postgres_archive_dir}}/%f'"
+    line: "archive_command = 'test ! -f /archive/%f && cp %p /archive/%f'"
   when: postgres_enable_pitr
   tags:
     - postgresql
 
 - name: Create cron job for backup rotation
   include_role:
-    name: healthcheck
+    name: cronjob
   vars:
-    healthcheck_cron_name: "Postgresql backup for {{ansible_hostname}} at {{postgres_data_dir}}"
-    healthcheck_description: "Weekly cronjob for Postgresql backup for {{ansible_hostname}}"
-    healthcheck_job: "{{postgres_pitr_cron_command}}" 
-    healthcheck_minute: '0'
-    healthcheck_hour: '0'
-    healthcheck_weekday: '1'
-    healthcheck_tags:
+    cronjob_cron_name: "Postgresql backup for {{ansible_hostname}} at {{postgres_data_dir}}"
+    cronjob_description: "Weekly cronjob for Postgresql backup for {{ansible_hostname}}"
+    cronjob_job: "{{postgres_pitr_cron_command}}" 
+    cronjob_minute: '0'
+    cronjob_hour: '0'
+    cronjob_weekday: '1'
+    cronjob_tags:
       - postgresql
       - backup
   when: postgres_enable_pitr

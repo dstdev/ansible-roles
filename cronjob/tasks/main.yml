@@ -1,28 +1,28 @@
 ---
-# tasks file for healthcheck
-- name: "Create healthcheck name {{healthcheck_cron_name}}"
+# tasks file for cronjobs
+- name: "Create cronjobs name {{cronjob_cron_name}}"
   community.healthchecksio.checks:
     state: present
-    api_key: "{{ healthcheck_project_api_key }}"
-    name: "{{healthcheck_cron_name}}"
+    api_key: "{{ cronjob_healthcheck_project_api_key }}"
+    name: "{{cronjob_cron_name}}"
     unique: ["name"]
     channels: "*"
-    grace: "{{healthcheck_grace}}"
-    tags: "{{healthcheck_tags}}"
-    desc: "{{healthcheck_description}}"
-    schedule: "{{healthcheck_schedule}}"
+    grace: "{{cronjob_grace}}"
+    tags: "{{cronjob_tags}}"
+    desc: "{{cronjob_description}}"
+    schedule: "{{cronjob_schedule}}"
   register: output
   tags:
     - always
 
 - name: Create cronjob
   ansible.builtin.cron:
-    name: "{{healthcheck_cron_name}}"
-    minute: "{{healthcheck_minute}}"
-    hour: "{{healthcheck_hour}}"
-    day: "{{healthcheck_day}}"
-    month: "{{healthcheck_month}}"
-    weekday: "{{healthcheck_weekday}}"
-    job: "{{healthcheck_job}} && curl -fsS -m 10 --retry 5 -o /dev/null {{healthcheck_url}}/ping/{{output.uuid}}"
+    name: "{{cronjob_cron_name}}"
+    minute: "{{cronjob_minute}}"
+    hour: "{{cronjob_hour}}"
+    day: "{{cronjob_day}}"
+    month: "{{cronjob_month}}"
+    weekday: "{{cronjob_weekday}}"
+    job: "{{cronjob_job}} && curl -fsS -m 10 --retry 5 -o /dev/null {{cronjob_healthcheck_url}}/ping/{{output.uuid}}"
   tags:
     - always

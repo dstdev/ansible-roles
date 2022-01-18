@@ -1,28 +1,28 @@
 - name: Create daily backups
   include_role:
-    name: healthcheck
+    name: cronjob
   vars:
-    healthcheck_cron_name: "Daily backup of {{backup.directory}} on {{ansible_hostname}}"
-    healthcheck_description: "Restic backup for {{backup.directory}}"
-    healthcheck_job: "/usr/local/sbin/drestic backup {{backup.directory}}"
-    healthcheck_minute: '0'
-    healthcheck_hour: '23'
-    healthcheck_tags:
+    cronjob_cron_name: "Daily backup of {{backup.directory}} on {{ansible_hostname}}"
+    cronjob_description: "Restic backup for {{backup.directory}}"
+    cronjob_job: "/usr/local/sbin/drestic backup {{backup.directory}}"
+    cronjob_minute: '0'
+    cronjob_hour: '23'
+    cronjob_tags:
       - backup
   tags:
     - restic
 
 - name: Create job to prune backups
   include_role:
-    name: healthcheck
+    name: cronjob
   vars:
-    healthcheck_cron_name: "Weekly pruning of {{backup.directory}} on {{ansible_hostname}}"
-    healthcheck_description: "Restic backup for {{backup.directory}}"
-    healthcheck_job: "/usr/local/sbin/drestic forget {% if 'keep_daily' in backup %}--keep-daily {{backup.keep_daily}}{%endif%} {% if 'keep_weekly' in backup %}--keep-weekly {{backup.keep_weekly}}{%endif%} {% if 'keep_monthly' in backup %}--keep-monthly {{backup.keep_monthly}}{%endif%} --prune --path {{backup.directory}}"
-    healthcheck_minute: '0'
-    healthcheck_hour: '23'
-    healthcheck_weekday: '1'
-    healthcheck_tags:
+    cronjob_cron_name: "Weekly pruning of {{backup.directory}} on {{ansible_hostname}}"
+    cronjob_description: "Restic backup for {{backup.directory}}"
+    cronjob_job: "/usr/local/sbin/drestic forget {% if 'keep_daily' in backup %}--keep-daily {{backup.keep_daily}}{%endif%} {% if 'keep_weekly' in backup %}--keep-weekly {{backup.keep_weekly}}{%endif%} {% if 'keep_monthly' in backup %}--keep-monthly {{backup.keep_monthly}}{%endif%} --prune --path {{backup.directory}}"
+    cronjob_minute: '0'
+    cronjob_hour: '23'
+    cronjob_weekday: '1'
+    cronjob_tags:
       - backup
   tags:
     - restic

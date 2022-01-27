@@ -16,3 +16,4 @@ cronjob_grace: "60"
 cronjob_tags: []
 
 cronjob_job: '{{ undef(hint("You must define your health checks job"))}}'
+cronjob_tz: 'US/Eastern'

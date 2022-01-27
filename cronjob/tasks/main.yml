@@ -11,6 +11,7 @@
     tags: "{{cronjob_tags}}"
     desc: "{{cronjob_description}}"
     schedule: "{{cronjob_schedule}}"
+    tz: "{{cronjob_tz}}"
   register: output
   tags:
     - always

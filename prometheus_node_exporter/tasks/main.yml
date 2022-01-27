@@ -1,0 +1,56 @@
+# Extracts node_exporter from a shared tarball and installs onto the specified inventory.
+# Creates a systemd file for starting, without actually using systemd. Design
+# decision was made to not use systemd for use with images
+---
+- name: Create nodeusr account to run node_exporter
+  user:
+    name: nodeusr
+    shell: /sbin/nologin
+    home: /var/lib/node_exporter
+    uid: 440
+  tags:
+    - prometheus_node_exporter
+
+- name: Extract node_exporter downloaded tarball
+  unarchive:
+    src: "https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz"
+    dest: "/var/lib/node_exporter/"
+    owner: nodeusr
+    group: nodeusr
+    remote_src: yes
+  tags:
+    - prometheus_node_exporter
+
+- name: Create systemd service file
+  blockinfile:
+    create: yes
+    path: /etc/systemd/system/node_exporter.service
+    block: |
+      [Unit]
+      Description=Node Exporter
+      After=network.target
+      [Service]
+      User=nodeusr
+      Group=nodeusr
+      Type=simple
+      ExecStart=/var/lib/node_exporter/node_exporter-1.3.1.linux-amd64/node_exporter --collector.textfile.directory /var/lib/node_exporter/textfile_collector
+      [Install]
+      WantedBy=multi-user.target
+  tags:
+    - prometheus_node_exporter
+
+- name: Enable the systemd service file manually
+  file:
+    state: link
+    src: /etc/systemd/system/node_exporter.service
+    dest: /etc/systemd/system/multi-user.target.wants/node_exporter.service
+  tags:
+    - prometheus_node_exporter
+      
+- name: Start the systemd service file if this is not a chroot
+  service:
+    name: node_exporter
+    state: started
+  when: not ansible_is_chroot
+  tags:
+    - prometheus_node_exporter

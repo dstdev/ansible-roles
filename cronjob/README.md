@@ -29,6 +29,7 @@ Default variables:
 | cronjob_grace               | "60"                               | Grace period in seconds                        |
 | cronjob_tags                | []                                 | List of tags to apply                          |
 | cronjob_job                 | Undefined                          | The cron job to run                            |
+| cronjob_tz                  | US/Eastern                         | Timezone of cronjob. Greatly effects status    |
 
 
 Dependencies

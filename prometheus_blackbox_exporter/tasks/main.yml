@@ -1,0 +1,58 @@
+# Extracts blackbox_exporter from a shared tarball and installs onto the specified inventory.
+# Creates a systemd file for starting, without actually using systemd. Design
+# decision was made to not use systemd for use with images
+# NOTE:
+# * Targets a particular version release for consistency
+---
+- name: Create nodeusr account to run blackbox_exporter
+  user:
+    name: nodeusr
+    shell: /sbin/nologin
+    home: /var/lib/node_exporter
+    uid: 440
+  tags:
+    - prometheus_blackbox_exporter
+
+- name: Extract blackbox_exporter downloaded tarball
+  unarchive:
+    src: "https://github.com/prometheus/blackbox_exporter/releases/download/v0.19.0/blackbox_exporter-0.19.0.linux-amd64.tar.gz"
+    dest: "/var/lib/node_exporter/"
+    owner: nodeusr
+    group: nodeusr
+    remote_src: yes
+  tags:
+    - prometheus_blackbox_exporter
+
+- name: Create systemd service file
+  blockinfile:
+    create: yes
+    path: /etc/systemd/system/blackbox_exporter.service
+    block: |
+      [Unit]
+      Description=Blackbox Exporter
+      After=network.target
+      [Service]
+      User=nodeusr
+      Group=nodeusr
+      Type=simple
+      ExecStart=/var/lib/node_exporter/blackbox_exporter-0.19.0.linux-amd64/blackbox_exporter --collector.textfile.directory /var/lib/node_exporter/bb_textfile_collector
+      [Install]
+      WantedBy=multi-user.target
+  tags:
+    - prometheus_blackbox_exporter
+
+- name: Enable the systemd service file manually
+  file:
+    state: link
+    src: /etc/systemd/system/blackbox_exporter.service
+    dest: /etc/systemd/system/multi-user.target.wants/blackbox_exporter.service
+  tags:
+    - prometheus_blackbox_exporter
+      
+- name: Start the systemd service file if this is not a chroot
+  service:
+    name: blackbox_exporter
+    state: started
+  when: not ansible_is_chroot
+  tags:
+    - prometheus_blackbox_exporter

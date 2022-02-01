@@ -42,6 +42,7 @@
     state: started
     restart_policy: always
     env:
+      TZ: "{{healthchecks_timezone}}"
       PUID: "{{healthchecks_data_dir_puid}}"
       PGID: "{{healthchecks_data_dir_guid}}"
       SITE_ROOT: "{{healthchecks_site_root}}"
@@ -50,7 +51,7 @@
       SUPERUSER_PASSWORD: "{{healthchecks_superuser_password}}"
     volumes:
       - "{{healthchecks_data_dir}}:/config"
-      - /etc/resolv.conf:/etc/resolv.con
+      - /etc/resolv.conf:/etc/resolv.conf
     labels: "{{healthchecks_docker_labels}}"
     networks: "{{healthchecks_docker_networks}}"
     log_options:
@@ -65,3 +66,5 @@
     line: 'PING_ENDPOINT = "{{healthchecks_http_protocol}}://{{healthchecks_site_root}}"'
     state: present
 
+  tags:
+    - healthchecks_server

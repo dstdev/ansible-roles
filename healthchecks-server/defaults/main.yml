@@ -11,3 +11,4 @@ healthchecks_superuser_password: admin
 healthchecks_traefik_enable: no
 healthchecks_traefik_network: traefik_proxy
 healthchecks_image_version: latest
+healthchecks_timezone: "US/Eastern"

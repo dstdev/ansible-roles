@@ -13,21 +13,21 @@ Role Variables
 
 All variables are listed below, along with the default values (see `defaults/main.yml`):
 
-| Name | Default Value | Description |
-| ---- | ----- | ----------- |
-| mounts | [] | List of dictionaries defining the mount
+| Name   | Default Value | Description                             |
+| ----   | -----         | -----------                             |
+| mounts | []            | List of dictionaries defining the mount |
 
 The `mounts` variable is a list of dictionaries.  Each items defines the `path`, `fstype`, `opts`, and `src`.  And should mimic the options found in `/etc/fstab`. 
 
 Item definition:
 
-| Name | Default Value | Description |
-| ---- | ----- | ----------- |
-| path | Required | Path to mount filesystem |
-| fstype | Required | Filesystem type|
-| opts | Required | Filesystem options |
-| src | Required | Mount source  |
-| mkfs | no | Whether to run mkfs if the format doesn't match fstype |
+| Name   | Default Value | Description                                            |
+| ----   | -----         | -----------                                            |
+| path   | Required      | Path to mount filesystem                               |
+| fstype | Required      | Filesystem type                                        |
+| opts   | Required      | Filesystem options                                     |
+| src    | Required      | Mount source                                           |
+| mkfs   | no            | Whether to run mkfs if the format doesn't match fstype |
 
 
 

@@ -80,18 +80,6 @@
   tags:
     - common
 
-- name: Self healthcheck
-  include_role:
-    name: cronjob
-  vars:
-    cronjob_cron_name: "{{ansible_hostname}} self ping"
-    cronjob_description: "{{ansible_hostname}} self ping"
-    cronjob_minute: 0
-    cronjob_job: ls /
- 
-  tags:
-    - common
-
 - name: Set timezone
   community.general.timezone:
     name: "{{common_timezone}}"

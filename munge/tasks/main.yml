@@ -1,0 +1,30 @@
+---
+# tasks file for munge
+- name: install epel
+  ansible.builtin.package:
+    name: epel-release
+    state: present
+
+- name: install munge packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop:
+    - munge
+    - munge-devel
+
+- name: create munge keyfile
+  ansible.builtin.copy:
+    dest: "/etc/munge/munge.key"
+    content: "{{munge_key}}"
+    owner: munge
+    group: munge
+    mode: "0400"
+  notify:
+    - Restart munge
+
+- name: Enable munge service
+  service:
+    name: munge
+    state: started
+    enabled: true

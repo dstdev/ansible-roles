@@ -1,0 +1,182 @@
+---
+# tasks file for slurm-controller
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop:
+    - zlib-devel
+    - zlib
+    - bzip2
+    - bzip2-devel
+    - openssl
+    - openssl-devel
+    - pkgconfig
+    - wget
+    - python3
+    - "@Development tools"
+ 
+- name: Install slurmdbd requirements
+  ansible.builtin.package:
+    name: "{{item}}"
+  when: slurm_controller
+  loop:
+    - mariadb-server
+    - mariadb-devel
+    - python2-PyMySQL
+    - python36-PyMySQL
+
+- name: Add slurm group
+  ansible.builtin.group:
+    name: slurm
+    gid: 450
+    state: present
+
+- name: Add slurm user
+  ansible.builtin.user:
+    name: slurm
+    comment: "Slurm account"
+    uid: 450
+    group: slurm
+    state: present
+    home: /var/lib/slurm
+    shell: /sbin/nologin
+
+- name: Download slurm
+  get_url:
+    url: "https://download.schedmd.com/slurm/slurm-{{slurm_version}}.tar.bz2"
+    dest: "/tmp/slurm-{{slurm_version}}.tar.bz2"
+  register: slurm_source
+
+
+- name: extract slurm archive
+  unarchive:
+    copy: no
+    dest: /tmp/
+    src: "{{slurm_source.dest}}"
+  when: slurm_source.changed
+  register: slurm_source_unpack
+
+- name: Configure slurm
+  command: "./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --runstatedir=/run"
+  args:
+    chdir: "/tmp/slurm-{{slurm_version}}"
+  when: slurm_source_unpack is changed
+  register: slurm_configure
+
+- name: Install slurm
+  shell: make && make install
+  args:
+    chdir: "/tmp/slurm-{{slurm_version}}"
+  when: slurm_configure is changed
+
+- name: Create slurm owned directories
+  file:
+    state: directory
+    path: "{{item}}"
+    owner: slurm
+    group: slurm
+  loop:
+    - /var/run/slurm
+    - /var/log/slurm
+    - /var/spool/slurm
+
+- name: Create slurmctld service file
+  ansible.builtin.template:
+    src: templates/slurmctld.service.j2
+    dest: /etc/systemd/system/slurmctld.service
+    owner: root
+    group: root
+    mode: "0644"
+  when: slurm_controller
+
+- name: Start slurmctld service
+  ansible.builtin.service:
+    name: slurmctld
+    state: started
+    enabled: true
+  when: slurm_controller
+
+- name: Create configuration file
+  ansible.builtin.template:
+    src: templates/slurm.conf.j2
+    dest: /etc/slurm.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: slurm_controller
+  notify:
+      - Restart slurmctld
+
+- name: Start mariadb
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+  when: slurm_controller
+
+- name: create slurmdbd service file
+  ansible.builtin.template:
+    src: templates/slurmdbd.service.j2
+    dest: /etc/systemd/system/slurmdbd.service
+    owner: root
+    group: root
+    mode: "0644"
+  when: slurm_controller
+
+- name: Start slurmdbd service
+  ansible.builtin.service:
+    name: slurmdbd
+    state: started
+    enabled: true
+  when: slurm_controller
+
+- name: Create database user slurm
+  community.mysql.mysql_user:
+    name: slurm
+    encrypted: yes
+    priv: '*.*:ALL'
+    state: present
+  when: slurm_controller
+
+
+- name: Create slurmdbd configuration file
+  ansible.builtin.template:
+    src: templates/slurmdbd.conf.j2
+    dest: /etc/slurmdbd.conf
+    owner: slurm
+    group: slurm
+    mode: "0600"
+  when: slurm_controller
+  notify:
+      - Restart slurmdbd
+
+- name: Create cgroup configuration file
+  ansible.builtin.template:
+    src: templates/cgroup.conf.j2
+    dest: /etc/cgroup.conf
+    owner: root
+    group: root
+    mode: "0600"
+  when: slurm_slurmd
+  notify:
+      - Restart slurmd
+
+
+- name: create slurmd service file
+  ansible.builtin.template:
+    src: templates/slurmd.service.j2
+    dest: /etc/systemd/system/slurmd.service
+    owner: root
+    group: root
+    mode: "0644"
+  when: slurm_slurmd
+
+- name: Start slurmd service
+  ansible.builtin.service:
+    name: slurmd
+    state: started
+    enabled: true
+  when: slurm_slurmd
+
+

@@ -1,0 +1,6 @@
+---
+# defaults file for slurm-controller
+slurm_database_password: "default"
+slurm_version: "21.08.5"
+slurm_slurmd: false
+slurm_controller: false

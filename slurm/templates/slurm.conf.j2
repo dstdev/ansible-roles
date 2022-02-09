@@ -1,0 +1,40 @@
+ControlMachine=localhost
+ControlAddr=172.17.11.101 # Need to be configured
+AuthType=auth/munge
+CryptoType=crypto/munge
+#MpiDefault=pmix
+ProctrackType=proctrack/cgroup
+ReturnToService=1
+SlurmctldPidFile=/var/run/slurm/slurmctld.pid
+SlurmctldPort=6817
+SlurmdPidFile=/var/run/slurm/slurmd.pid
+SlurmdPort=6818
+SlurmdSpoolDir=/var/spool/slurm/d
+SlurmUser=root
+StateSaveLocation=/var/spool/slurm/ctld
+SwitchType=switch/none
+TaskPlugin=task/none
+InactiveLimit=0
+KillWait=30
+MinJobAge=300
+SlurmctldTimeout=120
+SlurmdTimeout=300
+Waittime=0
+SchedulerType=sched/backfill
+SelectType=select/linear
+SlurmctldParameters=enable_configless
+SlurmctldLogFile=/var/log/slurm/slurmctld.log # Need to configure
+
+AccountingStorageType=accounting_storage/slurmdbd
+
+ClusterName=cluster # add as variable
+JobCompType=jobcomp/none
+JobAcctGatherFrequency=30
+JobAcctGatherType=jobacct_gather/none
+SlurmctldDebug=3 # Add as variable
+SlurmdDebug=3 # Add as variable
+#NodeName=localhost CPUs=1 State=UNKNOWN
+NodeName=slurm-compute-[01-02]  CPUs=1
+NodeName=slurm-login-01
+PartitionName=debug Nodes=slurm-compute-[01-02] Default=YES MaxTime=INFINITE State=UP
+

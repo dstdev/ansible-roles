@@ -22,7 +22,7 @@ slurm_partitions: []
 # cgroup settings
 slurm_cgroup_automount: yes
 slurm_cgroup_constrain_cores: yes
-slurm_cgroup_contrain_ram_space: yes
+slurm_cgroup_constrain_ram_space: yes
 
 # slurmdbd settings
 slurm_dbd_storage_user: slurm

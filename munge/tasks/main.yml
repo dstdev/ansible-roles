@@ -17,8 +17,7 @@
   ansible.builtin.copy:
     dest: "/etc/munge/munge.key"
     content: "{{munge_key}}"
-    owner: munge
-    group: munge
+    owner: "{{munge_user}}"
     mode: "0400"
   notify:
     - Restart munge

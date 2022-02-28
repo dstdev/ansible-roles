@@ -1,3 +1,4 @@
 ---
 # defaults file for munge
-munge_key: "{{undef(hint="You must specify the munge key value")}}"
+munge_key: "{{undef(hint='You must specify the munge key value')}}"
+munge_user: "munge"

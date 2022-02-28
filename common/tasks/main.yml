@@ -46,6 +46,7 @@
   user:
     name: "{{item.name}}"
     state: "{{item.state|default('present')}}"
+    password: "{{item.password}}"
     groups:
       - hpcadmin
     createhome: yes

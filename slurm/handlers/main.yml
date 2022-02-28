@@ -14,3 +14,4 @@
   ansible.builtin.service:
     name: slurmd
     state: restarted
+  when: not ansible_is_chroot

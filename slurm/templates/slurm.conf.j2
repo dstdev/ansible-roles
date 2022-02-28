@@ -1,16 +1,16 @@
-ControlMachine=localhost
-ControlAddr=172.17.11.101 # Need to be configured
+ControlMachine={{slurm_control_machine}}
+ControlAddr={{slurm_control_address}} # Need to be configured
 AuthType=auth/munge
 CryptoType=crypto/munge
 #MpiDefault=pmix
 ProctrackType=proctrack/cgroup
 ReturnToService=1
 SlurmctldPidFile=/var/run/slurm/slurmctld.pid
-SlurmctldPort=6817
+SlurmctldPort={{slurm_controller_port}}
 SlurmdPidFile=/var/run/slurm/slurmd.pid
-SlurmdPort=6818
+SlurmdPort={{slurm_daemon_port}}
 SlurmdSpoolDir=/var/spool/slurm/d
-SlurmUser=root
+SlurmUser={{slurm_user}}
 StateSaveLocation=/var/spool/slurm/ctld
 SwitchType=switch/none
 TaskPlugin=task/none
@@ -27,14 +27,20 @@ SlurmctldLogFile=/var/log/slurm/slurmctld.log # Need to configure
 
 AccountingStorageType=accounting_storage/slurmdbd
 
-ClusterName=cluster # add as variable
+ClusterName={{slurm_cluster_name}} # add as variable
 JobCompType=jobcomp/none
 JobAcctGatherFrequency=30
 JobAcctGatherType=jobacct_gather/none
-SlurmctldDebug=3 # Add as variable
-SlurmdDebug=3 # Add as variable
+SlurmctldDebug={{slurm_controller_debug}} # Add as variable
+SlurmdDebug={{slurm_daemon_debug}} # Add as variable
 #NodeName=localhost CPUs=1 State=UNKNOWN
-NodeName=slurm-compute-[01-02]  CPUs=1
-NodeName=slurm-login-01
-PartitionName=debug Nodes=slurm-compute-[01-02] Default=YES MaxTime=INFINITE State=UP
+{% for node in slurm_nodes %}
+{{node}}
+{%endfor%}
+{% for partition in slurm_partitions %}
+{{partition}}
+{%endfor%}
+#NodeName=slurm-compute-[01-02]  CPUs=1
+#NodeName=slurm-login-01
+#PartitionName=debug Nodes=slurm-compute-[01-02] Default=YES MaxTime=INFINITE State=UP
 

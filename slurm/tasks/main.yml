@@ -15,6 +15,9 @@
     - wget
     - python3
     - "@Development tools"
+  tags:
+    - slurm_controller
+    - slurm_slurmd
  
 - name: Install slurmdbd requirements
   ansible.builtin.package:
@@ -25,28 +28,40 @@
     - mariadb-devel
     - python2-PyMySQL
     - python36-PyMySQL
+  tags:
+    - slurm_controller
+    - slurm_slurmd
 
 - name: Add slurm group
   ansible.builtin.group:
     name: slurm
-    gid: 450
+    gid: "{{slurm_gid}}"
     state: present
+  tags:
+    - slurm_controller
+    - slurm_slurmd
 
 - name: Add slurm user
   ansible.builtin.user:
     name: slurm
     comment: "Slurm account"
-    uid: 450
+    uid: "{{slurm_uid}}"
     group: slurm
     state: present
     home: /var/lib/slurm
     shell: /sbin/nologin
+  tags:
+    - slurm_controller
+    - slurm_slurmd
 
 - name: Download slurm
   get_url:
     url: "https://download.schedmd.com/slurm/slurm-{{slurm_version}}.tar.bz2"
     dest: "/tmp/slurm-{{slurm_version}}.tar.bz2"
   register: slurm_source
+  tags:
+    - slurm_controller
+    - slurm_slurmd
 
 
 - name: extract slurm archive
@@ -56,6 +71,9 @@
     src: "{{slurm_source.dest}}"
   when: slurm_source.changed
   register: slurm_source_unpack
+  tags:
+    - slurm_controller
+    - slurm_slurmd
 
 - name: Configure slurm
   command: "./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --runstatedir=/run"
@@ -63,12 +81,18 @@
     chdir: "/tmp/slurm-{{slurm_version}}"
   when: slurm_source_unpack is changed
   register: slurm_configure
+  tags:
+    - slurm_controller
+    - slurm_slurmd
 
 - name: Install slurm
   shell: make && make install
   args:
     chdir: "/tmp/slurm-{{slurm_version}}"
   when: slurm_configure is changed
+  tags:
+    - slurm_controller
+    - slurm_slurmd
 
 - name: Create slurm owned directories
   file:
@@ -80,6 +104,9 @@
     - /var/run/slurm
     - /var/log/slurm
     - /var/spool/slurm
+  tags:
+    - slurm_controller
+    - slurm_slurmd
 
 - name: Create slurmctld service file
   ansible.builtin.template:
@@ -89,6 +116,8 @@
     group: root
     mode: "0644"
   when: slurm_controller
+  tags:
+    - slurm_controller
 
 - name: Start slurmctld service
   ansible.builtin.service:
@@ -96,6 +125,8 @@
     state: started
     enabled: true
   when: slurm_controller
+  tags:
+    - slurm_controller
 
 - name: Create configuration file
   ansible.builtin.template:
@@ -107,6 +138,8 @@
   when: slurm_controller
   notify:
       - Restart slurmctld
+  tags:
+    - slurm_controller
 
 - name: Start mariadb
   ansible.builtin.service:
@@ -114,6 +147,8 @@
     state: started
     enabled: true
   when: slurm_controller
+  tags:
+    - slurm_controller
 
 - name: create slurmdbd service file
   ansible.builtin.template:
@@ -123,6 +158,8 @@
     group: root
     mode: "0644"
   when: slurm_controller
+  tags:
+    - slurm_controller
 
 - name: Start slurmdbd service
   ansible.builtin.service:
@@ -130,6 +167,8 @@
     state: started
     enabled: true
   when: slurm_controller
+  tags:
+    - slurm_controller
 
 - name: Create database user slurm
   community.mysql.mysql_user:
@@ -138,6 +177,8 @@
     priv: '*.*:ALL'
     state: present
   when: slurm_controller
+  tags:
+    - slurm_controller
 
 
 - name: Create slurmdbd configuration file
@@ -150,6 +191,8 @@
   when: slurm_controller
   notify:
       - Restart slurmdbd
+  tags:
+    - slurm_controller
 
 - name: Create cgroup configuration file
   ansible.builtin.template:
@@ -158,9 +201,11 @@
     owner: root
     group: root
     mode: "0600"
-  when: slurm_slurmd
+  when: slurm_controller
   notify:
       - Restart slurmd
+  tags:
+    - slurm_controller
 
 
 - name: create slurmd service file
@@ -171,12 +216,22 @@
     group: root
     mode: "0644"
   when: slurm_slurmd
+  tags:
+    - slurm_slurmd
 
 - name: Start slurmd service
   ansible.builtin.service:
     name: slurmd
     state: started
     enabled: true
-  when: slurm_slurmd
+  when: slurm_slurmd and not ansible_is_chroot
+  tags:
+    - slurm_slurmd
+
+- name: Enable slurmd on image
+  ansible.builtin.shell: systemctl enable slurmd
+  when: ansible_is_chroot
+  tags:
+    - slurm_slurmd
 
 

@@ -7,13 +7,13 @@
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter
-    uid: 440
+    uid: "{{ uid }}"
   tags:
     - prometheus_node_exporter
 
 - name: Extract node_exporter downloaded tarball
   unarchive:
-    src: "https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz"
+    src: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version  }}/node_exporter-{{ node_exporter_version  }}.linux-amd64.tar.gz"
     dest: "/var/lib/node_exporter/"
     owner: nodeusr
     group: nodeusr
@@ -22,20 +22,9 @@
     - prometheus_node_exporter
 
 - name: Create systemd service file
-  blockinfile:
-    create: yes
-    path: /etc/systemd/system/node_exporter.service
-    block: |
-      [Unit]
-      Description=Node Exporter
-      After=network.target
-      [Service]
-      User=nodeusr
-      Group=nodeusr
-      Type=simple
-      ExecStart=/var/lib/node_exporter/node_exporter-1.3.1.linux-amd64/node_exporter --collector.textfile.directory /var/lib/node_exporter/textfile_collector
-      [Install]
-      WantedBy=multi-user.target
+  template:
+    src: node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service
   tags:
     - prometheus_node_exporter
 
@@ -46,11 +35,51 @@
     dest: /etc/systemd/system/multi-user.target.wants/node_exporter.service
   tags:
     - prometheus_node_exporter
+
+- name: Create textfile_collector directory
+  file:
+    path: /var/lib/node_exporter/textfile_collector
+    state: directory
+    mode: 0755
+  tags:
+    - prometheus_node_exporter
       
 - name: Start the systemd service file if this is not a chroot
   service:
     name: node_exporter
     state: started
-  when: not ansible_is_chroot
+    when: not ansible_is_chroot
+  tags:
+    - prometheus_node_exporter
+
+- name: Verify that smartmontools is installed
+  yum:
+    name: smartmontools
+    state: latest
+  when: ansible_distribution == 'CentOS'
+  tags:
+    - prometheus_node_exporter
+
+- name: Verify that smartmontools is installed
+  package:
+    name: smartmontools
+    state: latest
+  when: ansible_distribution == 'Debian'
+  tags:
+    - prometheus_node_exporter
+
+- name: Fetch smartmon shell script file
+  get_url:
+    url: "{{ smartmon  }}"
+    dest: "/var/lib/node_exporter/smartmon.sh"
+    mode: 0755
+  tags:
+    - prometheus_node_exporter
+
+- name: Crontab the smartmon shell script file
+  cron:
+    name: "run smartmon.sh to node_exporter collector"
+    special_time: hourly
+    job: "/var/lib/node_exporter/smartmon.sh > /var/lib/node_exporter/textfile_collector/smart_status.out"
   tags:
     - prometheus_node_exporter

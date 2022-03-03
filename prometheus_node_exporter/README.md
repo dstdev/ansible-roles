@@ -13,10 +13,9 @@ None
 Role Variables
 --------------
 
-smartmon: Link to the smartmon.sh script you want to use
-node_exporter_link: link path to the downloads section for node_exporter plugin
-node_exporter_version: Particular version you wish to download
-uid: The nodeusr uid
+* node_exporter_link: link path to the downloads section for node_exporter plugin
+* node_exporter_version: Particular version you wish to download
+* uid: The nodeusr uid
 
 Example Playbook
 ----------------

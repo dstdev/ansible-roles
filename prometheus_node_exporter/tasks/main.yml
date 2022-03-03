@@ -48,7 +48,7 @@
   service:
     name: node_exporter
     state: started
-    when: not ansible_is_chroot
+  when: not ansible_is_chroot
   tags:
     - prometheus_node_exporter
 
@@ -69,8 +69,8 @@
     - prometheus_node_exporter
 
 - name: Fetch smartmon shell script file
-  get_url:
-    url: "{{ smartmon  }}"
+  copy:
+    src: "smartmon.sh"
     dest: "/var/lib/node_exporter/smartmon.sh"
     mode: 0755
   tags:
@@ -80,6 +80,6 @@
   cron:
     name: "run smartmon.sh to node_exporter collector"
     special_time: hourly
-    job: "/var/lib/node_exporter/smartmon.sh > /var/lib/node_exporter/textfile_collector/smart_status.out"
+    job: "/var/lib/node_exporter/smartmon.sh > /var/lib/node_exporter/textfile_collector/smart_status.prom 2>&1"
   tags:
     - prometheus_node_exporter

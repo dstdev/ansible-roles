@@ -6,12 +6,12 @@ slurm_slurmd: false
 slurm_controller: false
 slurm_uid: 450
 slurm_gid: 450
-slurm_control_machine: 127.0.0.1
-slurm_control_address: 127.0.0.1
+slurm_controller_hostname: localhost
+slurm_controller_ip: 127.0.0.1
 slurm_controller_port: 6817
 slurm_daemon_port: 6818
 # this slurm user needs to be investigate?
-slurm_user: root
+slurm_user: slurm
 slurm_cluster_name: cluster
 slurm_controller_debug: 3
 slurm_daemon_debug: 3

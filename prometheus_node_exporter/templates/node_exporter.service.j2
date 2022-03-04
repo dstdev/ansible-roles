@@ -1,0 +1,10 @@
+[Unit]
+Description=Node Exporter
+After=network.target
+[Service]
+User=nodeusr
+Group=nodeusr
+Type=simple
+ExecStart=/var/lib/node_exporter/node_exporter-"{{ node_exporter_version }}".linux-amd64/node_exporter --collector.textfile.directory /var/lib/node_exporter/textfile_collector
+[Install]
+WantedBy=multi-user.target

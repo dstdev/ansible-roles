@@ -13,6 +13,8 @@ Role Variables
 --------------
 
 * uid: The nodeusr uid; same user as the node_exporter
+* slurm_bin_loc: binary location for the slurm tools (sacct, sinfo, etc)
+* slurm_conf_loc: configuration file location for slurm
 
 Example Playbook
 ----------------

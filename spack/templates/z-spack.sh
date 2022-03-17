@@ -10,13 +10,3 @@ module unuse {{unuse_module}}
 {% for default_module in spack_default_module_paths %}
 module use {{default_module}}
 {% endfor %}
-
-{% if spack_root_only_module_paths %}
-if (( "$EUID" != 0 )); then
-{% for module_path in spack_root_only_module_paths %}
-  module unuse {{module_path}}
-{% endfor %}
-fi
-{% endif %}
-
-

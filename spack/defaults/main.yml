@@ -1,14 +1,15 @@
 ---
 # defaults file for spack
 spack_repo: https://github.com/spack/spack.git
+spack_version: "HEAD"
 spack_root: /opt/spack
 spack_default_module_paths:
   - "{{spack_root}}/share/spack/modules/"
 spack_app_root: "{{spack_root}}/opt/"
 spack_module_root: "{{spack_root}}/share/spack/modules"
 spack_scratch_dir: /tmp
-spack_headnode: false
+spack_root_host: false
+spack_bright: true
 spack_unuse_module_paths: []
-spack_root_only_module_paths: []
 spack_default_modules: ""
 spack_prefix_lines: []

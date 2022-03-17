@@ -11,19 +11,19 @@ None
 Role Variables
 --------------
 
-| Name | Default Value | Description |
-| ---- | ----- | ----------- |
-| spack_repo | https://github.com/spack/spack.git | Spack github repo |
-| spack_root | /opt/spack | Location to install spack repository |
-| spack_default_module_paths | {{spack_root}}/share/spack/modules/ | List of default module paths |
-| spack_app_root | "{{spack_root}}/opt/" | Root directory to install applications |
-| spack_module_root | "{{spack_root}}/share/spack/modules" | Module file root directory |
-| spack_scratch_dir | /tmp | Scratch directory use during compilation |
-| spack_headnode | false | If system is headnode.  If true/yes, git repo is install here |
-| spack_unuse_module_paths | [] | Module paths to unuse, such as defaults from lmod install |
-| spack_root_only_module_paths | [] | Module paths to only make available to root user|
-| spack_default_modules | "" | Default modules to load |
-| spack_prefix_lines | [] | Line to add to to of profile scripts |
+| Name                         | Default Value                        | Description                                                                                             |
+| ----                         | -----                                | -----------                                                                                             |
+| spack_repo                   | https://github.com/spack/spack.git   | Spack github repo                                                                                       |
+| spack_root                   | /opt/spack                           | Location to install spack repository                                                                    |
+| spack_version                | HEAD                                 | Git reference to pin to                                                                                 |
+| spack_default_module_paths   | {{spack_root}}/share/spack/modules/  | List of default module paths                                                                            |
+| spack_app_root               | "{{spack_root}}/opt/"                | Root directory to install applications                                                                  |
+| spack_module_root            | "{{spack_root}}/share/spack/modules" | Module file root directory                                                                              |
+| spack_scratch_dir            | /tmp                                 | Scratch directory use during compilation                                                                |
+| spack_root_host              | false                                | If system is the root host (i.e. headnode) to install to images.  If true/yes, git repo is install here |
+| spack_unuse_module_paths     | []                                   | Module paths to unuse, such as defaults from lmod install                                               |
+| spack_default_modules        | ""                                   | Default modules to load                                                                                 |
+| spack_prefix_lines           | []                                   | Line to add to top of profile scripts                                                                   |
 
 Dependencies
 ------------

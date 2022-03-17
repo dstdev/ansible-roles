@@ -3,7 +3,8 @@
   git:
     repo: "{{spack_repo}}"
     dest: "{{spack_root}}"
-  when: spack_headnode | bool
+    version: "{{spack_version}}"
+  when: spack_root_host | bool
 
 - name: Copy spack sh config
   template:  
@@ -20,12 +21,14 @@
     path: /etc/sysconfig/modules/lmod/cm-lmod-init.sh
     regexp: ENABLE_LMOD
     line: "export ENABLE_LMOD=1"
+  when: spack_bright
 
 - name: enable lmod csh
   lineinfile:
     path: /etc/sysconfig/modules/lmod/cm-lmod-init.csh
     regexp: ENABLE_LMOD
     line: 'setenv ENABLE_LMOD "1"'
+  when: spack_bright
 
 - name: Copy spack configuration file
   template:
@@ -33,7 +36,7 @@
     dest: "{{spack_root}}/etc/spack/config.yaml"
     backup: yes
     force: no
-  when: spack_headnode | bool
+  when: spack_root_host | bool
 
 - name: Copy spack module configuration file
   copy:
@@ -41,7 +44,7 @@
     dest: "{{spack_root}}/etc/spack/modules.yaml"
     backup: yes
     force: no
-  when: spack_headnode | bool
+  when: spack_root_host | bool
 
 
 - name: Copy spack package configuration file
@@ -49,4 +52,4 @@
     src: files/packages.yaml
     dest: "{{spack_root}}/etc/spack/packages.yaml"
     force: no
-  when: spack_headnode | bool
+  when: spack_root_host | bool

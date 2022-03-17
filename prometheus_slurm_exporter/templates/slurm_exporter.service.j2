@@ -2,10 +2,11 @@
 Description=Prometheus Slurm Exporter
 After=network.target
 [Service]
+Environment=SLURM_CONF="{{ slurm_conf_loc  }}"
+Environment=PATH=$PATH:"{{ slurm_bin_loc  }}"
 User=nodeusr
 Group=nodeusr
 Type=simple
-ExecStartPre="module load slurm"
 ExecStart=/var/lib/node_exporter/prometheus-slurm-exporter --listen-address=127.0.0.1:9101
 [Install]
 WantedBy=multi-user.target

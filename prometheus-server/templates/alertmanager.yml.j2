@@ -1,0 +1,17 @@
+{{ ansible_managed | comment }}
+
+global:
+
+  resolve_timeout: {{ alertmanager_resolve_timeout | quote}}
+{% if alertmanager_slack_api_url | string | length %}
+  slack_api_url: {{ alertmanager_slack_api_url | quote }}
+{% endif %}
+
+route:
+  receiver: 'slack-notifications'
+
+receivers:
+- name: 'slack-notifications'
+  slack_configs:
+  - channel: {{ alertmanager_slack_channel }}
+    send_resolved: true

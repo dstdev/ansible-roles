@@ -1,0 +1,51 @@
+---
+# http://prometheus.io/docs/introduction/getting_started/
+#
+
+- name: set internal variables for convenience, part 1
+  set_fact:
+    prometheus_alertmanager_signature: "alertmanager-{{ prometheus_alertmanager_version }}.{{ prometheus_platform_suffix }}"
+
+- name: set internal variables for convenience, part 2
+  set_fact:
+    prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
+    prometheus_alertmanager_daemon_dir: "{{ prometheus_install_path }}/{{ prometheus_alertmanager_signature }}"
+    prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/v{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
+
+- name: download and extract alertmanager tarball
+  unarchive:
+    src: "{{ prometheus_alertmanager_tarball_url }}"
+    dest: "{{ prometheus_alertmanager_untar_path }}"
+    copy: no
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "go-w"
+
+- name: mkdir for alertmanager data
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rwx,g=rx,o="
+  with_items:
+    - "{{ prometheus_alertmanager_db_path }}"
+
+- name: copy systemd config to server
+  template:
+    src: "../templates/alertmanager.service.j2"
+    dest: "/etc/systemd/system/alertmanager.service"
+  notify:
+    - restart alertmanager
+
+- name: copy alertmanager config
+  template:
+    force: true
+    src: alertmanager.yml.j2
+    dest: "{{ prometheus_config_path }}/alertmanager.yml"
+    owner: prometheus
+    group: prometheus
+    mode: 0644
+    validate: "{{ prometheus_alertmanager_daemon_dir }}/amtool check-config %s"
+  notify:
+    - restart alertmanager

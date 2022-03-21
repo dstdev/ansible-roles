@@ -10,7 +10,6 @@
   rpm_key:
     key: https://packages.grafana.com/gpg.key
     state: present
-  become: true
 
 - name: install grafana  rpm repository
   yum_repository:
@@ -19,18 +18,19 @@
     baseurl: https://packages.grafana.com/oss/rpm
     gpgcheck: true
     gpgkey: https://packages.grafana.com/gpg.key
-  become: true
 
 - name: install grafana
   yum:
     name: grafana
     state: present
-  become: true
 
 - name: grafana is installed
   yum:
     name=grafana
     state=installed
+  retries: 5
+  delay: 2
+  notify: restart grafana
 
 - name: grafana is running and enabled
   service:
@@ -38,8 +38,68 @@
     state=started
     enabled=yes
 
-- name: Disabling SELinux state
-  selinux:
-    state: disabled
-  notify:
-    - restart server
+# - name: Disabling SELinux state
+#   selinux:
+#     state: disabled
+#   notify:
+#     - restart server
+
+- name: create prometheus datasource
+  community.grafana.grafana_datasource:
+    name: dst_prometheus
+    ds_type: prometheus
+    ds_url: "{{ datasource_url }}"
+    url: "{{ grafana_url }}"
+    is_default: yes
+    # access: proxy
+    # tls_skip_verify: true
+    # additional_json_data:
+    #   httpHeaderName1: "Authorization"
+    # additional_secure_json_data:
+    #   httpHeaderValue1: "Bearer ihavenogroot"
+
+
+# - name: Import Grafana dashboard Node Exporter
+#   community.grafana.grafana_dashboard:
+#     grafana_url: "{{ grafana_url }}"
+#     # grafana_api_key: "{{ grafana_api_key }}"
+#     # folder: node_exporter
+#     overwrite: yes
+#     dashboard_id: 1860
+
+# - name: Import Grafana dashboard Slurm
+#   community.grafana.grafana_dashboard:
+#     grafana_url: "{{ grafana_url }}"
+#     # grafana_api_key: "{{ grafana_api_key }}"
+#     # folder: slurm
+#     dashboard_id: 4323
+
+- name: copy dashboard files to server
+  copy:
+    src: "../files/slurm_dashboard.json"
+    dest: "/tmp/"
+
+
+- name: Import Grafana dashboard slurm_dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_url }}"
+    # grafana_api_key: "{{ grafana_api_key }}"
+    state: present
+    commit_message: Updated by ansible
+    overwrite: yes
+    path: /tmp/slurm_dashboard.json
+
+- name: copy dashboard files to server
+  copy:
+    src: "../files/node-exporter-full_rev26.json"
+    dest: "/tmp/"
+
+
+- name: Import Grafana dashboard node-exporter-full_rev26
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_url }}"
+    # grafana_api_key: "{{ grafana_api_key }}"
+    state: present
+    commit_message: Updated by ansible
+    overwrite: yes
+    path: /tmp/node-exporter-full_rev26.json

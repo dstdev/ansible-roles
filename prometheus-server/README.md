@@ -38,11 +38,12 @@ Including an example of how to use your role (for instance, with variables passe
   vars:
     prometheus_components:
       - prometheus
-      - node_exporter
+      # - node_exporter # It can be replaced with an updated "prometheus_node_exporter" role
       - alertmanager
 
     alertmanager_slack_api_url: 'https://hooks.slack.com/services/API'
-    prometheus_targets: '#alerts-testing'
+    alertmanager_slack_channel: '#alerts-testing'
+    prometheus_targets:
       node:
       - targets:
         - localhost:9100

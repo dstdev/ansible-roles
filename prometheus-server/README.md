@@ -34,9 +34,7 @@ Including an example of how to use your role (for instance, with variables passe
 - hosts: all
   become: yes
   roles:
-   - prometheus-server
-     - ansible-prometheus
-     - cloudalchemy.prometheus
+    - prometheus-server
   vars:
     prometheus_components:
       - prometheus

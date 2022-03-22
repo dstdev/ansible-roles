@@ -2,21 +2,23 @@ prometheus-server
 =========
 
 Install prometheus-server with ansible. 
+It is optional to choose any of the following prometheus components to install:
+- prometheus
+- node_exporter
+- alertmanager
 
 Requirements
 ------------
 
-Has been tested in centos 7
-ansible [core 2.12.3]
-python version = 3.9.10 (main, Jan 15 2022, 11:48:15) [Clang 12.0.0 (clang-1200.0.32.29)]
-jinja version = 3.0.3
+Has been tested in centos 7 targets and the following ansible execution environments:
+- ansible [core 2.12.3]
+- python version = 3.9.10 (main, Jan 15 2022, 11:48:15) [Clang 12.0.0 (clang-1200.0.32.29)]
+- jinja version = 3.0.3
 
 Role Variables
 --------------
 
 All variables which can be overridden are stored in defaults/main.yml file with default values.
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
 Dependencies
 ------------
@@ -27,7 +29,7 @@ Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
+```yaml
 ---
 - hosts: all
   become: yes
@@ -50,6 +52,7 @@ Including an example of how to use your role (for instance, with variables passe
         - node02:9100
         labels:
           env: dev_nodes
+```
 
 License
 -------

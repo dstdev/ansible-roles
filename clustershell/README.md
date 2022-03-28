@@ -1,13 +1,12 @@
-Role Name
+Clustershell
 =========
 
-This role installs clush (cluster shell), a program for executing commands in parallel on a cluster and for gathering their results, on specified nodes.
-This role was generated using "ansible-galaxy init clush", so any strangeness may be due to that.
+ClusterShell provides a light and unified command execution Python framework to help administer GNU/Linux or BSD clusters.
 
 Requirements
 ------------
 
-No requirements at the moment.
+Python 3.6 or greater
 
 Role Variables
 --------------
@@ -36,4 +35,8 @@ BSD
 Author Information
 ------------------
 
-Shawn.
+An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+
+Todo
+----
+- [ ] Automaticaly detect and configure for traefik

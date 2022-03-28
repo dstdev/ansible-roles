@@ -67,20 +67,19 @@
 #     overwrite: yes
 #     dashboard_id: 1860
 
-# - name: Import Grafana dashboard Slurm
-#   community.grafana.grafana_dashboard:
-#     grafana_url: "{{ grafana_url }}"
-#     # grafana_api_key: "{{ grafana_api_key }}"
-#     # folder: slurm
-#     dashboard_id: 4323
-
 - name: copy dashboard files to server
   copy:
-    src: "../files/slurm_dashboard.json"
-    dest: "/tmp/"
+    src: "../files/{{item}}"
+    dest: /tmp/
+    # owner: root
+    # group: root
+    # mode: 0644
+  loop:
+    - slurm_dashboard.json
+    - node-exporter-full_rev26.json
+    - nvidia_dcgm.json
 
-
-- name: Import Grafana dashboard slurm_dashboard
+- name: Import Grafana dashboard slurm_dashboard.json
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
     # grafana_api_key: "{{ grafana_api_key }}"
@@ -89,13 +88,7 @@
     overwrite: yes
     path: /tmp/slurm_dashboard.json
 
-- name: copy dashboard files to server
-  copy:
-    src: "../files/node-exporter-full_rev26.json"
-    dest: "/tmp/"
-
-
-- name: Import Grafana dashboard node-exporter-full_rev26
+- name: Import Grafana dashboard node-exporter-full_rev26.json
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
     # grafana_api_key: "{{ grafana_api_key }}"
@@ -103,3 +96,12 @@
     commit_message: Updated by ansible
     overwrite: yes
     path: /tmp/node-exporter-full_rev26.json
+
+- name: Import Grafana dashboard nvidia_dcgm.json
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_url }}"
+    # grafana_api_key: "{{ grafana_api_key }}"
+    state: present
+    commit_message: Updated by ansible
+    overwrite: yes
+    path: /tmp/nvidia_dcgm.json

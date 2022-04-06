@@ -2,8 +2,8 @@
 Description=Prometheus Slurm Exporter
 After=network.target
 [Service]
-Environment=SLURM_CONF="{{ slurm_conf_loc  }}"
-Environment=PATH=$PATH:"{{ slurm_bin_loc  }}"
+Environment="SLURM_CONF={{ slurm_conf_loc  }}"
+Environment="PATH=$PATH:{{ slurm_bin_loc  }}"
 User=nodeusr
 Group=nodeusr
 Type=simple

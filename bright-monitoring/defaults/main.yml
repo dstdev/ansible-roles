@@ -1,0 +1,4 @@
+---
+# defaults file for bright-monitoring
+bright_configfile_dir: "/cm/local/apps/cmd/scripts/healthchecks/configfiles/"
+bright_rogue_process_legit_user: []

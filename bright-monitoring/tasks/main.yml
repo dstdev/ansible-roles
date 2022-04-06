@@ -1,0 +1,10 @@
+---
+# tasks file for bright-monitoring
+- name: Add legit user to rogue_process config
+  ansible.builtin.lineinfile:
+    path: "{{bright_configfile_dir}}/rogueprocess.py"
+    line: "legitUsers += {{bright_rogue_process_legit_user}}"
+  tags:
+    - bright_monitoring
+
+

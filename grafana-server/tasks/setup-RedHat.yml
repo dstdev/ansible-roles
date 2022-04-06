@@ -1,10 +1,10 @@
 ---
-  # tasks file for grafana-server-dev
+# tasks file for grafana-server-dev
 - name: permit traffic in default zone on port 3000/tcp
   ansible.posix.firewalld:
-   port: 3000/tcp
-   permanent: yes
-   state: enabled
+    port: 3000/tcp
+    permanent: yes
+    state: enabled
 
 - name: install grafana rpm key
   rpm_key:

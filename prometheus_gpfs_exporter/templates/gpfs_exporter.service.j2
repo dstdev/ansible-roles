@@ -1,0 +1,10 @@
+[Unit]
+Description=GPFS Exporter
+After=network.target
+[Service]
+User=nodeusr
+Group=nodeusr
+Type=simple
+ExecStart={{ executable_path }}/ibm-spectrum-exporter
+[Install]
+WantedBy=multi-user.target

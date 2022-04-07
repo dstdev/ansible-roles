@@ -1,0 +1,10 @@
+[Unit]
+Description=DCGM Exporter
+After=network.target
+[Service]
+User=nodeusr
+Group=nodeusr
+Type=simple
+ExecStart={{ executable_path }}
+[Install]
+WantedBy=multi-user.target

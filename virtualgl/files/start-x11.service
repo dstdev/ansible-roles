@@ -1,0 +1,12 @@
+[Unit]
+Description=Start X11 without DM
+After=network.target
+
+# Run the replace-busids.py first
+Wants=replace-busids.service
+After=replace-busids.service
+[Service]
+Type=simple
+ExecStart=/usr/bin/X -core -noreset :0 -seat seat0 -nolisten tcp vt1 -novtswitch -background none
+[Install]
+Alias=display-manager.service

@@ -1,0 +1,59 @@
+# Ansible generated Xorg configuration file for use with VirtualGL
+
+Section "DRI"
+        Mode 0666
+EndSection
+
+Section "ServerFlags"
+        Option         "IgnoreABI" "1"
+        Option         "nolisten" "True"
+        Option         "AutoAddDevices" "False"
+EndSection
+
+Section "InputDevice"
+
+    # generated from default
+    Identifier     "Mouse0"
+    Driver         "mouse"
+    Option         "Protocol" "auto"
+    Option         "Device" "/dev/input/mice"
+    Option         "Emulate3Buttons" "no"
+    Option         "ZAxisMapping" "4 5"
+EndSection
+
+Section "InputDevice"
+
+    # generated from default
+    Identifier     "Keyboard0"
+    Driver         "kbd"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor0"
+    VendorName     "Unknown"
+    ModelName      "Unknown"
+    HorizSync       28.0 - 33.0
+    VertRefresh     43.0 - 72.0
+    Option         "DPMS"
+    Option         "IgnoreEDID"
+EndSection
+
+Section "Device"
+    Identifier     "Device0"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BusID          "{{ busid }}"
+    Option         "AllowEmptyInitialConfiguration"
+EndSection
+
+Section "Screen"
+    Identifier     "Screen0"
+    Device         "Device0"
+    Monitor        "Monitor0"
+    DefaultDepth    24
+    Option         "UseDisplayDevice" "none"
+    Option         "HardDPMS"         "False"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection

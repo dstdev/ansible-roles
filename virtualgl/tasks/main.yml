@@ -1,0 +1,45 @@
+# Installs and configures X11 to start an X server based off of the avaiable GPUs. One completed
+# installs VirtualGL and configures.
+# VARS: 
+# - Listed in the vars/main.yml file
+# - 
+---
+- name: Gather GPU BusID information
+  command:
+    cmd: nvidia-xconfig --query-gpu-info | grep -i BusID
+  register: busid_list 
+  tags:
+    - virtualgl
+
+- name: Form list of all GPU BusIDs (gather the first one for now)
+  set_fact:
+    busid: "{{ busid_list.splitlines()[0].split(':', 1)[1] }}"
+
+- name: Write X11.org configuration file from BusID above
+  template:
+    src: xorg.conf.j2
+    dest: /etc/X11/xorg.conf
+  tags:
+    - virtualgl
+
+- name: Install VirtualGL
+  yum:
+    name: "{{ download }}"
+    state: present
+  tags:
+    - virtualgl
+
+- name: Install LightDM
+  yum:
+    name: lightdm
+    state: present
+  tags:
+    - virtualgl
+
+- name: Start/enable LightDM
+  service:
+    name: lightdm
+    state: started
+    enabled: yes
+
+    

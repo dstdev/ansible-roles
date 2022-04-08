@@ -5,6 +5,7 @@
   set_fact:
     prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz"
     prometheus_daemon_dir: "{{ prometheus_install_path }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}"
+  tags: alert_rules
 
 - name: download and extract prometheus tarball
   unarchive:
@@ -44,13 +45,25 @@
   notify:
     - restart prometheus
 
-- name: copy dst rule files
+# - name: copy alert rule files
+#   copy:
+#     src: "../files/alert-dst.rules"
+#     dest: "{{ prometheus_rule_path }}/alert-dst.rules"
+#     validate: "{{ prometheus_daemon_dir }}/promtool check rules %s"
+#   notify:
+#     - restart prometheus
+#   tags: alert_rules
+
+- name: copy alert rule files
   copy:
-    src: "../files/alert-dst.rules"
-    dest: "{{ prometheus_rule_path }}/alert-dst.rules"
+    src: "../files/{{item}}"
+    dest: "{{ prometheus_rule_path }}/"
     validate: "{{ prometheus_daemon_dir }}/promtool check rules %s"
+  loop:
+    - alert-dst.rules
   notify:
     - restart prometheus
+  tags: alert_rules
 
 - name: alerting rules file
   template:

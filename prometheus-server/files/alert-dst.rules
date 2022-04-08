@@ -1,4 +1,26 @@
 groups:
+- name: smartmon_rules
+  rules:
+  - alert: NodeDiskErrs
+    annotations:
+      summary: Disk encounted smartmon_offline_uncorrectable_raw_value = {{ printf "%.0f" $value }}.
+      description: '{{ $labels.instance }} interface {{ $labels.device }} has encountered
+        errors in the last hour.'
+    expr: (smartmon_offline_uncorrectable_raw_value) > 0
+    for: 1h
+    labels:
+      severity: critical
+
+  - alert: NodeDiskFailed
+    annotations:
+      summary: Disk encounted smartmon_end_to_end_error_raw_value = {{ printf "%.0f" $value }}.
+      description: '{{ $labels.instance }} interface {{ $labels.device }} has disks failing
+        in the last hour.'
+    expr: (smartmon_end_to_end_error_raw_value) > 0
+    for: 1h
+    labels:
+      severity: critical
+
 - name: Exporter Alerts
   rules:
   - alert: Node down

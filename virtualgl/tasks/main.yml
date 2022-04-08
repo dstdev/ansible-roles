@@ -1,6 +1,6 @@
 ---
 - name: Write X11.org configuration file
-  file:
+  copy:
     src: xorg.conf
     dest: /etc/X11/xorg.conf
   tags:
@@ -63,5 +63,14 @@
     name: start-x11
     state: started
   when: not ansible_is_chroot
+  tags:
+    - virtualgl
+
+# Bright specific
+- name: Install cuda-xorg package if using Bright
+  yum:
+    name: cuda-xorg
+    state: present
+  when: using_bright
   tags:
     - virtualgl

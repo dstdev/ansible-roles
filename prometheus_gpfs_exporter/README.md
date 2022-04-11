@@ -1,9 +1,8 @@
-Prometheus Node Exporter
+GPFS Node Exporter
 =========
+IBM Spectrum Exporter is a Prometheus exporter to collect & export data from IBM Spectrum.
 
-Role which installs the prometheus node_exporter module for hardware and OS metrics exposed by *NIX kernels, written in Go with pluggable metric collectors.
-
-[Prometheus Node Exporter](https://github.com/prometheus/node_exporter)
+[IBM Spectrum Exporter](https://github.com/topine/ibm-spectrum-exporter)
 
 Requirements
 ------------
@@ -13,8 +12,9 @@ None
 Role Variables
 --------------
 
-* node_exporter_link: link path to the downloads section for node_exporter plugin
-* node_exporter_version: Particular version you wish to download
+* gpfs_exporter_link: link path to the downloads section for exporter plugin
+* gpfs_exporter_version: Particular version you wish to download
+* executable_path: location in which to install exporter
 * uid: The nodeusr uid
 
 Example Playbook
@@ -25,4 +25,4 @@ Including an example of how to use your role (for instance, with variables passe
 ---
   - hosts: servers
     roles:
-      - prometheus_node_exporter
+      - prometheus_gpfs_exporter

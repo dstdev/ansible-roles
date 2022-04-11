@@ -89,6 +89,7 @@
     validate: "{{ prometheus_daemon_dir }}/promtool check config %s"
   notify:
     - restart prometheus
+  tags: alert_rules
 
 - name: configure Prometheus web
   copy:

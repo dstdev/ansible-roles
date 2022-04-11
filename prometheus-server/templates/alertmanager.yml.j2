@@ -1,3 +1,4 @@
+
 {{ ansible_managed | comment }}
 
 global:
@@ -15,3 +16,29 @@ receivers:
   slack_configs:
   - channel: {{ alertmanager_slack_channel }}
     send_resolved: true
+
+{% raw %}
+    title: '{{ template "slack.monzo.title" . }}'
+    icon_emoji: '{{ template "slack.monzo.icon_emoji" . }}'
+    color: '{{ template "slack.monzo.color" . }}'
+    text: '{{ template "slack.monzo.text" . }}'
+    actions:
+    - type: button
+      text: 'Runbook :green_book:'
+      url: '{{ (index .Alerts 0).Annotations.runbook }}'
+    - type: button
+      text: 'Query :mag:'
+      url: '{{ (index .Alerts 0).GeneratorURL }}'
+    - type: button
+      text: 'Dashboard :grafana:'
+      url: '{{ (index .Alerts 0).Annotations.dashboard }}'
+    - type: button
+      text: 'Silence :no_bell:'
+      url: '{{ template "__alert_silence_link" . }}'
+    - type: button
+      text: '{{ template "slack.monzo.link_button_text" . }}'
+      url: '{{ .CommonAnnotations.link_url }}'
+{% endraw %}
+
+templates:
+  - "{{ prometheus_config_path }}/*.tmpl"

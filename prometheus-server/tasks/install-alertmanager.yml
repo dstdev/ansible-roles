@@ -5,13 +5,15 @@
 - name: set internal variables for convenience, part 1
   set_fact:
     prometheus_alertmanager_signature: "alertmanager-{{ prometheus_alertmanager_version }}.{{ prometheus_platform_suffix }}"
+  tags: alert_templates
 
 - name: set internal variables for convenience, part 2
   set_fact:
     prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
     prometheus_alertmanager_daemon_dir: "{{ prometheus_install_path }}/{{ prometheus_alertmanager_signature }}"
     prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/v{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
-
+  tags: alert_templates
+  
 - name: download and extract alertmanager tarball
   unarchive:
     src: "{{ prometheus_alertmanager_tarball_url }}"
@@ -38,6 +40,16 @@
   notify:
     - restart alertmanager
 
+- name: copy alert templates
+  copy:
+    src: "../files/{{item}}"
+    dest: "{{ prometheus_config_path }}/"
+  loop:
+    - monzo-slack-templates.tmpl
+  notify:
+    - restart prometheus
+  tags: alert_templates
+
 - name: copy alertmanager config
   template:
     force: true
@@ -49,3 +61,4 @@
     validate: "{{ prometheus_alertmanager_daemon_dir }}/amtool check-config %s"
   notify:
     - restart alertmanager
+  tags: alert_templates

@@ -24,4 +24,4 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - x2goserver
+         - x2go-server

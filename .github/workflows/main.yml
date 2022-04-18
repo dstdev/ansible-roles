@@ -1,0 +1,27 @@
+name: Molecule
+on:
+  - push
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        folder:
+          - prometheus_node_exporter
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+            #- name: Create .vault_password
+            #run: |
+            #echo $ENV_VAULT_PASSWORD > rglusic/ansible-workspaces/.vault_password
+            #shell: bash
+            #env:
+            #ENV_VAULT_PASSWORD: ${{secrets.VAULT_PASSWORD}}
+      - name: molecule
+        uses: gofrolist/molecule-action@v2
+        with:
+          molecule_working_dir: dstdev/ansible-roles/${{matrix.folder}}
+          molecule_command: test

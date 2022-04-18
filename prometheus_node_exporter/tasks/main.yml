@@ -56,7 +56,7 @@
   yum:
     name: smartmontools
     state: latest
-  when: ansible_distribution == 'CentOS'
+  when: ansible_os_family == 'RedHat'
   tags:
     - prometheus_node_exporter
 
@@ -64,7 +64,7 @@
   package:
     name: smartmontools
     state: latest
-  when: ansible_distribution == 'Debian'
+  when: ansible_os_family == 'Debian'
   tags:
     - prometheus_node_exporter
 
@@ -73,6 +73,22 @@
     src: "smartmon.sh"
     dest: "/var/lib/node_exporter/smartmon.sh"
     mode: 0755
+  tags:
+    - prometheus_node_exporter
+
+- name: Verify cron is installed
+  package:
+    name: cronie
+    state: present
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - prometheus_node_exporter
+
+- name: Verify cron is installed
+  apt:
+    name: cron
+    state: present
+  when: ansible_os_family == 'Debian'
   tags:
     - prometheus_node_exporter
 

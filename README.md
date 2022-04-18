@@ -1,3 +1,5 @@
+[![Molecule](https://github.com/dstdev/ansible-roles/actions/workflows/main.yml/badge.svg)](https://github.com/dstdev/ansible-roles/actions/workflows/main.yml)
+
 # DST General Roles
 
 Add to an existing ansible directory as its roles directory

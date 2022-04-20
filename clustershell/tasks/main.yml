@@ -1,23 +1,18 @@
----
-- hosts: clustershell
-  become: true
-  
-  #vars_file:
-  #- vars.yaml
-  
-  pre_tasks:
-    - name: Install/update epel repository if needed
-      yum:
-      name: epel-release
-      state: latest
-      when: ansible_facts['os_family'] == 'RedHat' and ansible_facts ['distribution_major_version'] == '7'
-      
+---  
+- name: Install/update epel repository if needed
+  ansible.builtin.package:
+    name: epel-release
+    state: present
+  when: ansible_facts['os_family'] == 'RedHat' and ansible_facts ['distribution_major_version'] == '7'
+  tags:
+    - clustershell      
+    
 # tasks file for clustershell
 # because this is a cluster utility tool, we will install to /etc with yum
 - name: Install clustershell
-  yum:
-  name: clustershell
-  state: present
+  ansible.builtin.package:
+    name: clustershell
+    state: present
   tags:
     - clustershell
     

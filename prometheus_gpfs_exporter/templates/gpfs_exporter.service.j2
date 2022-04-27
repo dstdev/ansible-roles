@@ -5,6 +5,6 @@ After=network.target
 User=nodeusr
 Group=nodeusr
 Type=simple
-ExecStart={{ executable_path }}/ibm-spectrum-exporter
+ExecStart={{ executable_path }}/gpfs_exporter-{{ gpfs_exporter_version }}.linux-amd64/gpfs_exporter
 [Install]
 WantedBy=multi-user.target

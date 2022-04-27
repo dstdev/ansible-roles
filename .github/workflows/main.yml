@@ -25,4 +25,4 @@ jobs:
         uses: gofrolist/molecule-action@v2
         with:
           molecule_working_dir: dstdev/ansible-roles/${{matrix.folder}}
-          molecule_command: test
+          molecule_command: converge

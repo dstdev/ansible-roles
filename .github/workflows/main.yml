@@ -9,6 +9,7 @@ jobs:
       matrix:
         folder:
           - prometheus_node_exporter
+          - prometheus_gpfs_exporter
     steps:
       - name: checkout
         uses: actions/checkout@v2

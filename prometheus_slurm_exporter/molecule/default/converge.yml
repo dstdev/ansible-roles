@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include prometheus_slurm_exporter"
+      include_role:
+        name: "prometheus_slurm_exporter"

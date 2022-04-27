@@ -6,11 +6,11 @@ driver:
 platforms:
   - name: instance
     image: rockylinux
-    privileged: True
+    privileged: true
     volume_mounts:
       - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
     command: "/usr/sbin/init"
-    pre_build_image: true
+    pre_build_image: false
 provisioner:
   name: ansible
 verifier:

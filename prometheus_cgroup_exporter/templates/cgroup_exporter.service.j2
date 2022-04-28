@@ -1,0 +1,10 @@
+[Unit]
+Description=Cgroup Exporter
+After=network.target
+[Service]
+User=nodeusr
+Group=nodeusr
+Type=simple
+ExecStart={{ executable_path }}/cgroup_exporter-{{ exporter_version }}.linux-amd64/cgroup_exporter
+[Install]
+WantedBy=multi-user.target

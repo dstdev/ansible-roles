@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    ansible_is_chroot: true
+  tasks:
+    - name: "Include prometheus_dcgm_exporter"
+      include_role:
+        name: "prometheus_dcgm_exporter"

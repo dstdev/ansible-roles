@@ -13,6 +13,7 @@ Role Variables
 --------------
 
 | Name                  | Default                  | Description                                    |
+| --------------------- | ------------------------ | ---------------------------------------------- |
 | gpfs_exporter_version | "2.0.0"                  | Version to download                            |
 | executable_path       | "/usr/lib/node_exporter" | Path to executable location                    |
 | uid                   | "771"                    | UID to use for consistancy                     |

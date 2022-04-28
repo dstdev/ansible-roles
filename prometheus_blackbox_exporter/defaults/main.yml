@@ -1,0 +1,3 @@
+exporter_path: /var/lib/node_exporter
+exporter_version: 0.20.0
+uid: 440

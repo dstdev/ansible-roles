@@ -8,94 +8,70 @@
     shell: /sbin/nologin
     home: /var/lib/node_exporter
     uid: "{{ uid }}"
-  tags:
-    - prometheus_node_exporter
 
 - name: Extract node_exporter downloaded tarball
   unarchive:
     src: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version  }}/node_exporter-{{ node_exporter_version  }}.linux-amd64.tar.gz"
-    dest: "/var/lib/node_exporter/"
+    dest: "{{ executable_path }}"
     owner: nodeusr
     group: nodeusr
     remote_src: yes
-  tags:
-    - prometheus_node_exporter
 
 - name: Create systemd service file
   template:
     src: node_exporter.service.j2
     dest: /etc/systemd/system/node_exporter.service
-  tags:
-    - prometheus_node_exporter
 
 - name: Enable the systemd service file manually
   file:
     state: link
     src: /etc/systemd/system/node_exporter.service
     dest: /etc/systemd/system/multi-user.target.wants/node_exporter.service
-  tags:
-    - prometheus_node_exporter
 
 - name: Create textfile_collector directory
   file:
     path: /var/lib/node_exporter/textfile_collector
     state: directory
     mode: 0755
-  tags:
-    - prometheus_node_exporter
       
 - name: Start the systemd service file if this is not a chroot
   service:
     name: node_exporter
     state: started
   when: not ansible_is_chroot
-  tags:
-    - prometheus_node_exporter
 
 - name: Verify that smartmontools is installed
-  yum:
+  dnf:
     name: smartmontools
     state: latest
   when: ansible_os_family == 'RedHat'
-  tags:
-    - prometheus_node_exporter
 
 - name: Verify that smartmontools is installed
   package:
     name: smartmontools
     state: latest
   when: ansible_os_family == 'Debian'
-  tags:
-    - prometheus_node_exporter
 
 - name: Fetch smartmon shell script file
   copy:
     src: "smartmon.sh"
     dest: "/var/lib/node_exporter/smartmon.sh"
     mode: 0755
-  tags:
-    - prometheus_node_exporter
 
 - name: Verify cron is installed
   package:
     name: cronie
     state: present
   when: ansible_os_family == 'RedHat'
-  tags:
-    - prometheus_node_exporter
 
 - name: Verify cron is installed
   apt:
     name: cron
     state: present
   when: ansible_os_family == 'Debian'
-  tags:
-    - prometheus_node_exporter
 
 - name: Crontab the smartmon shell script file
   cron:
     name: "run smartmon.sh to node_exporter collector"
     special_time: hourly
     job: "/var/lib/node_exporter/smartmon.sh > /var/lib/node_exporter/textfile_collector/smart_status.prom 2>&1"
-  tags:
-    - prometheus_node_exporter

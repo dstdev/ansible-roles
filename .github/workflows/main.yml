@@ -10,6 +10,9 @@ jobs:
         folder:
           - prometheus_node_exporter
           - prometheus_gpfs_exporter
+          - prometheus_dcgm_exporter
+          - prometheus_blackbox_exporter
+          - prometheus_ibm_exporter
           - prometheus_slurm_exporter
     steps:
       - name: checkout

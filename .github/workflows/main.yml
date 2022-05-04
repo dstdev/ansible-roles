@@ -16,17 +16,12 @@ jobs:
           - prometheus_slurm_exporter
           - prometheus_cgroup_exporter
           - virtualgl
+          - turbovnc
     steps:
       - name: checkout
         uses: actions/checkout@v2
         with:
           path: "${{ github.repository }}"
-            #- name: Create .vault_password
-            #run: |
-            #echo $ENV_VAULT_PASSWORD > rglusic/ansible-workspaces/.vault_password
-            #shell: bash
-            #env:
-            #ENV_VAULT_PASSWORD: ${{secrets.VAULT_PASSWORD}}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:

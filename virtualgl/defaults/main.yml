@@ -1,4 +1,2 @@
 ---
-using_bright: true
-busid: "PCI:4:0:0"
-download: "https://cfhcable.dl.sourceforge.net/project/virtualgl/3.0/VirtualGL-3.0.x86_64.rpm"
+download: "https://iweb.dl.sourceforge.net/project/virtualgl/3.0/VirtualGL-3.0.x86_64.rpm"

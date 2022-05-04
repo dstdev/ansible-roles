@@ -1,9 +1,9 @@
-VirtualGL
+TurboVNC
 =========
 
-This role installs VirtualGL v3.0 and configures it to use the new EGL backend for virtual rendering.
+This role installs TurboVNC v3.0
 
-[VirtualGL](https://virtualgl.org/)
+[TurboVNC](https://turbovnc.org/)
 
 Requirements
 ------------
@@ -15,7 +15,7 @@ Role Variables
 
 | Name                  | Default                                                                         | Description                                    |
 | --------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------- |
-| download              | "https://iweb.dl.sourceforge.net/project/virtualgl/3.0/VirtualGL-3.0.x86_64.rpm" | Download link to the rpm package provided by VirtualGL | 
+| download              | "https://cfhcable.dl.sourceforge.net/project/turbovnc/3.0/turbovnc-3.0.x86_64.rpm" | Download link to the rpm package provided by TurboVNC | 
 
 Tags
 --------------
@@ -35,5 +35,5 @@ Including an example of how to use your role (for instance, with variables passe
 ```
   - hosts: gpu_servers
     roles:
-      - virtualgl
+      - turbovnc
 ```

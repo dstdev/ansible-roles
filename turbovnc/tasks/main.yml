@@ -1,0 +1,12 @@
+---
+- name: Import TurboVNC GPG Key
+  rpm_key:
+    state: present
+    key: https://www.turbovnc.org/key/VGL-GPG-KEY
+  when: ansible_os_family == 'RedHat'
+
+- name: Install TurboVNC
+  yum:
+    name: "{{ download }}"
+    state: present
+  when: ansible_os_family == 'RedHat'

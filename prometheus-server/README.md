@@ -17,8 +17,8 @@ Has been tested in centos 7 targets and the following ansible execution environm
 
 Role Tags
 --------------
-```yaml
 The following tags are available:
+```yaml
 --tags alert_templates    # Updates alertmanager alert template
 --tags alert_rules        # Updates/add alert rules
 ```

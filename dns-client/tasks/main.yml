@@ -1,0 +1,8 @@
+---
+# tasks file for dns-client
+- name: DNS cliennt configuration
+  lineinfile:
+    path: /etc/resolv.conf
+    regexp: '^nameserver 172.17.11.107'
+    insertbefore: '^nameserver'
+    line: 'nameserver 172.17.11.107'

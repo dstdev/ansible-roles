@@ -123,7 +123,7 @@ prometheus_alert_rules:
   #     summary: 'Ensure entire alerting pipeline is functional'
   - alert: InstanceDown
     expr: 'up == 0'
-    for: 1m
+    for: 5m
     labels:
       severity: critical
     annotations:

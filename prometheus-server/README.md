@@ -18,6 +18,13 @@ Has been tested in centos 7 targets and the following ansible execution environm
 Role Variables
 --------------
 
+The following tags are available:
+--tags alert_templates    # Updates alertmanager alert template
+--tags alert_rules        # Updates/add alert rules
+
+Role Tags
+--------------
+
 All variables which can be overridden are stored in defaults/main.yml file with default values.
 
 Dependencies

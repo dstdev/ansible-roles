@@ -15,14 +15,14 @@ Has been tested in centos 7 targets and the following ansible execution environm
 - python version = 3.9.10 (main, Jan 15 2022, 11:48:15) [Clang 12.0.0 (clang-1200.0.32.29)]
 - jinja version = 3.0.3
 
-Role Variables
+Role Tags
 --------------
-
+```yaml
 The following tags are available:
 --tags alert_templates    # Updates alertmanager alert template
 --tags alert_rules        # Updates/add alert rules
-
-Role Tags
+```
+Role Variables
 --------------
 
 All variables which can be overridden are stored in defaults/main.yml file with default values.

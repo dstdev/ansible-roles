@@ -1,22 +1,4 @@
 groups:
-- alert: MemoryCorrectableErrors
-  expr: increase(node_edac_correctable_errors_total[1h]) >0
-  for: 1h
-  labels:
-    severity: critical
-  annotations:
-    summary: "node_edac_correctable_errors_total increase (instance {{ $labels.instance }})"
-    description: "node_edac_correctable_errors_total increase in 60 minutes: VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
-
-- alert: MemoryUncorrectableErrors
-  expr: increase(node_edac_uncorrectable_errors_total[1h]) >0
-  for: 1h
-  labels:
-    severity: critical
-  annotations:
-    summary: "node_edac_uncorrectable_errors_total increase (instance {{ $labels.instance }})"
-    description: "node_edac_uncorrectable_errors_total increase in 60 minutes: VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
-    
 - name: smartmon_rules
   rules:
   - alert: NodeDiskErrs
@@ -36,6 +18,23 @@ groups:
     for: 5m
     labels:
       severity: critical
+  - alert: MemoryCorrectableErrors
+    expr: increase(node_edac_correctable_errors_total[1h]) >0
+    for: 1h
+    labels:
+      severity: critical
+    annotations:
+      summary: "node_edac_correctable_errors_total increase (instance {{ $labels.instance }})"
+      description: "node_edac_correctable_errors_total increase in 60 minutes: VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+  - alert: MemoryUncorrectableErrors
+    expr: increase(node_edac_uncorrectable_errors_total[1h]) >0
+    for: 1h
+    labels:
+      severity: critical
+    annotations:
+      summary: "node_edac_uncorrectable_errors_total increase (instance {{ $labels.instance }})"
+      description: "node_edac_uncorrectable_errors_total increase in 60 minutes: VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
 - name: Exporter Alerts
   rules:

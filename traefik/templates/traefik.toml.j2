@@ -10,7 +10,6 @@ level = "{{traefik_debug_level}}"
   dashboard = true
 {% endif %}
 
-traefik_enable_dashboard
 [providers]
   [providers.docker]
     endpoint = "unix:///var/run/docker.sock"
@@ -29,11 +28,11 @@ traefik_enable_dashboard
 
   [entryPoints.websecure]
     address = ":443"
-
+{% if traefik_enable_letsencrypt %}
 [certificatesResolvers.letsencrypt.acme]
 email = "{{traefik_admin_email}}"
   storage = "/etc/traefik/acme/acme.json"
   [certificatesResolvers.letsencrypt.acme.httpChallenge]
     # used during the challenge
     entryPoint = "web"
-
+{% endif %}

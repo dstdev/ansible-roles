@@ -42,6 +42,24 @@
   tags:
     - common
 
+- name: Add dst user authorized_key
+  ansible.posix.authorized_key:
+    user: "dst"
+    state: present
+    key: "{{common_dst_authorized_key}}"
+  tags:
+    - common
+
+- name: Add dst user private_key
+  copy:
+    content: "{{common_dst_private_key}}"
+    dest: "/usr/local/dst/.ssh/id_rsa"
+    owner: "dst"
+    group: "dst"
+    mode: "0600"
+  tags:
+    - common
+
 - name: create users
   user:
     name: "{{item.name}}"

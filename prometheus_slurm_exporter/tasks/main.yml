@@ -8,8 +8,6 @@
     shell: /sbin/nologin
     home: /var/lib/node_exporter
     uid: "{{ uid }}"
-  tags:
-    - prometheus_slurm_exporter
 
 - name: Copy over the compiled slurm exporter
   copy:
@@ -19,28 +17,20 @@
     group: nodeusr
     remote_src: no
     mode: 0755
-  tags:
-    - prometheus_slurm_exporter
 
 - name: Create systemd service file
   template:
     src: slurm_exporter.service.j2
     dest: /etc/systemd/system/slurm_exporter.service
-  tags:
-    - prometheus_slurm_exporter
 
 - name: Enable the systemd service file manually
   file:
     state: link
     src: /etc/systemd/system/slurm_exporter.service
     dest: /etc/systemd/system/multi-user.target.wants/slurm_exporter.service
-  tags:
-    - prometheus_slurm_exporter
 
 - name: Start the systemd service file if this is not a chroot
   service:
     name: slurm_exporter
     state: started
   when: not ansible_is_chroot
-  tags:
-    - prometheus_slurm_exporter

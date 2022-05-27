@@ -1,0 +1,25 @@
+---
+# tasks file for ldap-client
+- name: Install openldap
+  yum:
+    name: openldap
+    state: latest
+
+- name: Install openldap-clients
+  yum:
+    name: openldap-clients
+    state: latest
+
+- name: Install nss-pam-ldapd
+  yum:
+    name: nss-pam-ldapd
+    state: latest
+
+- name: Configure LDAP Auth
+  ansible.builtin.command: authconfig --enableldap --enableldapauth --ldapserver=dev-util-01.dst.dev --ldapbasedn="dc=dst,dc=dev" --enablemkhomedir --update
+
+- name: Test LDAP connection
+  getent:
+    database: passwd
+    key: ldaptest
+    fail_key: yes

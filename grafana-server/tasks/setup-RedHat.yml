@@ -78,6 +78,7 @@
     - slurm_dashboard.json
     - node-exporter-full_rev26.json
     - nvidia_dcgm.json
+    - s-m-a-r-t-disk-monitoring-for-prometheus-dashboard_rev1.json
 
 - name: Import Grafana dashboard slurm_dashboard.json
   community.grafana.grafana_dashboard:
@@ -105,3 +106,12 @@
     commit_message: Updated by ansible
     overwrite: yes
     path: /tmp/nvidia_dcgm.json
+
+- name: Import SMART disk monitoring for Prometheus Dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_url }}"
+    # grafana_api_key: "{{ grafana_api_key }}"
+    state: present
+    commit_message: Updated by ansible
+    overwrite: yes
+    path: /tmp/s-m-a-r-t-disk-monitoring-for-prometheus-dashboard_rev1.json

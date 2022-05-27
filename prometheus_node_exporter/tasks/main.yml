@@ -7,14 +7,14 @@
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter
-    uid: "{{ uid }}"
+    uid: "{{ node_exporter_uid }}"
   tags:
     - prometheus_node_exporter
 
 - name: Extract node_exporter downloaded tarball
   unarchive:
-    src: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version  }}/node_exporter-{{ node_exporter_version  }}.linux-amd64.tar.gz"
-    dest: "/var/lib/node_exporter/"
+    src: "{{node_exporter_link}}/v{{ node_exporter_version  }}/node_exporter-{{ node_exporter_version  }}.linux-amd64.tar.gz"
+    dest: "{{ executable_path }}"
     owner: nodeusr
     group: nodeusr
     remote_src: yes
@@ -53,7 +53,7 @@
     - prometheus_node_exporter
 
 - name: Verify that smartmontools is installed
-  yum:
+  dnf:
     name: smartmontools
     state: latest
   when: ansible_os_family == 'RedHat'

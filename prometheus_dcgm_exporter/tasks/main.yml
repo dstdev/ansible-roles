@@ -5,8 +5,6 @@
     shell: /sbin/nologin
     home: /var/lib/node_exporter
     uid: "{{ uid }}"
-  tags:
-    - prometheus_dcgm_exporter
 
 - name: Install dcgm
   copy:
@@ -15,28 +13,20 @@
     owner: nodeusr
     group: nodeusr
     mode: 0755
-  tags:
-    - prometheus_dcgm_exporter
 
 - name: Create systemd service file
   template:
     src: dcgm_exporter.service.j2
     dest: /etc/systemd/system/dcgm_exporter.service
-  tags:
-    - prometheus_dcgm_exporter
 
 - name: Enable the systemd service file manually
   file:
     state: link
     src: /etc/systemd/system/dcgm_exporter.service
     dest: /etc/systemd/system/multi-user.target.wants/dcgm_exporter.service
-  tags:
-    - prometheus_dcgm_exporter
 
 - name: Start the systemd service file if this is not a chroot
   service:
     name: dcgm_exporter
     state: started
   when: not ansible_is_chroot
-  tags:
-    - prometheus_dcgm_exporter

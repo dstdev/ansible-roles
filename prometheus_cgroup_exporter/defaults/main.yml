@@ -1,0 +1,4 @@
+---
+executable_path: /var/lib/node_exporter/
+exporter_version: 0.8.0
+uid: 440

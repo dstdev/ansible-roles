@@ -10,22 +10,28 @@ jobs:
         folder:
           - prometheus_node_exporter
           - prometheus_gpfs_exporter
+          - prometheus_dcgm_exporter
+          - prometheus_blackbox_exporter
+          - prometheus_ibm_exporter
           - prometheus_slurm_exporter
+          - prometheus_cgroup_exporter
+          - virtualgl
+          - turbovnc
     steps:
       - name: checkout
         uses: actions/checkout@v2
         with:
           path: "${{ github.repository }}"
-            #- name: Create .vault_password
-            #run: |
-            #echo $ENV_VAULT_PASSWORD > rglusic/ansible-workspaces/.vault_password
-            #shell: bash
-            #env:
-            #ENV_VAULT_PASSWORD: ${{secrets.VAULT_PASSWORD}}
-      - name: molecule
-        uses: gofrolist/molecule-action@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          molecule_working_dir: dstdev/ansible-roles/${{matrix.folder}}
-          molecule_options: --debug
-          molecule_command: test
-          molecule_args: --destroy never
+          python-version: '3.x'
+
+      - name: Install dependencies.
+        run: pip3 install yamllint ansible-lint ansible "molecule[lint,docker]"
+
+      - name: Install Galaxy dependencies.
+        run: ansible-galaxy collection install community.docker
+
+      - name: Run molecule
+        run: "cd dstdev/ansible-roles/${{matrix.folder}} && molecule test"

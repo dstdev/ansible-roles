@@ -1,4 +1,3 @@
-gpfs_exporter_link: https://github.com/topine/ibm-spectrum-exporter/releases/download/
-gpfs_exporter_version: 0.0.3
+exporter_version: 0.0.3
 executable_path: "/var/lib/node_exporter/"
-uid: 769
+uid: 440

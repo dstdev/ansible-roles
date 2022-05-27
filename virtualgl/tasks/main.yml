@@ -1,76 +1,24 @@
 ---
-- name: Write X11.org configuration file
-  copy:
-    src: xorg.conf
-    dest: /etc/X11/xorg.conf
-  tags:
-    - virtualgl
+- name: Import VGL GPG Key
+  rpm_key:
+    state: present
+    key: https://www.virtualgl.org/key/VGL-GPG-KEY
+  when: ansible_os_family == 'RedHat'
 
 - name: Install VirtualGL
   yum:
     name: "{{ download }}"
     state: present
-  tags:
-    - virtualgl
+  when: ansible_os_family == 'RedHat'
 
-- name: Install BusID replacement startup script
+- name: Add 'VGL_DISPLAY=egl' to profile.d
   copy:
-    src: replace-busids.py
-    dest: /usr/bin/replace-busids.py
-  tags:
-    - virtualgl
+    src: vgl_exports.sh
+    dest: /etc/profile.d/vgl_exports.sh
 
-- name: Install BusID replacement startup service file
-  copy:
-    src: replace-busids.service
-    dest: /etc/systemd/system/replace-busids.service
-  tags:
-    - virtualgl
-
-- name: Enable BusID replacement startup service file
-  file:
-    state: link
-    src: /etc/systemd/system/replace-busids.service
-    dest: /etc/systemd/system/multi-user.target.wants/replace-busids.service
-  tags:
-    - virtualgl
-
-- name: Start BusID replacement service if not chroot
-  service:
-    name: replace-busids
-    state: started
-  when: not ansible_is_chroot
-  tags:
-    - virtualgl
-
-- name: Install X11 startup service file
-  copy:
-    src: start-x11.service
-    dest: /etc/systemd/system/start-x11.service
-  tags:
-    - virtualgl
-
-- name: Enable X11 startup service file
-  file:
-    state: link
-    src: /etc/systemd/system/start-x11.service
-    dest: /etc/systemd/system/multi-user.target.wants/start-x11.service
-  tags:
-    - virtualgl
-
-- name: Start X11 service if not chroot
-  service:
-    name: start-x11
-    state: started
-  when: not ansible_is_chroot
-  tags:
-    - virtualgl
-
-# Bright specific
-- name: Install cuda-xorg package if using Bright
-  yum:
-    name: cuda-xorg
-    state: present
-  when: using_bright
-  tags:
-    - virtualgl
+# WARNING: These settings are chosen as the environments we use are isolated behind
+# a vpn/headnode.
+- name: Configure compute node to use VirtualGL
+  shell:
+    cmd: "/usr/bin/vglserver_config +egl +s +f -t"
+  changed_when: "'molecule-idempotence-notest' not in ansible_skip_tags"

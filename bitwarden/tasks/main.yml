@@ -9,6 +9,13 @@
   tags:
     - bitwarden
 
+- name: Pull an image
+  community.docker.docker_image:
+    name: "vaultwarden/server:{{bitwarden_image_version}}"
+    source: pull
+  tags:
+    - bitwarden
+
 - name: Set bitwarden docker labels
   ansible.builtin.set_fact:
     bitwarden_docker_labels: 

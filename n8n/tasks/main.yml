@@ -1,0 +1,109 @@
+---
+# tasks file for n8n
+- name: create n8n data diretory
+  file:
+    path: "{{n8n_data_dir}}"
+    owner: root
+    group: root
+    state: directory
+  tags:
+    - n8n_install
+    - n8n
+
+- name: Create n8n docker network
+  community.docker.docker_network:
+    name: "{{n8n_docker_network}}"
+  tags:
+    - n8n
+    - n8n_install
+    - n8n_docker
+
+- name: Set n8n labels
+  ansible.builtin.set_fact:
+    n8n_docker_labels: 
+      traefik.enable: "true"
+      traefik.http.routers.n8n.entrypoints: "websecure"
+      traefik.http.routers.n8n.rule: "Host(`{{n8n_site_root}}`)"
+      traefik.http.routers.n8n.tls: "true"
+      traefik.http.routers.n8n.tls.certresolver: letsencrypt
+      traefik.http.services.n8n.loadbalancer.server.port: "5678"
+      traefik.http.middlewares.n8n.headers.SSLRedirect: "true"
+      traefik.http.middlewares.n8n.headers.STSSeconds: "315360000"
+      traefik.http.middlewares.n8n.headers.browserXSSFilter: "true"
+      traefik.http.middlewares.n8n.headers.contentTypeNosniff: "true"
+      traefik.http.middlewares.n8n.headers.forceSTSHeader: "true"
+      traefik.http.middlewares.n8n.headers.SSLHost: "datainscience.com"
+      traefik.http.middlewares.n8n.headers.STSIncludeSubdomains: "true"
+      traefik.http.middlewares.n8n.headers.STSPreload: "true"
+      traefik.docker.network: traefik_proxy
+    n8n_docker_networks:
+      - name: traefik_proxy
+  when: n8n_traefik_enable
+  tags:
+    - n8n
+    - n8n_docker
+    - n8n_install
+
+- name: Create n8n postgresql docker container
+  include_role:
+    name: postgresql-server
+  vars:
+    postgres_root_dir: "{{n8n_postgres_dir}}"
+    postgres_version: "{{n8n_postgres_version}}"
+    postgres_user: n8n
+    postgres_password: '{{n8n_postgres_password}}'
+    postgres_database: n8n
+    postgres_container_name: "n8n_postgres"
+    postgres_network_mode: "default"
+    postgres_networks:
+      - name: "{{n8n_docker_network}}"
+  tags:
+    - n8n
+    - n8n_docker
+    - n8n_postgres
+
+- name: Set docker networks
+  ansible.builtin.set_fact:
+    n8n_docker_networks:
+      - name: "{{n8n_traefik_network}}"
+      - name: "{{n8n_docker_network}}"
+  when: n8n_traefik_enable
+  tags:
+    - n8n
+    - n8n_docker
+
+- name: Start docker container
+  community.docker.docker_container:
+    name: n8n
+    image: "n8nio/n8n:{{n8n_image_version}}"
+    state: started
+    restart_policy: always
+    volumes:
+      - "{{n8n_config_dir}}:/home/node/.n8n"
+    labels: "{{n8n_docker_labels}}"
+    networks: "{{n8n_docker_networks}}"
+    env:
+      #N8N_BASIC_AUTH_ACTIVE: "true"
+      #N8N_BASIC_AUTH_USER: "{{n8n_user}}"
+      #N8N_BASIC_AUTH_PASSWORD: "{{n8n_password}}"
+      N8N_HOST: "{{n8n_site_root}}"
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: "http"
+      NODE_ENV: "production"
+      WEBHOOK_URL: "https://{{n8n_site_root}}/"
+      GENERIC_TIMEZONE: "{{n8n_timezone}}"
+      DB_TYPE: "postgresdb"
+      DB_POSTGRESDB_DATABASE: "n8n"
+      DB_POSTGRESDB_HOST: "n8n_postgres"
+      DB_POSTGRESDB_PASSWORD: "{{n8n_postgres_password}}"
+      DB_POSTGRESDB_USER: "n8n"
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
+    log_options:
+      max-size: "10m"
+      max-files: "3"
+  tags:
+    - n8n
+    - n8n_docker
+    - n8n_install
+
+

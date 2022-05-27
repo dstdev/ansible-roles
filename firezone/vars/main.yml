@@ -1,0 +1,3 @@
+---
+# vars file for firezone
+firezone_github_url: "https://github.com/firezone/firezone/releases/download/"

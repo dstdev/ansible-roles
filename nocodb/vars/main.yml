@@ -1,0 +1,3 @@
+---
+# vars file for nocodb
+nocodb_db_string: "pg://{{nocodb_pg_host}}:5432?u={{nocodb_pg_user}}&p={{nocodb_pg_password}}&d={{nocodb_pg_database}}"

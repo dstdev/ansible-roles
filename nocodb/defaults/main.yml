@@ -1,0 +1,12 @@
+---
+# defaults file for nocodb
+nocodb_data_dir: /data/apps/nocodb
+nocodb_site_root: "nocodb.internal.datainscience.com"
+nocodb_image_version: latest
+nocodb_jwt_secret: "{{undef(hint='You must specify the jwt')}}"
+nocodb_pg_host: "localhost"
+nocodb_pg_user: "nocodb"
+nocodb_pg_password: "{{undef(hint='You must specify the postgres_password')}}"
+nocodb_pg_database: "nocodb"
+nocodb_traefik_cert_resolver: letsencrypt
+nocodb_traefik_enable: true

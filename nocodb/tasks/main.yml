@@ -1,0 +1,67 @@
+---
+# tasks file for nocodb
+- name: Create nocodb data diretory
+  file:
+    path: "{{nocodb_data_dir}}"
+    owner: root
+    group: root
+    state: directory
+  tags:
+    - nocodb
+
+- name: Set labels
+  ansible.builtin.set_fact:
+    nocodb_docker_labels: 
+      traefik.enable: "true"
+      traefik.http.routers.nocodb.entrypoints: "websecure"
+      traefik.http.routers.nocodb.rule: "Host(`{{nocodb_site_root}}`)"
+      traefik.http.routers.nocodb.tls: "true"
+      traefik.http.services.nocodb.loadbalancer.server.port: "8080"
+      traefik.docker.network: traefik_proxy
+    nocodb_docker_networks:
+      - name: traefik_proxy
+  when: nocodb_traefik_enable
+  tags:
+    - nocodb
+
+- name: Set traefik certresolver
+  ansible.utils.update_fact:
+    updates:
+      - path: "nocodb_docker_labels['traefik.http.routers.nocodb.tls.certresolver']"
+        value: "{{nocodb_traefik_cert_resolver}}"
+  when: nocodb_traefik_enable and nocodb_traefik_cert_resolver
+  register: nocodb_docker_labels
+  tags:
+    - nocodb
+
+- name: Fix update facts
+  ansible.builtin.set_fact:
+    nocodb_docker_labels: "{{nocodb_docker_labels.nocodb_docker_labels}}"
+  when: nocodb_traefik_enable and nocodb_traefik_cert_resolver
+  tags:
+    - nocodb
+
+- name: Debug labels
+  debug:
+    msg: "{{nocodb_docker_labels}}"
+  tags:
+    - nocodb
+
+- name: Start docker container
+  community.docker.docker_container:
+    name: nocodb
+    image: "nocodb/nocodb:{{nocodb_image_version}}"
+    state: started
+    restart_policy: always
+    env:
+      NC_DB: "{{nocodb_db_string}}"
+      NC_AUTH_JWT_SECRET: "{{nocodb_jwt_secret}}"
+    volumes:
+      - "{{nocodb_data_dir}}:/usr/app/data"
+    labels: "{{nocodb_docker_labels}}"
+    networks: "{{nocodb_docker_networks}}"
+    log_options:
+      max-size: "10m"
+      max-files: "3"
+  tags:
+    - nocodb

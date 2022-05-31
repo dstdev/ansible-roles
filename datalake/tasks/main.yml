@@ -29,17 +29,6 @@
   tags:
     - datalake
 
-- name: Install dst package in virtual environment
-  pip:
-    #name: file://opt/dst-automations
-    name: git+ssh://git@github.com/dstdev/dst-automations.git
-    virtualenv: /opt/venv
-  environment:
-    GIT_SSH_COMMAND: "ssh -i /root/.ssh/id_ed25519"
-  tags:
-    - datalake
-    - datalake_python
-
 - name: Copy scripts down
   ansible.builtin.git:
     repo: git@github.com:dstdev/dst-automations.git
@@ -49,6 +38,17 @@
     force: yes
   tags:
     - datalake
+
+- name: Install dst package in virtual environment
+  pip:
+    name: /opt/dst-automations
+    #name: git+ssh://git@github.com/dstdev/dst-automations.git
+    virtualenv: /opt/venv
+  environment:
+    GIT_SSH_COMMAND: "ssh -i /root/.ssh/id_ed25519"
+  tags:
+    - datalake
+    - datalake_python
 
 - name: Create environment file for automations
   template:

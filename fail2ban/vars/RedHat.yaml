@@ -1,0 +1,3 @@
+fail2ban_packages:
+  - epel-release
+  - fail2ban-all

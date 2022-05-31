@@ -1,0 +1,8 @@
+---
+# vars file for n8n
+n8n_docker_network: "n8n_internal"
+n8n_docker_networks:
+  - "{{n8n_docker_network}}"
+
+n8n_config_dir: "{{n8n_data_dir}}/app"
+n8n_postgres_dir: "{{n8n_data_dir}}/postgres"

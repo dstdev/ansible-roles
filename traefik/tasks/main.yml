@@ -7,7 +7,6 @@
     - python3-docker
     - python3-dockerpty
     - python3-yaml
-    - docker-compose
   tags:
     - traefik
 
@@ -46,43 +45,26 @@
   tags:
     - traefik
 
-# TODO: Move to straight docker, not docker-compose
-- name: docker-compose
-  community.docker.docker_compose:
-    project_name: traefik
-    definition: 
-      version: "2.3"
-      services:
-        traefik:
-          image: "traefik:v2.2"
-          restart: unless-stopped
-          container_name: traefik
-          volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - "{{traefik_data_dir}}/traefik.toml:/etc/traefik/traefik.toml"
-            - "{{traefik_data_dir}}/acme:/etc/traefik/acme"
-          networks:
-            - traefik_proxy
-          ports:
-            - "443:443/tcp"
-            - "80:80/tcp"
-            - "9180:8080/tcp"
+- name: Start traefik container
+  community.docker.docker_container:
+    name: traefik
+    image: "traefik:v2.2"
+    state: started
+    restart_policy: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "{{traefik_data_dir}}/traefik.toml:/etc/traefik/traefik.toml"
+      - "{{traefik_data_dir}}/acme:/etc/traefik/acme"
+    log_options:
+      max-size: "10m"
+      max-file: "3"
+    networks:
+      - name: traefik_proxy
+    ports:
+      - "443:443"
+      - "80:80"
+      - "9180:8080"
 
-          logging:
-            options:
-              max-size: "10m"
-              max-file: "3"
-      networks:
-        traefik_proxy:
-          external:
-            name: traefik_proxy
-    state: present
-    pull: yes
-  register: output
   tags:
     - traefik
-
-- ansible.builtin.assert:
-    that: "output.services.traefik.traefik.state.running"
-  tags:
-    - traefik
+    - traefik-this

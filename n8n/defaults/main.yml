@@ -1,0 +1,16 @@
+---
+# defaults file for n8n
+n8n_data_dir: /data/apps/n8n
+n8n_site_root: n8n.datainscience.com
+n8n_traefik_enable: no
+n8n_traefik_network: traefik_proxy
+n8n_docker_labels: {}
+n8n_docker_networks: []
+n8n_image_version: latest
+n8n_postgres_version: "14-bullseye"
+n8n_timezone: "US/Eastern"
+# n8n Authentication
+n8n_user: "admin"
+n8n_password: '{{ undef(hint("You must define your password for the n8n application"))}}'
+# Postgres settings
+n8n_postgres_password: '{{ undef(hint("You must define your password for the n8n postgresql database"))}}'

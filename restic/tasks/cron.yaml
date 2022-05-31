@@ -20,7 +20,7 @@
     cronjob_description: "Restic backup for {{backup.directory}}"
     cronjob_job: "/usr/local/sbin/drestic forget {% if 'keep_daily' in backup %}--keep-daily {{backup.keep_daily}}{%endif%} {% if 'keep_weekly' in backup %}--keep-weekly {{backup.keep_weekly}}{%endif%} {% if 'keep_monthly' in backup %}--keep-monthly {{backup.keep_monthly}}{%endif%} --prune --path {{backup.directory}}"
     cronjob_minute: '0'
-    cronjob_hour: '23'
+    cronjob_hour: '22'
     cronjob_weekday: '1'
     cronjob_tags:
       - backup

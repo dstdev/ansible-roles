@@ -1,7 +1,7 @@
 ---
 # tasks file for dst
 # TODO: Always runs a repo/apt update at the beginning, if it hasn't been run in a while
-#
+
 - name: Update apt cache if out of date
   apt:
     update_cache: yes
@@ -42,6 +42,24 @@
   tags:
     - common
 
+- name: Add dst user authorized_key
+  ansible.posix.authorized_key:
+    user: "dst"
+    state: present
+    key: "{{common_dst_authorized_key}}"
+  tags:
+    - common
+
+- name: Add dst user private_key
+  copy:
+    content: "{{common_dst_private_key}}"
+    dest: "/usr/local/dst/.ssh/id_rsa"
+    owner: "dst"
+    group: "dst"
+    mode: "0600"
+  tags:
+    - common
+
 - name: create users
   user:
     name: "{{item.name}}"
@@ -67,6 +85,7 @@
 - name: Set system hostname
   ansible.builtin.hostname:
     name: "{{common_hostname}}"
+    use: '{{hostname_use}}'
   when: common_hostname
   tags:
     - common

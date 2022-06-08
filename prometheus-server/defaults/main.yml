@@ -1,4 +1,6 @@
 ---
+# set default when running against chroot
+ansible_processor_count: "2"
 # variables to be defined in user's playbook to specify prometheus component
 prometheus_components:
   - prometheus

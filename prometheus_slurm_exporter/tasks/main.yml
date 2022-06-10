@@ -7,7 +7,7 @@
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter
-    uid: "{{ uid }}"
+    uid: "{{ prometheus_exporter_uid }}"
 
 - name: Copy over the compiled slurm exporter
   copy:

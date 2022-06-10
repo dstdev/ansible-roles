@@ -4,6 +4,6 @@
   vars:
     ansible_is_chroot: True
   tasks:
-    - name: "Include prometheus_gpfs_exporter"
+    - name: "Include prometheus_ibm_exporter"
       include_role:
-        name: "prometheus_gpfs_exporter"
+        name: "prometheus_ibm_exporter"

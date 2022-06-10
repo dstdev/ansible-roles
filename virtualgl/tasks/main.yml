@@ -7,7 +7,7 @@
 
 - name: Install VirtualGL
   yum:
-    name: "{{ download }}"
+    name: "{{ vgl_download }}"
     state: present
   when: ansible_os_family == 'RedHat'
 

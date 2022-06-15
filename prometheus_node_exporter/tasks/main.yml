@@ -7,14 +7,14 @@
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter
-    uid: "{{ node_exporter_uid }}"
+    uid: "{{ prometheus_exporter_uid }}"
   tags:
     - prometheus_node_exporter
 
 - name: Extract node_exporter downloaded tarball
   unarchive:
     src: "{{node_exporter_link}}/v{{ node_exporter_version  }}/node_exporter-{{ node_exporter_version  }}.linux-amd64.tar.gz"
-    dest: "{{ executable_path }}"
+    dest: "{{ node_exporter_executable_path }}"
     owner: nodeusr
     group: nodeusr
     remote_src: yes

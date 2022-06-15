@@ -4,12 +4,12 @@
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter
-    uid: "{{ uid }}"
+    uid: "{{ prometheus_exporter_uid }}"
 
 - name: Extract gpfs_exporter downloaded tarball
   unarchive:
-    src: "https://github.com/topine/ibm-spectrum-exporter/releases/download/v{{ exporter_version }}/ibm-spectrum-exporter_{{ exporter_version  }}_Linux_x86_64.tar.gz"
-    dest: "{{ executable_path }}"
+    src: "https://github.com/topine/ibm-spectrum-exporter/releases/download/v{{ ibm_exporter_version }}/ibm-spectrum-exporter_{{ ibm_exporter_version  }}_Linux_x86_64.tar.gz"
+    dest: "{{ ibm_exporter_executable_path }}"
     owner: nodeusr
     group: nodeusr
     mode: 0755

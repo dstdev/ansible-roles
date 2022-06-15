@@ -4,12 +4,12 @@
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter
-    uid: "{{ uid }}"
+    uid: "{{ prometheus_exporter_uid }}"
 
 - name: Extract cgroup_exporter downloaded tarball
   unarchive:
-    src: "https://github.com/treydock/cgroup_exporter/releases/download/v{{ exporter_version }}/cgroup_exporter-{{ exporter_version }}.linux-amd64.tar.gz"
-    dest: "{{ executable_path }}"
+    src: "https://github.com/treydock/cgroup_exporter/releases/download/v{{ cgroup_exporter_version }}/cgroup_exporter-{{ cgroup_exporter_version }}.linux-amd64.tar.gz"
+    dest: "{{ cgroup_exporter_executable_path }}"
     owner: nodeusr
     group: nodeusr
     mode: 0755

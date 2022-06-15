@@ -5,6 +5,6 @@ After=network.target
 User=nodeusr
 Group=nodeusr
 Type=simple
-ExecStart={{ executable_path }}/ibm-spectrum-exporter
+ExecStart={{ ibm_exporter_executable_path }}/ibm-spectrum-exporter
 [Install]
 WantedBy=multi-user.target

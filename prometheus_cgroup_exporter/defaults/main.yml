@@ -1,4 +1,4 @@
 ---
-executable_path: /var/lib/node_exporter/
-exporter_version: 0.8.0
-uid: 440
+cgroup_exporter_executable_path: /var/lib/node_exporter/
+cgroup_exporter_version: 0.8.0
+prometheus_exporter_uid: 440

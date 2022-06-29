@@ -4,12 +4,12 @@
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter
-    uid: "{{ uid }}"
+    uid: "{{ prometheus_exporter_uid }}"
 
 - name: Extract gpfs_exporter downloaded tarball
   unarchive:
     src: "https://github.com/treydock/gpfs_exporter/releases/download/v{{ gpfs_exporter_version }}/gpfs_exporter-{{ gpfs_exporter_version }}.linux-amd64.tar.gz"
-    dest: "{{ executable_path }}"
+    dest: "{{ gpfs_exporter_executable_path }}"
     owner: nodeusr
     group: nodeusr
     mode: 0755

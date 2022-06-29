@@ -4,12 +4,12 @@
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter
-    uid: "{{ uid }}"
+    uid: "{{ prometheus_exporter_uid }}"
 
 - name: Install dcgm
   copy:
     src: dcgm_exporter
-    dest: "{{ executable_path }}"
+    dest: "{{ dcgm_exporter_executable_path }}"
     owner: nodeusr
     group: nodeusr
     mode: 0755

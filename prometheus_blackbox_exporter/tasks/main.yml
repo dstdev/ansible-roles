@@ -8,13 +8,13 @@
   user:
     name: nodeusr
     shell: /sbin/nologin
-    home: /var/lib/node_exporter
-    uid: 440
+    home: "{{ blackbox_exporter_path }}"
+    uid: "{{ prometheus_exporter_uid }}"
 
 - name: Extract blackbox_exporter downloaded tarball
   unarchive:
-    src: "https://github.com/prometheus/blackbox_exporter/releases/download/v{{exporter_version}}/blackbox_exporter-{{exporter_version}}.linux-amd64.tar.gz"
-    dest: "{{exporter_path}}"
+    src: "https://github.com/prometheus/blackbox_exporter/releases/download/v{{blackbox_exporter_version}}/blackbox_exporter-{{blackbox_exporter_version}}.linux-amd64.tar.gz"
+    dest: "{{ blackbox_exporter_path }}"
     owner: nodeusr
     group: nodeusr
     remote_src: yes

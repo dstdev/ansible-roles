@@ -5,6 +5,6 @@ After=network.target
 User=nodeusr
 Group=nodeusr
 Type=simple
-ExecStart={{ executable_path }}/dcgm_exporter
+ExecStart={{ dcgm_exporter_executable_path }}/dcgm_exporter
 [Install]
 WantedBy=multi-user.target

@@ -1,2 +1,2 @@
-uid: 672
-executable_path: /var/lib/node_exporter
+prometheus_exporter_uid: 440
+dcgm_exporter_executable_path: /var/lib/node_exporter

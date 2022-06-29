@@ -5,6 +5,6 @@ After=network.target
 User=nodeusr
 Group=nodeusr
 Type=simple
-ExecStart=/var/lib/node_exporter/blackbox_exporter-{{exporter_version}}.linux-amd64/blackbox_exporter
+ExecStart=/var/lib/node_exporter/blackbox_exporter-{{blackbox_exporter_version}}.linux-amd64/blackbox_exporter
 [Install]
 WantedBy=multi-user.target

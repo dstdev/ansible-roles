@@ -7,7 +7,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 EnvironmentFile=-/etc/sysconfig/slurmd
-ExecStart=/usr/sbin/slurmd -D -s --conf-server {{slurm_control_address}}:{{slurm_controller_port}} $SLURMD_OPTIONS
+ExecStart=/usr/sbin/slurmd -D -s --conf-server {{slurm_controller_ip}}:{{slurm_controller_port}} $SLURMD_OPTIONS
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 LimitNOFILE=131072

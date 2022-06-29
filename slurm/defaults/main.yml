@@ -1,7 +1,7 @@
 ---
 # defaults file for slurm-controller
 slurm_database_password: "default"
-slurm_version: "21.08-latest"
+slurm_version: "21.08.1-2"
 slurm_slurmd: false
 slurm_controller: false
 slurm_uid: 450

@@ -223,7 +223,7 @@
     dest: /etc/cgroup.conf
     owner: slurm
     group: slurm
-    mode: "0600"
+    mode: "0644"
   when: slurm_controller
   notify:
       - Restart slurmd
@@ -256,5 +256,3 @@
   when: ansible_is_chroot
   tags:
     - slurm_install_slurmd
-
-

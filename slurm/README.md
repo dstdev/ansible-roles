@@ -6,7 +6,7 @@ Install and configures slurm controller, daemons, and database.
 Requirements
 ------------
 
-None
+Running Mariadb/MySQL Role or instance
 
 Role Variables
 --------------
@@ -37,6 +37,7 @@ Role Variables
 | slurm_dbd_log_level              | verbose       | Slurmdbd log level                        |
 | slurm_dbd_address                | localhost     | Host ip address for dbd                   |
 | slurm_dbd_host                   | localhost     | Hostname of dbd service                   |
+| slurm_dbd_password               | ""            | MySQL/Mariadb password                    |
 
 
 Tags

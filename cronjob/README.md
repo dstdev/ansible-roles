@@ -7,7 +7,9 @@ our managed healthchecks.io instance
 Requirements
 ------------
 
-None
+Requires installation of the forked DST role at  https://github.com/dstdev/community.healthchecksio.git.
+
+    ansible-galaxy collection install  https://github.com/dstdev/community.healthchecksio.git
 
 
 Role Variables

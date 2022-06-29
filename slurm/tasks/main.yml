@@ -4,7 +4,7 @@
   set_fact:
     slurm_download_version: "{{slurm_version | replace('.', '-')}}"
   tags:
-    - slurm_test
+    - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
@@ -13,12 +13,7 @@
     slurm_download_version: "{{slurm_download_version}}-1"
   when: "{{slurm_download_version.split('-') | length }} < 4"
   tags:
-    - slurm_install_controller
-    - slurm_install_slurmd
-
-- debug:
-    msg: "{{slurm_download_version}}"
-  tags:
+    - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
@@ -39,6 +34,7 @@
     - python3
     - "@Development tools"
   tags:
+    - slurm
     - slurm_install_controller
     - slurm_install_slurmd
  
@@ -52,6 +48,7 @@
     - python2-PyMySQL
     - python36-PyMySQL
   tags:
+    - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
@@ -61,6 +58,7 @@
     gid: "{{slurm_gid}}"
     state: present
   tags:
+    - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
@@ -83,6 +81,7 @@
     dest: "/tmp/slurm-{{slurm_download_version}}.zip"
   register: slurm_source
   tags:
+    - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
@@ -95,25 +94,28 @@
   when: slurm_source.changed
   register: slurm_source_unpack
   tags:
+    - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
 - name: Configure slurm
   command: "./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --runstatedir=/run"
   args:
-    chdir: "/tmp/slurm-{{slurm_download_version}}"
+    chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"
   when: slurm_source_unpack is changed
   register: slurm_configure
   tags:
+    - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
 - name: Install slurm
   shell: make && make install
   args:
-    chdir: "/tmp/slurm-{{slurm_download_version}}"
+    chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"
   when: slurm_configure is changed
   tags:
+    - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
@@ -128,6 +130,7 @@
     - /var/log/slurm
     - /var/spool/slurm
   tags:
+    - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
@@ -140,6 +143,7 @@
     mode: "0644"
   when: slurm_controller
   tags:
+    - slurm
     - slurm_install_controller
 
 - name: Start slurmctld service
@@ -149,6 +153,7 @@
     enabled: true
   when: slurm_controller
   tags:
+    - slurm
     - slurm_install_controller
 
 - name: Create configuration file
@@ -162,6 +167,7 @@
   notify:
       - Restart slurmctld
   tags:
+    - slurm
     - slurm_configure
 
 - name: Start mariadb
@@ -171,6 +177,7 @@
     enabled: true
   when: slurm_controller
   tags:
+    - slurm
     - slurm_install_controller
 
 - name: create slurmdbd service file
@@ -182,6 +189,7 @@
     mode: "0644"
   when: slurm_controller
   tags:
+    - slurm
     - slurm_install_controller
 
 - name: Start slurmdbd service
@@ -191,6 +199,7 @@
     enabled: true
   when: slurm_controller
   tags:
+    - slurm
     - slurm_install_controller
 
 - name: Create database user slurm
@@ -201,6 +210,7 @@
     state: present
   when: slurm_controller
   tags:
+    - slurm
     - slurm_install_controller
 
 
@@ -215,6 +225,7 @@
   notify:
       - Restart slurmdbd
   tags:
+    - slurm
     - slurm_configure
 
 - name: Create cgroup configuration file
@@ -228,6 +239,7 @@
   notify:
       - Restart slurmd
   tags:
+    - slurm
     - slurm_configure
 
 
@@ -240,6 +252,7 @@
     mode: "0644"
   when: slurm_slurmd
   tags:
+    - slurm
     - slurm_install_slurmd
 
 - name: Start slurmd service
@@ -249,10 +262,12 @@
     enabled: true
   when: slurm_slurmd and not ansible_is_chroot
   tags:
+    - slurm
     - slurm_install_slurmd
 
 - name: Enable slurmd on image
   ansible.builtin.shell: systemctl enable slurmd
   when: ansible_is_chroot
   tags:
+    - slurm
     - slurm_install_slurmd

@@ -47,6 +47,7 @@ List of tags you can use to control the execution of the role.
 
 | Name                     | Description                                  |
 | ----                     | -----------                                  |
+| slurm                    | Run all slurm role tasks                     |
 | slurm_install_controller | Install and configure slurmctld and slurmdbd |
 | slurm_install_slurmd     | Install and configure slurmd                 |
 | slurm_configure          | Update slurm configuration files             |

@@ -1,0 +1,24 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    munge_key: "aslkdjfalskjdfnalskjdnfpsdfunbf97\
+                0gbnsnbsdkfjgnasdlkjfas;lkdfjasdklfj"
+    slurm_slurmd: true
+    slurm_controller: true
+    slurm_partitions:
+      - PartitionName=defq Default=YES Nodes=localhost
+    slurm_proctrack_type: "linuxproc"
+  tasks:
+    - name: Set slurm nodes
+      ansible.builtin.set_fact:
+        slurm_nodes:
+          - "NodeName=localhost CPUs={{ ansible_processor_cores }} \
+             CoresPerSocket={{ ansible_processor_cores }} \
+             Boards=1 SocketsPerBoard=1 ThreadsPerCore=1"
+    - name: "Include munge"
+      ansible.builtin.include_role:
+        name: "munge"
+    - name: "Include slurm"
+      ansible.builtin.include_role:
+        name: "slurm"

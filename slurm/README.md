@@ -6,7 +6,7 @@ Install and configures slurm controller, daemons, and database.
 Requirements
 ------------
 
-Running Mariadb/MySQL Role or instance
+Running Mariadb/MySQL Role or instance and munge development libraries must be installed.
 
 Role Variables
 --------------
@@ -30,6 +30,7 @@ Role Variables
 | slurm_daemon_debug               | 3             | Daemon debug level                        |
 | slurm_nodes                      | []            | List of nodes                             |
 | slurm_partitions                 | []            | List of partitions                        |
+| slurm_proctrack_type             | cgroup        | ProctrackType                             |
 | slurm_cgroup_automount           | yes           | Automount cgroups                         |
 | slurm_cgroup_constrain_cores     | yes           | Constrain cores available                 |
 | slurm_cgroup_constrain_ram_space | yes           | Constrain ram space                       |

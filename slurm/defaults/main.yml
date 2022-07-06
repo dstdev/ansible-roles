@@ -1,7 +1,7 @@
 ---
 # defaults file for slurm-controller
 slurm_database_password: "default"
-slurm_version: "21.08.1-2"
+slurm_version: "21.08.8-2"
 slurm_slurmd: false
 slurm_controller: false
 slurm_uid: 450
@@ -15,14 +15,15 @@ slurm_user: slurm
 slurm_cluster_name: cluster
 slurm_controller_debug: 3
 slurm_daemon_debug: 3
+slurm_proctrack_type: "cgroup"
 slurm_nodes: []
 slurm_partitions: []
 
 
 # cgroup settings
-slurm_cgroup_automount: yes
-slurm_cgroup_constrain_cores: yes
-slurm_cgroup_constrain_ram_space: yes
+slurm_cgroup_automount: "yes"
+slurm_cgroup_constrain_cores: "yes"
+slurm_cgroup_constrain_ram_space: "yes"
 
 # slurmdbd settings
 slurm_dbd_storage_user: slurm

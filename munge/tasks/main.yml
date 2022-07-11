@@ -40,14 +40,6 @@
   tags:
     - munge
 
-- name: get status of munge
-  shell: "systemctl start munge.service; journalctl -u munge -n 200"
-  register: out
-
-- name: Debug munge
-  debug:
-    msg: "{{out}}"
-
 - name: Enable munge service
   service:
     name: munge
@@ -55,10 +47,3 @@
     enabled: true
   tags:
     - munge
-
-- name: get status of munge
-  shell: systemctl status munge.service
-  register: out
-- name: Debug munge
-  debug:
-    msg: "{{out}}"

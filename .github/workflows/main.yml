@@ -29,7 +29,6 @@ jobs:
           - virtualgl
           - turbovnc
           - slurm
-          - munge
     steps:
       - name: checkout
         uses: actions/checkout@v2

@@ -40,6 +40,13 @@
   tags:
     - munge
 
+- name: get status of munge
+  shell: "systemctl start munge.service; journactl -u munge -n 200"
+  register: out
+- name: Debug munge
+  debug:
+    msg: "{{out}}"
+
 - name: Enable munge service
   service:
     name: munge

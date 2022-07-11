@@ -47,3 +47,10 @@
     enabled: true
   tags:
     - munge
+
+- name: get status of munge
+  shell: systemctl status munge.service
+  register: out
+- name: Debug munge
+  debug:
+    msg: "{{out}}"

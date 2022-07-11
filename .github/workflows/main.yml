@@ -1,5 +1,6 @@
 name: Molecule
 on:
+  workflow_dispatch:
   push:
     paths:
       - prometheus_node_exporter

@@ -1,0 +1,4 @@
+munge_packages:
+  - epel-release
+  - munge
+  - munge-devel

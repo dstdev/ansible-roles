@@ -20,7 +20,8 @@ SlurmctldTimeout=120
 SlurmdTimeout=300
 Waittime=0
 SchedulerType=sched/backfill
-SelectType=select/linear
+SelectType="{{slurm_select_type}}"
+SelectTypeParameters="{{slurm_select_type_parameters}}"
 SlurmctldParameters=enable_configless
 SlurmctldLogFile=/var/log/slurm/slurmctld.log # Need to configure
 

@@ -1,17 +1,31 @@
 ---
 
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
 - name: Set slurm download version
-  set_fact:
-    slurm_download_version: "{{slurm_version | replace('.', '-')}}"
+  ansible.builtin.set_fact:
+    slurm_download_version: "{{ slurm_version | replace('.', '-')}}"
   tags:
     - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
 - name: Update slurm download version
-  set_fact:
-    slurm_download_version: "{{slurm_download_version}}-1"
-  when: "{{slurm_download_version.split('-') | length }} < 4"
+  ansible.builtin.set_fact:
+    slurm_download_version: "{{ slurm_download_version }}-1"
+  when: "{{ slurm_download_version.split('-') | length }} < 4"
   tags:
     - slurm
     - slurm_install_controller
@@ -22,31 +36,17 @@
   ansible.builtin.package:
     name: "{{item}}"
     state: present
-  loop:
-    - zlib-devel
-    - zlib
-    - bzip2
-    - bzip2-devel
-    - openssl
-    - openssl-devel
-    - pkgconfig
-    - wget
-    - python3
-    - "@Development tools"
+  loop: "{{slurm_required_packages}}"
   tags:
     - slurm
     - slurm_install_controller
     - slurm_install_slurmd
- 
+
 - name: Install slurmdbd requirements
   ansible.builtin.package:
     name: "{{item}}"
   when: slurm_controller
-  loop:
-    - mariadb-server
-    - mariadb-devel
-    - python2-PyMySQL
-    - python36-PyMySQL
+  loop: "{{slurm_dbd_required_packages}}"
   tags:
     - slurm
     - slurm_install_controller
@@ -77,7 +77,8 @@
 
 - name: Download slurm
   get_url:
-    url: "https://github.com/SchedMD/slurm/archive/refs/tags/slurm-{{slurm_download_version}}.zip"
+    url: "https://github.com/SchedMD/slurm/archive/refs/\
+          tags/slurm-{{slurm_download_version}}.zip"
     dest: "/tmp/slurm-{{slurm_download_version}}.zip"
   register: slurm_source
   tags:
@@ -88,7 +89,7 @@
 
 - name: extract slurm archive
   unarchive:
-    copy: no
+    copy: false
     dest: /tmp/
     src: "{{slurm_source.dest}}"
   when: slurm_source.changed
@@ -99,7 +100,8 @@
     - slurm_install_slurmd
 
 - name: Configure slurm
-  command: "./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --runstatedir=/run"
+  command: "./configure --prefix=/usr --sysconfdir=/etc \
+            --localstatedir=/var --runstatedir=/run"
   args:
     chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"
   when: slurm_source_unpack is changed
@@ -165,7 +167,7 @@
     mode: "0644"
   when: slurm_controller
   notify:
-      - Restart slurmctld
+    - Restart slurmctld
   tags:
     - slurm
     - slurm_configure
@@ -179,6 +181,32 @@
   tags:
     - slurm
     - slurm_install_controller
+
+- name: Create database user slurm
+  community.mysql.mysql_user:
+    name: slurm
+    encrypted: true
+    priv: '*.*:ALL'
+    state: present
+  when: slurm_controller
+  tags:
+    - slurm
+    - slurm_install_controller
+
+
+- name: Create slurmdbd configuration file
+  ansible.builtin.template:
+    src: templates/slurmdbd.conf.j2
+    dest: /etc/slurmdbd.conf
+    owner: slurm
+    group: slurm
+    mode: "0600"
+  when: slurm_controller
+  notify:
+    - Restart slurmdbd
+  tags:
+    - slurm
+    - slurm_configure
 
 - name: create slurmdbd service file
   ansible.builtin.template:
@@ -202,32 +230,6 @@
     - slurm
     - slurm_install_controller
 
-- name: Create database user slurm
-  community.mysql.mysql_user:
-    name: slurm
-    encrypted: yes
-    priv: '*.*:ALL'
-    state: present
-  when: slurm_controller
-  tags:
-    - slurm
-    - slurm_install_controller
-
-
-- name: Create slurmdbd configuration file
-  ansible.builtin.template:
-    src: templates/slurmdbd.conf.j2
-    dest: /etc/slurmdbd.conf
-    owner: slurm
-    group: slurm
-    mode: "0600"
-  when: slurm_controller
-  notify:
-      - Restart slurmdbd
-  tags:
-    - slurm
-    - slurm_configure
-
 - name: Create cgroup configuration file
   ansible.builtin.template:
     src: templates/cgroup.conf.j2
@@ -237,7 +239,7 @@
     mode: "0644"
   when: slurm_controller
   notify:
-      - Restart slurmd
+    - Restart slurmd
   tags:
     - slurm
     - slurm_configure

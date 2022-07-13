@@ -53,18 +53,9 @@
     - prometheus_node_exporter
 
 - name: Verify that smartmontools is installed
-  dnf:
+  ansible.builtin.package:
     name: smartmontools
     state: latest
-  when: ansible_os_family == 'RedHat'
-  tags:
-    - prometheus_node_exporter
-
-- name: Verify that smartmontools is installed
-  package:
-    name: smartmontools
-    state: latest
-  when: ansible_os_family == 'Debian'
   tags:
     - prometheus_node_exporter
 

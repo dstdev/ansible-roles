@@ -1,0 +1,66 @@
+---
+# tasks file for security-audit
+- name: PreInstall Auditd RHEL Family
+  ansible.builtin.yum:
+    name: audit
+    state: absent
+  when: ansible_os_family == "RedHat"
+
+- name: PreInstall Auditd Debian Family
+  ansible.builtin.apt:
+    pkg:
+      - auditd
+      - audispd-plugins
+    state: absent
+  when: ansible_os_family == "Debian"
+
+- name: Install Auditd RHEL Family
+  ansible.builtin.yum:
+    name: audit
+    state: latest
+  when: ansible_os_family == "RedHat"
+
+- name: Install Auditd Debian Family
+  ansible.builtin.apt:
+    pkg:
+      - auditd
+      - audispd-plugins
+    state: latest
+  when: ansible_os_family == "Debian"
+
+- name: Deploying Configuration Files 1/3
+  ansible.builtin.copy:
+    src: files/auditd.conf
+    dest: /etc/audit/auditd.conf
+
+- name: Deploying Configuration Files 2/3
+  ansible.builtin.copy:
+    src: files/auditd.service
+    dest: /usr/lib/systemd/system/auditd.service
+
+- name: Deploying Configuration Files 3/3
+  ansible.builtin.copy:
+    src: files/audit.rules
+    dest: /etc/audit/rules.d/audit.rules
+
+- name: Setting Config File Permissions 1/2
+  ansible.builtin.file:
+    path: /etc/audit/
+    recurse: yes
+    owner: root
+    group: root
+    mode: 0760
+
+- name: Setting Config File Permissions 2/2
+  ansible.builtin.file:
+    path: /var/log/audit
+    recurse: yes
+    owner: root
+    group: root
+    mode: 0760
+
+- name: Restarting Auditd Service
+  ansible.builtin.systemd:
+    name: auditd
+    enabled: yes
+    state: restarted

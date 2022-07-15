@@ -105,3 +105,14 @@
     name: "{{common_timezone}}"
   tags:
     - common
+
+- name: Add additional hostnames
+  ansible.builtin.lineinfile:
+    dest: /etc/hosts
+    create: yes
+    state: present
+    line: '{{item}}'
+    backup: yes
+  loop: "{{common_additional_etc_hosts}}"
+  tags:
+    - common

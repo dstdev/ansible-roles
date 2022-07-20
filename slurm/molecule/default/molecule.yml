@@ -9,7 +9,7 @@ driver:
   #ansible-lint
 platforms:
   - name: instance
-    image: rockylinux
+    image: rockylinux:8
     privileged: true
     volume_mounts:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"

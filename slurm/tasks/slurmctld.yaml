@@ -1,0 +1,51 @@
+- name: Create configuration file
+  ansible.builtin.template:
+    src: templates/slurm.conf.j2
+    dest: /etc/slurm.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: slurm_controller
+  notify:
+    - Restart slurmctld
+  tags:
+    - slurm
+    - slurm_configure
+
+- name: Create cgroup configuration file
+  ansible.builtin.template:
+    src: templates/cgroup.conf.j2
+    dest: /etc/cgroup.conf
+    owner: slurm
+    group: slurm
+    mode: "0644"
+  when: slurm_controller
+  notify:
+    - Restart slurmctld
+  tags:
+    - slurm
+    - slurm_configure
+
+- name: Create slurmctld service file
+  ansible.builtin.template:
+    src: templates/slurmctld.service.j2
+    dest: /etc/systemd/system/slurmctld.service
+    owner: root
+    group: root
+    mode: "0644"
+  when: slurm_controller
+  tags:
+    - slurm
+    - slurm_install_controller
+
+- name: Start slurmctld service
+  ansible.builtin.service:
+    name: slurmctld
+    state: started
+    enabled: true
+  when: slurm_controller
+  tags:
+    - slurm
+    - slurm_install_controller
+
+

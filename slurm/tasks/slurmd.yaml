@@ -1,0 +1,28 @@
+- name: create slurmd service file
+  ansible.builtin.template:
+    src: templates/slurmd.service.j2
+    dest: /etc/systemd/system/slurmd.service
+    owner: root
+    group: root
+    mode: "0644"
+  when: slurm_slurmd
+  tags:
+    - slurm
+    - slurm_install_slurmd
+
+- name: Start slurmd service
+  ansible.builtin.service:
+    name: slurmd
+    state: started
+    enabled: true
+  when: slurm_slurmd and not ansible_is_chroot
+  tags:
+    - slurm
+    - slurm_install_slurmd
+
+- name: Enable slurmd on image
+  ansible.builtin.shell: systemctl enable slurmd
+  when: ansible_is_chroot
+  tags:
+    - slurm
+    - slurm_install_slurmd

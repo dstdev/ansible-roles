@@ -31,7 +31,7 @@
 - name: create dst user
   user:
     name: dst
-    password: "{{common_dst_user_password}}"
+    password: "{{common_dst_user_password | password_hash('sha512')}}"
     groups:
       - hpcadmin
     state: present

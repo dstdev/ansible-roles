@@ -1,17 +1,33 @@
 ---
 # tasks file for munge
-- name: install epel
-  ansible.builtin.package:
-    name: epel-release
-    state: present
+#
+- name: Gather os specific variables
+  include_vars: "{{item}}"
+  with_first_found:
+    - files:
+      - "{{ansible_os_family}}.yaml"
+      - "{{ansible_os_family}}-{{ansible_distribution_major_version}}.yaml"
+      paths:
+        - "{{role_path}}/vars"
+  tags:
+    - munge
 
-- name: install munge packages
+- name: Install munge-devel for EL8
+  ansible.builtin.dnf:
+    name: munge-devel
+    enablerepo: powertools
+    state: present
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '8'
+  tags:
+    - munge
+
+- name: Install packages for Munge
   ansible.builtin.package:
     name: "{{item}}"
     state: present
-  loop:
+  loop: "{{munge_packages}}"
+  tags:
     - munge
-    - munge-devel
 
 - name: create munge keyfile
   ansible.builtin.copy:
@@ -21,9 +37,13 @@
     mode: "0400"
   notify:
     - Restart munge
+  tags:
+    - munge
 
 - name: Enable munge service
   service:
     name: munge
     state: started
     enabled: true
+  tags:
+    - munge

@@ -1,0 +1,19 @@
+---
+slurm_required_packages:
+  - zlib-devel
+  - zlib
+  - bzip2
+  - bzip2-devel
+  - openssl
+  - openssl-devel
+  - pkgconfig
+  - wget
+  - python3
+  - epel-release
+  - "@Development tools"
+
+slurm_dbd_required_packages:
+  - mariadb-server
+  - mariadb-devel
+  - python2-PyMySQL
+  - python36-PyMySQL

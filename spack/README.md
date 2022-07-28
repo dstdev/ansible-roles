@@ -6,7 +6,7 @@ This role is used to install and configure [spack](spack.io).
 Requirements
 ------------
 
-None
+Existing Lmod install configured by Bright Cluster Manager.
 
 Role Variables
 --------------

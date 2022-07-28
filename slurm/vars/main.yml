@@ -1,2 +1,4 @@
 ---
 # vars file for slurm-controller
+slurm_install_directory: "{{slurm_install_root}}/{{slurm_version}}"
+slurm_install_symlink: "{{slurm_install_root}}/current"

@@ -1,0 +1,19 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    lmod_install: yes
+    spack_root_host: true
+    spack_bright: false
+    lmod_module_root_path: /opt/spack/share/spack/modules
+  tasks:
+    - name: Install procps
+      ansible.builtin.package:
+        name: procps
+        state: present
+    - name: "Include lmod"
+      ansible.builtin.include_role:
+        name: "lmod"
+    - name: "Include spack"
+      ansible.builtin.include_role:
+        name: "spack"

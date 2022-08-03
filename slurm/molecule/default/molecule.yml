@@ -3,16 +3,16 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint: |
-  set -e
-  yamllint .
-  ansible-lint
+#lint: |
+  #set -e
+  #yamllint .
+  #ansible-lint
 platforms:
   - name: instance
-    image: rockylinux
+    image: rockylinux:8
     privileged: true
     volume_mounts:
-      - "sys/fs/cgroup:/sys/fs/cgroup:ro"
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
     command: "/usr/sbin/init"
     pre_build_image: true
 provisioner:

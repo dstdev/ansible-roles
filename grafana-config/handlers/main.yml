@@ -1,0 +1,15 @@
+---
+# handlers file for grafana-server-dev
+# - name: restart server
+#   command: /sbin/shutdown -r now
+#   async: 0
+#   poll: 0
+#   ignore_errors: true
+#   notify:
+#     - check server status
+
+- name: restart grafana
+  become: true
+  service:
+    name: grafana-server
+    state: restarted

@@ -1,10 +1,22 @@
 name: Molecule
 on:
-  - push
-
+  workflow_dispatch:
+  push:
+    paths:
+      - prometheus_node_exporter
+      - prometheus_gpfs_exporter
+      - prometheus_dcgm_exporter
+      - prometheus_blackbox_exporter
+      - prometheus_ibm_exporter
+      - prometheus_slurm_exporter
+      - prometheus_cgroup_exporter
+      - virtualgl
+      - turbovnc
+      - slurm
+      - spack
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         folder:
@@ -17,6 +29,7 @@ jobs:
           - prometheus_cgroup_exporter
           - virtualgl
           - turbovnc
+          - spack
     steps:
       - name: checkout
         uses: actions/checkout@v2

@@ -1,6 +1,6 @@
 ---
 # defaults file for clustershell
 # Mandary options
-
+GROUP_SOURCE: slurm
 
 # Optional

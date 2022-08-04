@@ -1,0 +1,147 @@
+---
+# tasks file for slurm-controller
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{slurm_required_packages}}"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install slurmdbd requirements
+  ansible.builtin.package:
+    name: "{{item}}"
+  when: slurm_controller
+  loop: "{{slurm_dbd_required_packages}}"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Add slurm group
+  ansible.builtin.group:
+    name: slurm
+    gid: "{{slurm_gid}}"
+    state: present
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Add slurm user
+  ansible.builtin.user:
+    name: slurm
+    comment: "Slurm account"
+    uid: "{{slurm_uid}}"
+    group: slurm
+    state: present
+    home: /var/lib/slurm
+    shell: /sbin/nologin
+  tags:
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Download slurm
+  get_url:
+    url: "https://github.com/SchedMD/slurm/archive/refs/\
+          tags/slurm-{{slurm_download_version}}.zip"
+    dest: "/tmp/slurm-{{slurm_download_version}}.zip"
+  register: slurm_source
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+
+- name: extract slurm archive
+  unarchive:
+    copy: false
+    dest: /tmp/
+    src: "{{slurm_source.dest}}"
+  when: slurm_source.changed
+  register: slurm_source_unpack
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Configure slurm
+  command: "./configure --prefix=/{{slurm_install_directory}} --sysconfdir=/etc \
+            --localstatedir=/var --runstatedir=/run"
+  args:
+    chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"
+  when: slurm_source_unpack is changed
+  register: slurm_configure
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install slurm
+  shell: make && make install
+  args:
+    chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"
+  when: slurm_configure is changed
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+
+## Symlink configuration
+- name: Check if symlink exists
+  ansible.builtin.stat:
+    path: "{{slurm_install_symlink}}"
+  register: current_symlink
+
+- name: Create current symlink
+  ansible.builtin.file:
+    state: link
+    src: "{{slurm_install_directory}}"
+    dest: "{{slurm_install_symlink}}"
+  when: not current_symlink.stat.exists
+
+- name: Update current symlink
+  ansible.builtin.file:
+    state: link
+    src: "{{slurm_install_directory}}"
+    dest: "{{slurm_install_symlink}}"
+  when: slurm_update_symlink
+
+
+## 
+- name: Create slurm owned directories
+  ansible.builtin.file:
+    state: directory
+    path: "{{item}}"
+    owner: slurm
+    group: slurm
+  loop:
+    - /var/run/slurm
+    - /var/log/slurm
+    - /var/spool/slurm
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Create slurm profile
+  ansible.builtin.template:
+    src: templates/slurm.sh.j2
+    dest: /etc/profile.d/slurm.sh
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Create slurm profile
+  ansible.builtin.template:
+    src: templates/slurm.csh.j2
+    dest: /etc/profile.d/slurm.csh
+    owner: root
+    group: root
+    mode: "0644"
+
+
+

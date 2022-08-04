@@ -5,3 +5,4 @@ common_dst_user_uid: 10000
 common_dst_users: []
 common_hostname: false
 common_timezone: "US/Eastern"
+commmon_additional_etc_hosts: []

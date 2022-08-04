@@ -11,13 +11,14 @@ Any pre-requisites that may not be covered by Ansible itself or the role should 
 Role Variables
 --------------
 
-| Name                     | Default Value | Description                             |
-| ----                     | -----         | -----------                             |
-| common_dst_user_password | None          | Password whihc must be specified        |
-| common_dst_user_id       | 10000         | uid for dst user                        |
-| common_dst_users         | []            | List of users to add                    |
-| common_hostname          | false         | System hostname to set in /etc/hostname |
-| common_timezone          | "US/Eastern"  | Timezone to apply                       |
+| Name                         | Default Value | Description                             |
+| ----                         | -----         | -----------                             |
+| common_dst_user_password     | None          | Password whihc must be specified        |
+| common_dst_user_id           | 10000         | uid for dst user                        |
+| common_dst_users             | []            | List of users to add                    |
+| common_hostname              | false         | System hostname to set in /etc/hostname |
+| common_timezone              | "US/Eastern"  | Timezone to apply                       |
+| commmon_additional_etc_hosts | []            | Lines to add to /etc/hosts              |
 
 common_dst_users Definition
 

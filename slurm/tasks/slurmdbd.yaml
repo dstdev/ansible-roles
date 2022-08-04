@@ -1,0 +1,59 @@
+- name: Start mariadb
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+  when: slurm_controller
+  tags:
+    - slurm
+    - slurm_install_controller
+
+- name: Create database user slurm
+  community.mysql.mysql_user:
+    name: slurm
+    encrypted: true
+    priv: '*.*:ALL'
+    state: present
+  when: slurm_controller
+  tags:
+    - slurm
+    - slurm_install_controller
+
+
+- name: Create slurmdbd configuration file
+  ansible.builtin.template:
+    src: templates/slurmdbd.conf.j2
+    dest: /etc/slurmdbd.conf
+    owner: slurm
+    group: slurm
+    mode: "0600"
+  when: slurm_controller
+  notify:
+    - Restart slurmdbd
+  tags:
+    - slurm
+    - slurm_configure
+
+- name: create slurmdbd service file
+  ansible.builtin.template:
+    src: templates/slurmdbd.service.j2
+    dest: /etc/systemd/system/slurmdbd.service
+    owner: root
+    group: root
+    mode: "0644"
+  when: slurm_controller
+  tags:
+    - slurm
+    - slurm_install_controller
+
+- name: Start slurmdbd service
+  ansible.builtin.service:
+    name: slurmdbd
+    state: started
+    enabled: true
+  when: slurm_controller
+  tags:
+    - slurm
+    - slurm_install_controller
+
+

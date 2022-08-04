@@ -1,4 +1,21 @@
 ---
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  when: spack_root_host | bool
+
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{spack_required_packages}}"
+
 - name: clone spack repository
   git:
     repo: "{{spack_repo}}"
@@ -8,13 +25,13 @@
 
 - name: Copy spack sh config
   template:  
-    src: templates/z-spack.sh
-    dest: /etc/profile.d/z-spack.sh
+    src: templates/zz-spack.sh
+    dest: /etc/profile.d/zz-spack.sh
 
 - name: copy spack csh config
   template:  
-    src: templates/z-spack.csh
-    dest: /etc/profile.d/z-spack.csh
+    src: templates/zz-spack.csh
+    dest: /etc/profile.d/zz-spack.csh
 
 - name: enable lmod bash
   lineinfile:
@@ -45,7 +62,6 @@
     backup: yes
     force: no
   when: spack_root_host | bool
-
 
 - name: Copy spack package configuration file
   copy:

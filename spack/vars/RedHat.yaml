@@ -1,0 +1,3 @@
+---
+spack_required_packages:
+  - git

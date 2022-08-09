@@ -44,13 +44,13 @@
 #   notify:
 #     - restart server
 
-- name: create prometheus datasource
-  community.grafana.grafana_datasource:
-    name: dst_prometheus
-    ds_type: prometheus
-    ds_url: "{{ datasource_url }}"
-    url: "{{ grafana_url }}"
-    is_default: yes
+# - name: create prometheus datasource
+#   community.grafana.grafana_datasource:
+#     name: dst_prometheus
+#     ds_type: prometheus
+#     ds_url: "{{ datasource_url }}"
+#     url: "{{ grafana_url }}"
+#     is_default: yes
     # access: proxy
     # tls_skip_verify: true
     # additional_json_data:
@@ -67,61 +67,61 @@
 #     overwrite: yes
 #     dashboard_id: 1860
 
-- name: copy dashboard files to server
-  copy:
-    src: "../files/{{item}}"
-    dest: /tmp/
-    # owner: root
-    # group: root
-    # mode: 0644
-  loop:
-    - slurm_dashboard.json
-    - node-exporter-full_rev26.json
-    - nvidia_dcgm.json
-    - s-m-a-r-t-disk-monitoring-for-prometheus-dashboard_rev1.json
-    - smart-disk-data_rev2.json
+# - name: copy dashboard files to server
+#   copy:
+#     src: "../files/{{item}}"
+#     dest: /tmp/
+#     # owner: root
+#     # group: root
+#     # mode: 0644
+#   loop:
+#     - slurm_dashboard.json
+#     - node-exporter-full_rev26.json
+#     - nvidia_dcgm.json
+#     - s-m-a-r-t-disk-monitoring-for-prometheus-dashboard_rev1.json
+#     - smart-disk-data_rev2.json
 
-- name: Import Grafana dashboard slurm_dashboard.json
-  community.grafana.grafana_dashboard:
-    grafana_url: "{{ grafana_url }}"
-    # grafana_api_key: "{{ grafana_api_key }}"
-    state: present
-    commit_message: Updated by ansible
-    overwrite: yes
-    path: /tmp/slurm_dashboard.json
+# - name: Import Grafana dashboard slurm_dashboard.json
+#   community.grafana.grafana_dashboard:
+#     grafana_url: "{{ grafana_url }}"
+#     # grafana_api_key: "{{ grafana_api_key }}"
+#     state: present
+#     commit_message: Updated by ansible
+#     overwrite: yes
+#     path: /tmp/slurm_dashboard.json
 
-- name: Import Grafana dashboard node-exporter-full_rev26.json
-  community.grafana.grafana_dashboard:
-    grafana_url: "{{ grafana_url }}"
-    # grafana_api_key: "{{ grafana_api_key }}"
-    state: present
-    commit_message: Updated by ansible
-    overwrite: yes
-    path: /tmp/node-exporter-full_rev26.json
+# - name: Import Grafana dashboard node-exporter-full_rev26.json
+#   community.grafana.grafana_dashboard:
+#     grafana_url: "{{ grafana_url }}"
+#     # grafana_api_key: "{{ grafana_api_key }}"
+#     state: present
+#     commit_message: Updated by ansible
+#     overwrite: yes
+#     path: /tmp/node-exporter-full_rev26.json
 
-- name: Import Grafana dashboard nvidia_dcgm.json
-  community.grafana.grafana_dashboard:
-    grafana_url: "{{ grafana_url }}"
-    # grafana_api_key: "{{ grafana_api_key }}"
-    state: present
-    commit_message: Updated by ansible
-    overwrite: yes
-    path: /tmp/nvidia_dcgm.json
+# - name: Import Grafana dashboard nvidia_dcgm.json
+#   community.grafana.grafana_dashboard:
+#     grafana_url: "{{ grafana_url }}"
+#     # grafana_api_key: "{{ grafana_api_key }}"
+#     state: present
+#     commit_message: Updated by ansible
+#     overwrite: yes
+#     path: /tmp/nvidia_dcgm.json
 
-- name: Import SMART disk monitoring for Prometheus Dashboard
-  community.grafana.grafana_dashboard:
-    grafana_url: "{{ grafana_url }}"
-    # grafana_api_key: "{{ grafana_api_key }}"
-    state: present
-    commit_message: Updated by ansible
-    overwrite: yes
-    path: /tmp/s-m-a-r-t-disk-monitoring-for-prometheus-dashboard_rev1.json
+# - name: Import SMART disk monitoring for Prometheus Dashboard
+#   community.grafana.grafana_dashboard:
+#     grafana_url: "{{ grafana_url }}"
+#     # grafana_api_key: "{{ grafana_api_key }}"
+#     state: present
+#     commit_message: Updated by ansible
+#     overwrite: yes
+#     path: /tmp/s-m-a-r-t-disk-monitoring-for-prometheus-dashboard_rev1.json
 
-- name: Import SMART disk data Dashboard
-  community.grafana.grafana_dashboard:
-    grafana_url: "{{ grafana_url }}"
-    # grafana_api_key: "{{ grafana_api_key }}"
-    state: present
-    commit_message: Updated by ansible
-    overwrite: yes
-    path: /tmp/smart-disk-data_rev2.json
+# - name: Import SMART disk data Dashboard
+#   community.grafana.grafana_dashboard:
+#     grafana_url: "{{ grafana_url }}"
+#     # grafana_api_key: "{{ grafana_api_key }}"
+#     state: present
+#     commit_message: Updated by ansible
+#     overwrite: yes
+#     path: /tmp/smart-disk-data_rev2.json

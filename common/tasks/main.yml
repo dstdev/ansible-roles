@@ -10,17 +10,6 @@
   tags:
     - common
 
-- name: Allow 'hpcadmin' group to have password sudo
-  lineinfile:
-    dest: /etc/sudoers.d/hpcadmin
-    create: yes
-    state: present
-    regexp: '^%hpcadmin'
-    line: '%hpcadmin ALL=(ALL) PASSWD: ALL'
-    validate: visudo -cf %s
-  tags:
-    - common
-
 - name: create hpcadmin group
   group:
     name: hpcadmin
@@ -39,6 +28,18 @@
     createhome: yes
     home: /usr/local/dst
     uid: "{{common_dst_user_uid}}"
+  tags:
+    - common
+
+# Needs to be configured after setting the password for the user
+- name: Allow 'hpcadmin' group to have password sudo
+  lineinfile:
+    dest: /etc/sudoers.d/hpcadmin
+    create: yes
+    state: present
+    regexp: '^%hpcadmin'
+    line: '%hpcadmin ALL=(ALL) PASSWD: ALL'
+    validate: visudo -cf %s
   tags:
     - common
 

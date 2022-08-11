@@ -1,0 +1,12 @@
+---
+# defaults file for wg-easy
+wg_easy_data_dir: /data/apps/wg_easy
+wg_easy_image_version: latest
+wg_easy_host_ip: 127.0.0.1
+wg_easy_password: "testing"
+wg_easy_default_dns: 8.8.8.8
+wg_easy_allowed_ips: 0.0.0.0/0
+wg_easy_default_address: 10.3.2.x
+wg_easy_traefik_enable: true
+wg_easy_site_root: vpn.datainscience.com
+wg_easy_traefik_cert_resolver: letsencrypt

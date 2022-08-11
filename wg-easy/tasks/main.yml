@@ -1,0 +1,79 @@
+---
+# tasks file for wg-easy
+- name: Install docker-py
+  ansible.builtin.package:
+    name: python3-docker
+    state: present
+  tags:
+    - wg
+
+- name: Create wg-easy data diretory
+  file:
+    path: "{{wg_easy_data_dir}}"
+    owner: root
+    group: root
+    state: directory
+  tags:
+    - wg
+
+- name: Set labels
+  ansible.builtin.set_fact:
+    wg_easy_docker_labels: 
+      traefik.enable: "true"
+      traefik.http.routers.wg_easy.entrypoints: "websecure"
+      traefik.http.routers.wg_easy.rule: "Host(`{{wg_easy_site_root}}`)"
+      traefik.http.routers.wg_easy.tls: "true"
+      traefik.http.services.wg_easy.loadbalancer.server.port: "51821"
+      traefik.docker.network: traefik_proxy
+    wg_easy_docker_networks:
+      - name: traefik_proxy
+  when: wg_easy_traefik_enable
+  tags:
+    - wg
+
+- name: Set traefik certresolver
+  ansible.utils.update_fact:
+    updates:
+      - path: "wg_easy_docker_labels['traefik.http.routers.wg_easy.tls.certresolver']"
+        value: "{{wg_easy_traefik_cert_resolver}}"
+  when: wg_easy_traefik_enable and wg_easy_traefik_cert_resolver
+  register: wg_easy_docker_labels
+  tags:
+    - wg
+
+- name: Fix update facts
+  ansible.builtin.set_fact:
+    wg_easy_docker_labels: "{{wg_easy_docker_labels.wg_easy_docker_labels}}"
+  when: wg_easy_traefik_enable and wg_easy_traefik_cert_resolver
+  tags:
+    - wg
+
+- name: Start docker container
+  community.docker.docker_container:
+    name: wg-easy
+    image: "weejewel/wg-easy:{{wg_easy_image_version}}"
+    state: started
+    restart_policy: unless-stopped
+    env:
+      WG_HOST: "{{wg_easy_host_ip}}"
+      PASSWORD: "{{wg_easy_password}}"
+      WG_DEFAULT_ADDRESS: "{{wg_easy_default_address}}"
+      WG_DEFAULT_DNS: "{{wg_easy_default_dns}}"
+      WG_ALLOWED_IPS: "{{wg_easy_allowed_ips}}"
+    volumes:
+      - "{{wg_easy_data_dir}}:/etc/wireguard"
+    ports:
+      - "51820:51820/udp"
+    capabilities:
+      - net_admin
+      - sys_module
+    sysctls:
+      net.ipv4.conf.all.src_valid_mark: 1
+      net.ipv4.ip_forward: 1
+    log_options:
+      max-size: "10m"
+      max-files: "3"
+    labels: "{{wg_easy_docker_labels}}"
+    networks: "{{wg_easy_docker_networks}}"
+  tags:
+    - wg

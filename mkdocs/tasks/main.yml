@@ -1,16 +1,18 @@
 ---
-- name: "docs builder"
-  hosts: localhost
-  connection: local
-  tasks:
-  
-    - name: "docs git update"
-      git:
-        repo: git@github.com:dstdev/slu-cluster-docs.git
-        dest: ../files
+- name: "docs git update"
+  ansible.builtin.git:
+    repo: "{{mkdocs_repo_url}}"
+    dest: "{{mkdocs_repo_dest}}"
 
-    - name: "docs build command"
-      ansible.builtin.shell: mkdocs build -f ../files/mkdocs.yml
+# where is mkdocs installed? 
+# example here: https://github.com/dstdev/ansible-roles/blob/development/datalake/tasks/main.yml to create a virtual environment at {{mkdocs_venv}}
 
-    - name: "move new site dir to apache dir"
-      ansible.builtin.shell: mv -f ../files/site var/www/html/www.docs 
+# create a cronjob script to periodically pull and build
+# use a template file to copy to /etc/cron.hourly to run every hour
+# ansible.builtin.template
+
+- name: "docs build command"
+  ansible.builtin.shell: mkdocs build -f ../files/mkdocs.yml
+
+- name: "move new site dir to apache dir"
+  ansible.builtin.shell: mv -f ../files/site var/www/html/www.docs 

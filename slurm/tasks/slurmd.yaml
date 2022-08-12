@@ -22,7 +22,7 @@
 
 - name: Enable slurmd on image
   ansible.builtin.shell: systemctl enable slurmd
-  when: ansible_is_chroot
+  when: slurm_slurmd and ansible_is_chroot
   tags:
     - slurm
     - slurm_install_slurmd

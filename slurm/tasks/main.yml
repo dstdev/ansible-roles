@@ -40,7 +40,12 @@
   ansible.builtin.include_tasks: "slurmctld.yaml"
   tags:
     - any
-
+    
+- name: Include slurmcd tasks
+  ansible.builtin.include_tasks: "slurmd.yaml"
+  tags:
+    - any
+    
 - name: Include slurmdbd tasks
   ansible.builtin.include_tasks: "slurmdbd.yaml"
   tags:

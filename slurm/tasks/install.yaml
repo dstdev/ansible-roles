@@ -43,6 +43,17 @@
     - slurm_install_controller
     - slurm_install_slurmd
 
+- name: Create slurm configuration directory
+  ansible.builtin.file:
+    path: /etc/slurm
+    state: directory
+    owner: slurm
+    group: slurm
+  when: slurm_controller
+  tags:
+    - slurm_install_controller
+
+
 - name: Create Daemon spool dir
   ansible.builtin.file:
     state: directory
@@ -86,7 +97,7 @@
     - slurm_install_slurmd
 
 - name: Configure slurm
-  command: "./configure --prefix=/{{slurm_install_directory}} --sysconfdir=/etc \
+  command: "./configure --prefix=/{{slurm_install_directory}} --sysconfdir=/etc/slurm \
             --localstatedir=/var --runstatedir=/run"
   args:
     chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"

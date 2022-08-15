@@ -31,13 +31,6 @@
     - slurm_install_controller
     - slurm_install_slurmd
 
-- name: Create slurm configuration directory
-  ansible.builtin.file:
-    path: /etc/slurm
-    state: directory
-    owner: slurm
-    group: slurm
-
 - name: Include install tasks
   ansible.builtin.include_tasks: "install.yaml"
   tags:

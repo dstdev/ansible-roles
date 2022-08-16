@@ -109,7 +109,7 @@
     - slurm_install_slurmd
 
 - name: Install slurm
-  shell: make && make install
+  shell: "make -j {{slurm_build_jobs}} && make install"
   args:
     chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"
   when: slurm_configure is changed

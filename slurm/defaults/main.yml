@@ -50,3 +50,6 @@ slurm_dbd_password: ""
 
 slurm_install_root: "/opt/slurm"
 slurm_update_symlink: yes
+
+slurm_build_jobs: 4
+slurm_enable_cgroup_conf: true

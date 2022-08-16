@@ -1,0 +1,3 @@
+---
+tmux_os_packages:
+  - tmux

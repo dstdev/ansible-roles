@@ -1,0 +1,140 @@
+# Get the current tmux version
+tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
+
+# Determine if in a vim window
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+  | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+
+# Determine if in a fzf window
+is_fzf="ps -o state= -o comm= -t '#{pane_tty}' \
+  | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?fzf$'"
+
+# Helps with escape working correctly in vim
+set -g escape-time 10
+
+# boost history
+set -g history-limit 5000
+
+setw -g automatic-rename off   # rename window to reflect current program
+set -g renumber-windows on    # renumber windows when a window is closed
+
+# set mouse select pane mode to click with mouse
+set -g mouse on
+
+# Vi copy paste mode
+set-window-option -g mode-keys vi
+
+# 1 based indexing. Makes sense with keyboard
+set -g base-index 1
+# make pane numbering consistent with windows
+setw -g pane-base-index 1
+
+# This appears to be the best color scheme for me, but we'll see.
+set -s default-terminal "xterm-256color"
+
+# ? not sure what this does
+set -as terminal-overrides ",*:Tc"
+
+# Change prefix
+set-option -g prefix C-f
+# reset prefix to Ctrl-f
+unbind-key C-b
+bind-key f send-prefix
+
+# Vi copypaste mode
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi y send-keys -X copy-selection
+bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
+bind P paste-buffer
+
+# Reload tmux config
+bind r source ~/.tmux.conf\; display "~/.tmux.conf sourced!"
+
+# handle vim and fzf navigations better.
+bind -n C-h run "($is_vim && tmux send-keys C-h) || \
+                 tmux select-pane -L"
+
+bind -n C-j run "($is_vim && tmux send-keys C-j)  || \
+                 ($is_fzf && tmux send-keys C-j) || \
+                 tmux select-pane -D"
+
+bind -n C-k run "($is_vim && tmux send-keys C-k) || \
+                 ($is_fzf && tmux send-keys C-k)  || \
+                 tmux select-pane -U"
+
+bind -n C-l run "($is_vim && tmux send-keys C-l) || \
+                 tmux select-pane -R"
+
+if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
+if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+
+bind-key -T copy-mode-vi 'C-h' select-pane -L
+bind-key -T copy-mode-vi 'C-j' select-pane -D
+bind-key -T copy-mode-vi 'C-k' select-pane -U
+bind-key -T copy-mode-vi 'C-l' select-pane -R
+#bind-key -T copy-mode-vi 'C-\' select-pane -l
+
+bind > swap-pane -D       # swap current pane with the next one
+bind < swap-pane -U       # swap current pane with the previous one
+
+# Better splits
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+
+
+############### THEME ##############
+# TODO: Alternate airline bar without all the special characters  
+set-option -g status "on"
+
+set -g status-justify "left"
+setw -g window-status-separator ""
+set -g status-right-length 200
+
+# change window screen colors
+set-option -wg mode-style bg="#FE8019",fg="#3C3836"
+
+# status bar theme                                         
+set-option -g status-right "#[fg=#3c3836, bg=#282828, nobold, nounderscore, noitalics]#[fg=#A89984,bg=#3C3836]  %a %h-%d  %H:%M #[fg=#A89984, bg=#3C3836, nobold, noitalics, nounderscore]#[fg=#3C3836, bg=#A89984] #h "
+set-window-option -g window-status-current-format "#[fg=#282828, bg=#fE8019, nobold, noitalics, nounderscore]#[fg=colour239, bg=#FE8019] #I #[fg=colour239, bg=#FE8019, bold] #W #[fg=#fE8019, bg=#282828, nobold, noitalics, nounderscore]"
+set-window-option -g window-status-format "#[fg=#282828,bg=#3c3836,noitalics]#[fg=#A89984,bg=#3c3836] #I #[fg=#a89984, bg=#3c3836] #W #[fg=#3c3836, bg=#282828, noitalics]"
+                                      
+
+#default window colors                                     
+set-option -g status-style fg="#A89984"
+
+# non-active colors                                        
+set-option -wg window-status-style bg="#3C3836",fg="#7C6F64"
+
+set-option -wg window-status-activity-style bg="#3C3836",fg="#A89984"
+
+# active window colors                                     
+set-option -wg window-status-current-style bg="#FE8019",fg="#3C3836"
+
+# pane border                                              
+set-option -g pane-active-border-style fg="#FE8019"
+set-option -g pane-border-style fg="#3C3836"
+
+# message infos                                            
+set-option -g message-style bg="#FE8019",fg="#3C3836"
+
+# writing commands inactive                                
+set-option -g message-command-style bg="#A89984",fg="#3C3836"
+
+# pane number display                                      
+set-option -g display-panes-active-colour "#FE8019"
+set-option -g display-panes-colour "#3C3836"
+
+                                    # clock
+set-option -wg clock-mode-colour "#FE8019"
+
+# bell
+set-option -wg window-status-bell-style bg="#3C3836",fg="#FE8019"
+
+# copy mode highlighting
+%if #{>=:#{version},3.2}
+    set-option -wg copy-mode-match-style "bg=#A89984,fg=#3C3836"
+    set-option -wg copy-mode-current-match-style "bg=#FE8109,fg=#3C3836"
+%endif
+

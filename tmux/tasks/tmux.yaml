@@ -1,0 +1,37 @@
+---
+- name: get user home directory
+  ansible.builtin.shell: >
+    getent passwd {{ user }} | awk -F: '{ print $6 }'
+  changed_when: false
+  register: user_home
+  tags:
+    tmux
+
+- name: Create tmux plugins directory
+  ansible.builtin.file:
+    path: "{{user_home.stdout}}/.tmux/plugins"
+    state: directory
+    owner: "{{user}}"
+    group: "{{user}}"
+
+- name: Copy tmux configuration
+  ansible.builtin.template:
+    src: "templates/tmux.conf.j2"
+    dest: "{{user_home.stdout}}/.tmux.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
+
+#- name: download tmux plugin manager
+  #become: yes
+  #become_user: "{{user}}"
+  #git:
+    #repo: https://github.com/tmux-plugins/tpm
+    #dest: "{{user_home.stdout}}/.tmux/plugins/tpm"
+    #update: yes
+
+#- name: install tpm
+  #become: yes
+  #become_user: "{{user}}"
+  #ansible.builtin.shell:
+    #cmd: "{{user_home.stdout}}/.tmux/plugins/tpm/bin/install_plugins"
+  #ignore_errors: true

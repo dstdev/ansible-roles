@@ -21,6 +21,19 @@ slurm_nodes: []
 slurm_partitions: []
 slurm_daemon_spool_dir: /var/spool/slurmd/
 slurm_state_save_location: /var/spool/slurmctld
+slurm_scheduler_type: backfill
+slurm_accounting_storage_enforce: 0
+
+## Priority settings
+slurm_priority_type: basic
+slurm_priority_calc_period: 5
+slurm_priority_weight_age: 0
+slurm_priority_weight_assoc: 0
+slurm_priority_weight_fair_share: 0
+slurm_priority_weight_job_size: 0
+slurm_priority_weight_partition: 0
+slurm_priority_weight_qos: 0
+slurm_priority_weight_tres: CPU=0 
 
 # slurm conf configs
 slurm_conf_return_to_service: 2

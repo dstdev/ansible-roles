@@ -11,45 +11,55 @@ Running Mariadb/MySQL Role or instance and munge development libraries must be i
 Role Variables
 --------------
 
-| Name                              | Default Value         | Description                               |
-| ----                              | -----                 | -----------                               |
-| mounts                            | []                    | List of dictionaries defining the mount   |
-| slurm_database_password           | "default"             | Mysql password for slurm database user    |
-| slurm_version                     | "21.08.5"             | Versino of slurm to download and install  |
-| slurm_slurmd                      | false                 | Install as a slurm daemon (compute/login) |
-| slurm_controller                  | false                 | Install as a slurm controller             |
-| slurm_uid                         | 450                   | Slurm User ID                             |
-| slurm_gid                         | 450                   | Slurm group ID                            |
-| slurm_controller_hostname         | localhost             | Hostname for SlurmctldHost                |
-| slurm_controller_ip               | 127.0.0.1             | IP for SlurmctldHost                      |
-| slurm_controller_port             | 6817                  | Controller listening port                 |
-| slurm_daemon_port                 | 6818                  | Daemon listening port                     |
-| slurm_user                        | slurm                 | User to run slurmctld as                  |
-| slurm_cluster_name                | cluster               | Name for this cluster install             |
-| slurm_controller_debug            | 3                     | Controller debug level                    |
-| slurm_daemon_debug                | 3                     | Daemon debug level                        |
-| slurm_proctrack_type              | cgroup                | ProctrackType                             |
-| slurm_nodes                       | []                    | List of nodes                             |
-| slurm_partitions                  | []                    | List of partitions                        |
-| slurm_daemon_spool_dir            | /var/spool/slurmd     | Location on node for slurm daemon states  |
-| slurm_state_save_location         | /var/spool/slurmctld  | Location on controller for state data     |
-| slurm_conf_return_to_service      | 2                     | Return to service: 0, 1, or 2             |
-| slurm_conf_task_plugin            | ['task/cgroup']       | Task plugins to use                       |
-| slurm_conf_job_acct_gather_type   | jobacct_gather/cgroup | Job accouting collection type             |
-| slurm_conf_gres_types             | []                    | GRES Types used                           |
-| slurm_conf_accouting_storage_tres | []                    | AccoutingStorageTres Parameter            |
-| slurm_conf_prolog_flags           | ["X11"]               | PrologFlags                               |
-| slurm_select_type                | select/cons_res      | Select type                               |
-| slurm_select_type_parameters     | CR_CORE              | Select type parameter                     |
-| slurm_cgroup_automount           | yes                  | Automount cgroups                         |
-| slurm_cgroup_constrain_cores     | yes                  | Constrain cores available                 |
-| slurm_cgroup_constrain_ram_space | yes                  | Constrain ram space                       |
-| slurm_dbd_storage_user           | slurm                | Slurmdbd service user                     |
-| slurm_dbd_log_level              | verbose              | Slurmdbd log level                        |
-| slurm_dbd_address                | localhost            | Host ip address for dbd                   |
-| slurm_dbd_host                   | localhost            | Hostname of dbd service                   |
-| slurm_dbd_password               | ""                   | MySQL/Mariadb password                    |
-
+| Name                              | Default Value         | Description                                 |
+| ----                              | -----                 | -----------                                 |
+| mounts                            | []                    | List of dictionaries defining the mount     |
+| slurm_database_password           | "default"             | Mysql password for slurm database user      |
+| slurm_version                     | "21.08.5"             | Versino of slurm to download and install    |
+| slurm_slurmd                      | false                 | Install as a slurm daemon (compute/login)   |
+| slurm_controller                  | false                 | Install as a slurm controller               |
+| slurm_uid                         | 450                   | Slurm User ID                               |
+| slurm_gid                         | 450                   | Slurm group ID                              |
+| slurm_controller_hostname         | localhost             | Hostname for SlurmctldHost                  |
+| slurm_controller_ip               | 127.0.0.1             | IP for SlurmctldHost                        |
+| slurm_controller_port             | 6817                  | Controller listening port                   |
+| slurm_daemon_port                 | 6818                  | Daemon listening port                       |
+| slurm_user                        | slurm                 | User to run slurmctld as                    |
+| slurm_cluster_name                | cluster               | Name for this cluster install               |
+| slurm_controller_debug            | 3                     | Controller debug level                      |
+| slurm_daemon_debug                | 3                     | Daemon debug level                          |
+| slurm_proctrack_type              | cgroup                | ProctrackType                               |
+| slurm_scheduler_type              | backfill              | Type of scheduler to uses (without "sched") |
+| slurm_nodes                       | []                    | List of nodes                               |
+| slurm_partitions                  | []                    | List of partitions                          |
+| slurm_daemon_spool_dir            | /var/spool/slurmd     | Location on node for slurm daemon states    |
+| slurm_state_save_location         | /var/spool/slurmctld  | Location on controller for state data       |
+| slurm_conf_return_to_service      | 2                     | Return to service: 0, 1, or 2               |
+| slurm_conf_task_plugin            | ['task/cgroup']       | Task plugins to use                         |
+| slurm_conf_job_acct_gather_type   | jobacct_gather/cgroup | Job accouting collection type               |
+| slurm_conf_gres_types             | []                    | GRES Types used                             |
+| slurm_conf_accouting_storage_tres | []                    | AccoutingStorageTres Parameter              |
+| slurm_conf_prolog_flags           | ["X11"]               | PrologFlags                                 |
+| slurm_select_type                 | select/cons_res       | Select type                                 |
+| slurm_select_type_parameters      | CR_CORE               | Select type parameter                       |
+| slurm_cgroup_automount            | yes                   | Automount cgroups                           |
+| slurm_cgroup_constrain_cores      | yes                   | Constrain cores available                   |
+| slurm_cgroup_constrain_ram_space  | yes                   | Constrain ram space                         |
+| slurm_dbd_storage_user            | slurm                 | Slurmdbd service user                       |
+| slurm_dbd_log_level               | verbose               | Slurmdbd log level                          |
+| slurm_dbd_address                 | localhost             | Host ip address for dbd                     |
+| slurm_dbd_host                    | localhost             | Hostname of dbd service                     |
+| slurm_dbd_password                | ""                    | MySQL/Mariadb password                      |
+| slurm_accounting_storage_enforce  | 0                     | Accounting enforcement                      |
+| slurm_priority_type               | basic                 | Priority Plugin to use                      |
+| slurm_priority_calc_period        | 5                     | Half lie decay time                         |
+| slurm_priority_weight_age         | 0                     | Weight contribution to priority             |
+| slurm_priority_weight_assoc       | 0                     | Association contribution to priority        |
+| slurm_priority_weight_fair_share  | 0                     | Fair share contribution to priority         |
+| slurm_priority_weight_job_size    | 0                     | Job sizec ontribution to priority           |
+| slurm_priority_weight_partition   | 0                     | Partition contribution to priority          |
+| slurm_priority_weight_qos         | 0                     | QOS contribution to priority                |
+| slurm_priority_weight_tres        | 0                     | TRES contribution to priority               |
 
 Tags
 ----

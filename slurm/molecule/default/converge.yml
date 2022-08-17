@@ -13,6 +13,7 @@
     slurm_conf_task_plugin: 
       - task/none
     slurm_conf_job_acct_gather_type: jobacct_gather/none
+    slurm_priority_type: multifactor
   tasks:
     - name: Set slurm nodes
       ansible.builtin.set_fact:

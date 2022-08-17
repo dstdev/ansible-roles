@@ -54,7 +54,7 @@
 - name: Add dst user private_key
   copy:
     content: "{{common_dst_private_key}}"
-    dest: "/usr/local/dst/.ssh/id_rsa"
+    dest: "{{common_dst_user_home}}/.ssh/id_rsa"
     owner: "dst"
     group: "dst"
     mode: "0600"

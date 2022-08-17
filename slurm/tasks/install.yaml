@@ -43,6 +43,35 @@
     - slurm_install_controller
     - slurm_install_slurmd
 
+- name: Create slurm configuration directory
+  ansible.builtin.file:
+    path: /etc/slurm
+    state: directory
+    owner: slurm
+    group: slurm
+  when: slurm_controller
+  tags:
+    - slurm_install_controller
+
+
+- name: Create Daemon spool dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{slurm_daemon_spool_dir}}"
+    owner: slurm
+    group: slurm
+  tags:
+    - slurm_install_slurmd
+
+- name: Create State Save Directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{slurm_state_save_location}}"
+    owner: slurm
+    group: slurm
+  tags:
+    - slurm_install_controller
+
 - name: Download slurm
   get_url:
     url: "https://github.com/SchedMD/slurm/archive/refs/\
@@ -68,7 +97,7 @@
     - slurm_install_slurmd
 
 - name: Configure slurm
-  command: "./configure --prefix=/{{slurm_install_directory}} --sysconfdir=/etc \
+  command: "./configure --prefix=/{{slurm_install_directory}} --sysconfdir=/etc/slurm \
             --localstatedir=/var --runstatedir=/run"
   args:
     chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"
@@ -80,7 +109,7 @@
     - slurm_install_slurmd
 
 - name: Install slurm
-  shell: make && make install
+  shell: "make -j {{slurm_build_jobs}} && make install"
   args:
     chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"
   when: slurm_configure is changed
@@ -121,7 +150,6 @@
   loop:
     - /var/run/slurm
     - /var/log/slurm
-    - /var/spool/slurm
   tags:
     - slurm
     - slurm_install_controller

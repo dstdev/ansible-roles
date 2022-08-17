@@ -9,6 +9,11 @@
     slurm_partitions:
       - PartitionName=defq Default=YES Nodes=localhost
     slurm_proctrack_type: "linuxproc"
+    slurm_conf_prolog_flags: []
+    slurm_conf_task_plugin: 
+      - task/none
+    slurm_conf_job_acct_gather_type: jobacct_gather/none
+    slurm_priority_type: multifactor
   tasks:
     - name: Set slurm nodes
       ansible.builtin.set_fact:

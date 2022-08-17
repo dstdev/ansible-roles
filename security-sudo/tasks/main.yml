@@ -1,0 +1,19 @@
+---
+# tasks file for security-sudo
+- name: Deploying Sudo Configuration Files
+  ansible.builtin.copy:
+    src: files/sudoers
+    dest: /etc/sudoers
+
+- name: Setting Config File Permissions
+  ansible.builtin.file:
+    path: /etc/sudoers
+    owner: root
+    group: root
+    mode: 0440
+
+- name: Verifying PAM configurations
+  lineinfile:
+    path: /etc/pam.d/sudo
+    state: absent
+    regexp: '^pam_succeed_if'

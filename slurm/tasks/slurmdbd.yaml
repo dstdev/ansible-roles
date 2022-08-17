@@ -23,7 +23,7 @@
 - name: Create slurmdbd configuration file
   ansible.builtin.template:
     src: templates/slurmdbd.conf.j2
-    dest: /etc/slurmdbd.conf
+    dest: /etc/slurm/slurmdbd.conf
     owner: slurm
     group: slurm
     mode: "0600"

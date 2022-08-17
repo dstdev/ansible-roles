@@ -2,7 +2,7 @@
 Description=Slurm controller daemon
 After=network-online.target munge.service
 Wants=network-online.target
-ConditionPathExists=/etc/slurm.conf
+ConditionPathExists=/etc/slurm/slurm.conf
 
 [Service]
 Type=simple

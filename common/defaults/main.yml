@@ -6,5 +6,5 @@ common_dst_users: []
 commond_dst_user_home: /usr/local/dst
 common_hostname: false
 common_timezone: "US/Eastern"
-commmon_additional_etc_hosts: []
 common_dst_authorized_key: ""
+common_additional_etc_hosts: []

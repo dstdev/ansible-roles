@@ -1,0 +1,9 @@
+---
+# handlers file for cobbler
+- name: Restart cobblerd
+  ansible.builtin.systemd:
+    name: cobblerd
+    state: restarted
+
+- name: Run cobbler sync
+  ansible.builtin.shell: "cobbler sync"

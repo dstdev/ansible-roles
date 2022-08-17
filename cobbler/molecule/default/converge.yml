@@ -1,0 +1,33 @@
+---
+- name: Pre-converge
+  hosts: all
+  tasks:
+    - name: install ip route
+      ansible.builtin.package:
+        name: iproute
+        state: present
+
+- name: Converge
+  hosts: all
+  gather_facts: True
+  vars:
+    cobbler_root_password: testing
+    cobbler_dhcp_netmask: 255.255.0.0
+  tasks:
+    #- name: Install ip route to get default
+    #- name: "print ansible facts"
+      #ansible.builtin.debug:
+        #var: hostvars[inventory_hostname]
+    - name: "print ansible_facts vars"
+      ansible.builtin.set_fact:
+        cobbler_dhcp_subnet: "{{ansible_default_ipv4['network']}}"
+        cobbler_dhcp_netmask: "{{ansible_default_ipv4['netmask']}}"
+        cobbler_dhcp_routers: "{{ansible_default_ipv4['gateway']}}"
+        cobbler_dhcp_dns: "{{ansible_facts['dns']['nameservers'][0]}}"
+        cobbler_dhcp_dynamic_bootp_start: "{{ansible_default_ipv4['network'] | trim('0')}}100"
+        cobbler_dhcp_dynamic_bootp_end: "{{ansible_default_ipv4['network'] | trim('0')}}254"
+        cobbler_server: "{{ansible_default_ipv4['address']}}"
+        cobbler_next_server_v4: "{{ansible_default_ipv4['address']}}"
+    - name: "Include dst.cobbler"
+      ansible.builtin.include_role:
+        name: "dst.cobbler"

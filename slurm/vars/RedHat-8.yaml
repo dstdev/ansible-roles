@@ -11,6 +11,9 @@ slurm_required_packages:
   - python3
   - epel-release
   - "@Development tools"
+  - dbus-devel
+  - kernel-headers
+  - mailx
 
 slurm_dbd_required_packages:
   - mariadb-server

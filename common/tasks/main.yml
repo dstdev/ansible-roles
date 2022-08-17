@@ -26,7 +26,7 @@
     state: present
     shell: /bin/bash
     createhome: yes
-    home: /usr/local/dst
+    home: "{{common_dst_user_home}}"
     uid: "{{common_dst_user_uid}}"
   tags:
     - common

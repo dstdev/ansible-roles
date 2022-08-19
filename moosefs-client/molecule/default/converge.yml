@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include moosefs.client"
+      ansible.builtin.include_role:
+        name: "moosefs-client"

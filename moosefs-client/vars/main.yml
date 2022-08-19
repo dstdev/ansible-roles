@@ -1,0 +1,3 @@
+---
+# vars file for moosefs-client
+moosefs_gpg_key: "https://ppa.moosefs.com/RPM-GPG-KEY-MooseFS"

@@ -11,14 +11,14 @@
     - common
 
 - name: create hpcadmin group
-  group:
+  ansible.builtin.group:
     name: hpcadmin
     state: present
   tags:
     - common
 
 - name: create dst user
-  user:
+  ansible.builtin.user:
     name: dst
     password: "{{common_dst_user_password | password_hash('sha512')}}"
     groups:
@@ -52,7 +52,7 @@
     - common
 
 - name: Add dst user private_key
-  copy:
+  ansible.builtin.copy:
     content: "{{common_dst_private_key}}"
     dest: "/usr/local/dst/.ssh/id_rsa"
     owner: "dst"
@@ -62,7 +62,7 @@
     - common
 
 - name: create users
-  user:
+  ansible.builtin.user:
     name: "{{item.name}}"
     state: "{{item.state|default('present')}}"
     password: "{{item.password}}"
@@ -70,6 +70,7 @@
       - hpcadmin
     createhome: yes
     expires: -1
+    uid: "{{item.uid}}"
   loop: "{{common_dst_users}}"
   tags:
     - common

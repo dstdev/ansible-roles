@@ -12,6 +12,13 @@
   tags:
     - moosefs-client
 
+- name: Install extra moosefs client dependencies
+  ansible.builtin.package:
+    name: fuse
+    state: present
+  tags:
+    - moosefs-client
+
 - name: Add moosefs repository
   ansible.builtin.yum_repository:
     name: MooseFS

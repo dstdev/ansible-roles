@@ -118,3 +118,14 @@
   loop: "{{common_additional_etc_hosts}}"
   tags:
     - common
+      
+# Disable SELinux
+- name: Disable SELinux
+  ansible.builtin.lineinfile:
+    dest: /etc/selinux/config
+    regexp: "^SELINUX="
+    line: "SELINUX=disabled"
+    state: present
+  when: common_disable_selinux
+  tags:
+    - common

@@ -8,3 +8,4 @@ common_hostname: false
 common_timezone: "US/Eastern"
 common_dst_authorized_key: ""
 common_additional_etc_hosts: []
+common_disable_selinux: true

@@ -62,7 +62,6 @@
     group: slurm
   tags:
     - slurm_install_slurmd
-
 - name: Create State Save Directory
   ansible.builtin.file:
     state: directory
@@ -72,22 +71,47 @@
   tags:
     - slurm_install_controller
 
+- name: Check slurm install
+  ansible.builtin.stat:
+    path: "{{slurm_install_directory}}/bin/srun"
+  register: slurm_installed
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+    - slurm_install_restd
+
+- name: Create temporary source dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{slurm_tmpdir}}"
+    mode: "0777"
+  when: not slurm_installed.stat.exists
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+    - slurm_install_restd
+
+#- ansible.builtin.include_tasks: "jwt.yaml"
+  #when: slurm_enable_restd and slurm_installed.stat.exists is not defined
+
 - name: Download slurm
   get_url:
     url: "https://github.com/SchedMD/slurm/archive/refs/\
           tags/slurm-{{slurm_download_version}}.zip"
-    dest: "/tmp/slurm-{{slurm_download_version}}.zip"
+    dest: "{{slurm_tmpdir}}/slurm-{{slurm_download_version}}.zip"
   register: slurm_source
+  when: not slurm_installed.stat.exists
   tags:
     - slurm
     - slurm_install_controller
     - slurm_install_slurmd
 
-
 - name: extract slurm archive
   unarchive:
     copy: false
-    dest: /tmp/
+    dest: "{{slurm_tmpdir}}"
     src: "{{slurm_source.dest}}"
   when: slurm_source.changed
   register: slurm_source_unpack
@@ -100,7 +124,7 @@
   command: "./configure --prefix=/{{slurm_install_directory}} --sysconfdir=/etc/slurm \
             --localstatedir=/var --runstatedir=/run"
   args:
-    chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"
+    chdir: "{{slurm_tmpdir}}/slurm-slurm-{{slurm_download_version}}"
   when: slurm_source_unpack is changed
   register: slurm_configure
   tags:
@@ -111,7 +135,7 @@
 - name: Install slurm
   shell: "make -j {{slurm_build_jobs}} && make install"
   args:
-    chdir: "/tmp/slurm-slurm-{{slurm_download_version}}"
+    chdir: "{{slurm_tmpdir}}/slurm-slurm-{{slurm_download_version}}"
   when: slurm_configure is changed
   tags:
     - slurm
@@ -124,6 +148,10 @@
   ansible.builtin.stat:
     path: "{{slurm_install_symlink}}"
   register: current_symlink
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
 
 - name: Create current symlink
   ansible.builtin.file:
@@ -131,6 +159,10 @@
     src: "{{slurm_install_directory}}"
     dest: "{{slurm_install_symlink}}"
   when: not current_symlink.stat.exists
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
 
 - name: Update current symlink
   ansible.builtin.file:
@@ -138,7 +170,10 @@
     src: "{{slurm_install_directory}}"
     dest: "{{slurm_install_symlink}}"
   when: slurm_update_symlink
-
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
 
 ## 
 - name: Create slurm owned directories
@@ -162,6 +197,10 @@
     owner: root
     group: root
     mode: "0644"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
 
 - name: Create slurm profile
   ansible.builtin.template:
@@ -170,6 +209,14 @@
     owner: root
     group: root
     mode: "0644"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
 
 
-
+# TODO: Cleanup tmp spaces
+- name: Clean up tmp space
+  ansible.builtin.file:
+    state: absent
+    path: "{{slurm_tmpdir}}"

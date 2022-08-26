@@ -60,6 +60,8 @@ Role Variables
 | slurm_priority_weight_partition   | 0                     | Partition contribution to priority          |
 | slurm_priority_weight_qos         | 0                     | QOS contribution to priority                |
 | slurm_priority_weight_tres        | 0                     | TRES contribution to priority               |
+| slurm_enable_restd                | false                 | Build and install the slurm rest api        |
+| slurm_restd_user                  | Undefined             | User to run api as. Not slurm or root       |
 
 Tags
 ----

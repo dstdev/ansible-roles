@@ -20,12 +20,22 @@
     - slurm_install_controller
     - slurm_install_slurmd
 
-- name: Install slurm rest api requirements
+- name: Install slurm rest api requirements EL8+
   ansible.builtin.dnf:
     name: "{{item}}"
     enablerepo: powertools
   loop: "{{slurm_restapi_required_packages}}"
-  when: slurm_enable_restd
+  when: slurm_enable_restd and ansible_facts['distribution_major_version'] | int >= 8
+  tags:
+    - slurm
+    - slurm_install_restapi
+    - slurm_install_restd
+
+- name: Install slurm rest api requirements EL7
+  ansible.builtin.package:
+    name: "{{item}}"
+  loop: "{{slurm_restapi_required_packages}}"
+  when: slurm_enable_restd and ansible_facts['distribution_major_version'] == "7" 
   tags:
     - slurm
     - slurm_install_restapi

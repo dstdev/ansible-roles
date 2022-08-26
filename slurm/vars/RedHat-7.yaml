@@ -19,3 +19,7 @@ slurm_dbd_required_packages:
   - mariadb-devel
   - python2-PyMySQL
   - python36-PyMySQL
+
+slurm_jwt_required_packages:
+  - jansson
+  - jansson-devel

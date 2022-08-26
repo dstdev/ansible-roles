@@ -1,0 +1,23 @@
+[Unit]
+Description=Slurm DBD accounting daemon
+After=network-online.target munge.service slurmctld.service
+Wants=network-online.target
+ConditionPathExists=/etc/slurm/slurm.conf
+
+[Service]
+Type=simple
+User={{slurm_restd_user}}
+EnvironmentFile=-/etc/sysconfig/slurmrestd
+ExecStart={{slurm_install_symlink}}/sbin/slurmrestd $SLURMREST_OPTIONS {{slurm_restd_host}}:{{slurm_restd_port}}
+ExecReload=/bin/kill -HUP $MAINPID
+LimitNOFILE=65536
+
+
+# Uncomment the following lines to disable logging through journald.
+# NOTE: It may be preferable to set these through an override file instead.
+#StandardOutput=null
+#StandardError=null
+
+[Install]
+WantedBy=multi-user.target
+

@@ -20,6 +20,17 @@
     - slurm_install_controller
     - slurm_install_slurmd
 
+- name: Install slurm rest api requirements
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    enablerepo: powertools
+  loop: "{{slurm_restapi_required_packages}}"
+  when: slurm_enable_restd
+  tags:
+    - slurm
+    - slurm_install_restapi
+    - slurm_install_restd
+
 - name: Add slurm group
   ansible.builtin.group:
     name: slurm
@@ -93,8 +104,8 @@
     - slurm_install_slurmd
     - slurm_install_restd
 
-#- ansible.builtin.include_tasks: "jwt.yaml"
-  #when: slurm_enable_restd and slurm_installed.stat.exists is not defined
+- ansible.builtin.include_tasks: "jwt.yaml"
+  when: slurm_enable_restd and not slurm_installed.stat.exists
 
 - name: Download slurm
   get_url:
@@ -216,7 +227,7 @@
 
 
 # TODO: Cleanup tmp spaces
-- name: Clean up tmp space
-  ansible.builtin.file:
-    state: absent
-    path: "{{slurm_tmpdir}}"
+#- name: Clean up tmp space
+  #ansible.builtin.file:
+    #state: absent
+    #path: "{{slurm_tmpdir}}"

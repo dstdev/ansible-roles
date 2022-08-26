@@ -1,0 +1,35 @@
+---
+- name: Add slurmrestd user
+  ansible.builtin.user:
+    name: slurm
+    comment: "Slurm account"
+    uid: "{{slurm_uid}}"
+    group: slurm
+    state: present
+    home: /var/lib/slurm
+    shell: /sbin/nologin
+  tags:
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+
+- name: create slurmrestd service file
+  ansible.builtin.template:
+    src: templates/slurmrestd.service.j2
+    dest: /etc/systemd/system/slurmrestd.service
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - slurm
+    - slurm_install_slurmd
+
+- name: Start slurmrestd service
+  ansible.builtin.service:
+    name: slurmrestd
+    state: started
+    enabled: true
+  when: not ansible_is_chroot
+  tags:
+    - slurm
+    - slurm_install_slurmd

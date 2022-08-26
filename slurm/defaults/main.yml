@@ -3,6 +3,7 @@
 slurm_database_password: "default"
 #slurm_version: "21.08.8-2"
 slurm_version: "22.05.2-1"
+slurm_jwt_version: "v1.12.0"
 slurm_slurmd: false
 slurm_controller: false
 slurm_uid: 450
@@ -66,3 +67,4 @@ slurm_update_symlink: yes
 
 slurm_build_jobs: 4
 slurm_enable_cgroup_conf: true
+slurm_enable_restd: false

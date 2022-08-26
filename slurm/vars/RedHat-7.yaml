@@ -23,3 +23,10 @@ slurm_dbd_required_packages:
 slurm_jwt_required_packages:
   - jansson
   - jansson-devel
+
+slurm_restapi_required_packages:
+  - libyaml
+  - json-c
+  - json-c-devel
+  - http-parser
+  - http-parser-devel

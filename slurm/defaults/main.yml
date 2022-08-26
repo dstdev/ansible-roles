@@ -69,4 +69,4 @@ slurm_disable_restart: false
 slurm_build_jobs: 4
 slurm_enable_cgroup_conf: true
 slurm_enable_restd: false
-slurm_restd_user: "{{undef(hint="You must specify the slurm rest api user")}}"
+slurm_restd_user: "{{undef(hint='You must specify the slurm rest api user')}}"

@@ -6,6 +6,10 @@
                 0gbnsnbsdkfjgnasdlkjfas;lkdfjasdklfj"
     slurm_slurmd: true
     slurm_controller: true
+    slurm_enable_restd: true
+    slurm_restd_host: "0.0.0.0"
+    slurm_restd_port: 9997
+    slurm_restd_user: apiuser
     slurm_partitions:
       - PartitionName=defq Default=YES Nodes=localhost
     slurm_proctrack_type: "linuxproc"
@@ -15,6 +19,10 @@
     slurm_conf_job_acct_gather_type: jobacct_gather/none
     slurm_priority_type: multifactor
   tasks:
+    - name: create restd user
+      ansible.builtin.user:
+        name: "{{slurm_restd_user}}"
+        state: present
     - name: Set slurm nodes
       ansible.builtin.set_fact:
         slurm_nodes:

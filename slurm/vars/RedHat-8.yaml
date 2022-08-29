@@ -20,3 +20,15 @@ slurm_dbd_required_packages:
   - mariadb-devel
   - python2-PyMySQL
   - python3-PyMySQL
+
+slurm_jwt_required_packages:
+  - jansson
+  - jansson-devel
+
+
+slurm_restapi_required_packages:
+  - libyaml
+  - json-c
+  - json-c-devel
+  - http-parser
+  - http-parser-devel

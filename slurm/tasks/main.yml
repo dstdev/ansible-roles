@@ -38,16 +38,25 @@
 
 - name: Include slurmdbd tasks
   ansible.builtin.include_tasks: "slurmdbd.yaml"
+  when: slurm_controller
   tags:
     - any
 
 - name: Include slurmctld tasks
   ansible.builtin.include_tasks: "slurmctld.yaml"
+  when: slurm_controller
+  tags:
+    - any
+
+- name: Include slurmrestd tasks
+  ansible.builtin.include_tasks: "slurmrestd.yaml"
+  when: slurm_controller and slurm_enable_restd
   tags:
     - any
     
 - name: Include slurmd tasks
   ansible.builtin.include_tasks: "slurmd.yaml"
+  when: slurm_slurmd
   tags:
     - any
     

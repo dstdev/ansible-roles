@@ -10,6 +10,7 @@
     slurm_restd_host: "0.0.0.0"
     slurm_restd_port: 9997
     slurm_restd_user: apiuser
+    slurm_restd_jwt_key: "_%CwxtDt^65i&"
     slurm_partitions:
       - PartitionName=defq Default=YES Nodes=localhost
     slurm_proctrack_type: "linuxproc"

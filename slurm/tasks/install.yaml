@@ -83,6 +83,7 @@
     group: slurm
   tags:
     - slurm_install_slurmd
+
 - name: Create State Save Directory
   ansible.builtin.file:
     state: directory

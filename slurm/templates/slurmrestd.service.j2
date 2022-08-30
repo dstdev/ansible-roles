@@ -1,5 +1,5 @@
 [Unit]
-Description=Slurm DBD accounting daemon
+Description=Slurm Restapi daemon
 After=network-online.target munge.service slurmctld.service
 Wants=network-online.target
 ConditionPathExists=/etc/slurm/slurm.conf
@@ -8,6 +8,7 @@ ConditionPathExists=/etc/slurm/slurm.conf
 Type=simple
 User={{slurm_restd_user}}
 EnvironmentFile=-/etc/sysconfig/slurmrestd
+Environment="SLURM_JWT=daemon"
 ExecStart={{slurm_install_symlink}}/sbin/slurmrestd $SLURMREST_OPTIONS {{slurm_restd_host}}:{{slurm_restd_port}}
 ExecReload=/bin/kill -HUP $MAINPID
 LimitNOFILE=65536

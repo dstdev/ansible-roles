@@ -62,7 +62,15 @@ Role Variables
 | slurm_priority_weight_tres        | 0                     | TRES contribution to priority                  |
 | slurm_enable_restd                | false                 | Build and install the slurm rest api           |
 | slurm_restd_user                  | Undefined             | User to run api as. Not slurm or root          |
+| slurm_rest_jwt_key                | Undefined             | Java Web Token Key                             |
+| slurm_restd_port                  | 8911                  | Restapi port                                   |
+| slurm_restd_host                  | 0.0.0.0               | Restapi host                                   |
 | slurm_disable_restart             | false                 | Disable service restart when files are updated |
+
+
+To create the jwt key, use the following command:
+
+    dd if=/dev/random of=/var/spool/slurmctld/jwt_hs256.key bs=32 count=1
 
 Tags
 ----

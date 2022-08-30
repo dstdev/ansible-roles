@@ -143,7 +143,7 @@
 
 - name: Configure slurm
   command: "./configure --prefix=/{{slurm_install_directory}} --sysconfdir=/etc/slurm \
-            --localstatedir=/var --runstatedir=/run"
+            --localstatedir=/var --runstatedir=/run {% if slurm_enable_restd %}--with-jwt={{slurm_install_directory}}{% endif %}"
   args:
     chdir: "{{slurm_tmpdir}}/slurm-slurm-{{slurm_download_version}}"
   when: slurm_source_unpack is changed

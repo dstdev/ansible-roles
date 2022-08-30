@@ -28,6 +28,7 @@ slurm_jwt_required_packages:
 
 slurm_restapi_required_packages:
   - libyaml
+  - libyaml-devel
   - json-c
   - json-c-devel
   - http-parser

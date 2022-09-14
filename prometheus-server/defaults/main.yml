@@ -32,6 +32,7 @@ prometheus_pid_path:             /var/run/prometheus
 prometheus_alertmanager_db_path: /var/lib/alertmanager
 prometheus_read_only_dirs: []
 
+prometheus_slurm_exporter_host: localhost
 
 prometheus_web_listen_address: "0.0.0.0:9090"
 prometheus_web_external_url: ''
@@ -102,7 +103,7 @@ prometheus_scrape_configs:
     metrics_path: "{{ prometheus_metrics_path }}"
     static_configs:
       - targets:
-          - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9200"
+          - "{{ prometheus_slurm_exporter_host | default('localhost') }}:9200"
 
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'
@@ -241,3 +242,4 @@ prometheus_alert_rules:
     for: 10m
     labels:
       severity: warning
+

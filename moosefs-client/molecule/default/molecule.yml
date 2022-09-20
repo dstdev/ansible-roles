@@ -1,0 +1,20 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: r8instance
+    image: rockylinux:8
+    privileged: true
+    command: "/usr/sbin/init"
+    pre_build_image: true
+  - name: c7instance
+    image: centos:7
+    privileged: true
+    command: "/usr/sbin/init"
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

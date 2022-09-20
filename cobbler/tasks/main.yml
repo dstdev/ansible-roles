@@ -1,0 +1,101 @@
+---
+# tasks file for cobbler
+
+- name: Install epel
+  ansible.builtin.package:
+    name: epel-release
+    state: present
+
+- name: Install relevant packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop:
+    - dhcp-server
+    - mod_ssl
+    - yum-utils
+    - syslinux
+    - syslinux-tftpboot
+    - fence-agents-all
+    - iproute
+    - debmirror
+    - pykickstart
+    - python3-kickstart
+
+- name: "Enable cobbler module"
+  command: dnf module enable -y cobbler:3.3
+  register: result
+  changed_when:
+    - '"Enabling module streams" in result.stdout'
+
+- name: Install cobbler
+  ansible.builtin.dnf:
+    name: cobbler
+    state: present
+
+- name: Check for symlink to web root
+  ansible.builtin.stat:
+    path: "/var/www/cobbler"
+  register: webroot_link
+
+- name: Move cobbler web root
+  ansible.builtin.copy:
+    src: "/var/www/cobbler/"
+    dest: "{{cobbler_webroot}}"
+    remote_src: yes
+  when: webroot_link.stat.islnk is defined and webroot_link.stat.islnk == False
+
+- name: Remove cobbler webroot
+  ansible.builtin.file:
+    state: absent
+    path: "/var/www/cobbler"
+  when: webroot_link.stat.islnk is defined and webroot_link.stat.islnk == False
+
+- name: Create a cobbler symlink
+  ansible.builtin.file:
+    dest: "/var/www/cobbler"
+    src: "{{cobbler_webroot}}"
+    state: link
+
+#- name: Update configuration file
+  #ansible.builtin.template:
+    #src: templates/settings.yaml.j2
+    #dest: /etc/cobbler/settings.yaml
+    #owner: root
+    #group: apache
+- name: Update lins in configuration file
+  ansible.builtin.lineinfile:
+    path: /etc/cobbler/settings.yaml
+    regexp: '^{{item.key}}: {{item.value}}'
+    line: '{{item.key}}: {{item.value}}'
+    backup: yes
+  loop:
+    - key: default_password_crypted
+      value: "{{cobbler_root_password | password_hash('sha512', 'somesaltything')}}"
+    - key: manage_dhcp
+      value: "{{cobbler_manage_dhcp}}"
+    - key: manage_dhcp_v4
+      value: "{{cobbler_manage_dhcp}}"
+    - key: next_server_v4
+      value: "{{cobbler_next_server_v4}}"
+    - key: server
+      value: "{{cobbler_server}}"
+  notify: Restart cobblerd
+
+- name: Update dhcp template file
+  ansible.builtin.template:
+    src: templates/dhcp.template.j2
+    dest: /etc/cobbler/dhcp.template
+  notify:
+    - Run cobbler sync
+
+- name: Enable cobbler
+  ansible.builtin.systemd:
+    name: cobblerd
+    state: started
+    enabled: yes
+
+- name: Enable dhcpd
+  ansible.builtin.systemd:
+    name: dhcpd
+    enabled: yes

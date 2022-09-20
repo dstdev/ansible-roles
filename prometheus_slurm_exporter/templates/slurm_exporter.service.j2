@@ -7,6 +7,6 @@ Environment="PATH=$PATH:{{ slurm_bin_loc  }}"
 User=nodeusr
 Group=nodeusr
 Type=simple
-ExecStart=/var/lib/node_exporter/prometheus-slurm-exporter --listen-address=127.0.0.1:9101
+ExecStart=/var/lib/node_exporter/prometheus-slurm-exporter --listen-address=127.0.0.1:{{slurm_exporter_port}}
 [Install]
 WantedBy=multi-user.target

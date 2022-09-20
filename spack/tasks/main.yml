@@ -14,6 +14,7 @@
   ansible.builtin.package:
     name: "{{item}}"
     state: present
+  when: spack_root_host | bool
   loop: "{{spack_required_packages}}"
 
 - name: clone spack repository

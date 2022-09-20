@@ -1,0 +1,18 @@
+---
+# defaults file for cobbler
+cobbler_root_password: "{{undef(hint='You must provide the hashed cobbler_root_password')}}"
+cobbler_server: 127.0.0.1
+cobbler_next_server_v4: 127.0.0.1
+cobbler_next_server_v6: ::1
+
+cobbler_dhcp_subnet: 192.168.1.0
+cobbler_dhcp_netmask: 255.255.255.0
+cobbler_dhcp_routers: 192.168.1.5
+cobbler_dhcp_dns: 192.168.1.1
+cobbler_dhcp_dynamic_bootp_start: 192.168.1.100
+cobbler_dhcp_dynamic_bootp_end: 192.168.1.254
+
+
+# optional variables to change
+cobbler_webroot: "/opt/cobbler"
+cobbler_manage_dhcp: "true"

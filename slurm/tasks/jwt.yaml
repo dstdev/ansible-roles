@@ -1,0 +1,65 @@
+- name: Install jwt required packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{slurm_jwt_required_packages}}"
+  tags:
+    - slurm
+    - slurm_install_restd
+
+# cd libjwt
+# autoreconf --force --install
+# ./configure --prefix=/usr/local
+# make -j
+# sudo make install
+
+# Determine if jwt directory exists
+- name: Download jwt
+  ansible.builtin.git:
+    repo: "https://github.com/benmcollins/libjwt.git"
+    dest: "{{slurm_tmpdir}}/libjwt"
+    depth: 1
+    single_branch: yes
+    version: "{{slurm_jwt_version}}"
+  tags:
+    - slurm
+    - slurm_install_restd
+
+- name: Autoreconfigure libjwt
+  ansible.builtin.command: "autoreconf --force --install"
+  args:
+    chdir: "{{slurm_tmpdir}}/libjwt"
+  tags:
+    - slurm
+    - slurm_install_restd
+
+- name: Configure libjwt
+  ansible.builtin.command: "./configure --prefix=/{{slurm_install_directory}}"
+  args:
+    chdir: "{{slurm_tmpdir}}/libjwt"
+  tags:
+    - slurm
+    - slurm_install_restd
+
+- name: Install libjwt
+  shell: "make -j {{slurm_build_jobs}} && make install"
+  args:
+    chdir: "{{slurm_tmpdir}}/libjwt"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Create jwt key
+  ansible.builtin.copy:
+    dest: "{{slurm_state_save_location}}/jwt_hs256.key"
+    content: "{{slurm_restd_jwt_key}}"
+    owner: "{{slurm_uid}}"
+    group: "{{slurm_gid}}"
+    mode: "0600"
+  notify:
+    - Restart munge
+  tags:
+    - munge
+
+

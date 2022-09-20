@@ -1,0 +1,51 @@
+---
+# tasks file for tmux
+- debug:
+    msg: "{{ansible_os_family}}"
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - tmux
+
+- name: Install os packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{tmux_os_packages}}"
+  tags:
+    - tmux
+
+- name: Get package facts
+  ansible.builtin.package_facts:
+    manager: auto
+  tags:
+    - tmux
+
+- name: Get tmux version
+  ansible.builtin.set_fact:
+    tmux_version: "{{ ansible_facts.packages['tmux'][0]['version']}}"
+  tags:
+    - tmux
+
+
+- include_tasks: tmux.yaml
+  loop: "{{tmux_users}}"
+  loop_control:
+    loop_var: user
+  tags:
+    - tmux
+
+- include_tasks: tmux.yaml
+  loop:
+    - root
+  loop_control:
+    loop_var: user
+  tags:
+    - tmux

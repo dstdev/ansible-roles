@@ -1,11 +1,10 @@
 - name: Create configuration file
   ansible.builtin.template:
     src: templates/slurm.conf.j2
-    dest: /etc/slurm.conf
+    dest: /etc/slurm/slurm.conf
     owner: root
     group: root
     mode: "0644"
-  when: slurm_controller
   notify:
     - Restart slurmctld
   tags:
@@ -15,11 +14,10 @@
 - name: Create cgroup configuration file
   ansible.builtin.template:
     src: templates/cgroup.conf.j2
-    dest: /etc/cgroup.conf
+    dest: /etc/slurm/cgroup.conf
     owner: slurm
     group: slurm
     mode: "0644"
-  when: slurm_controller
   notify:
     - Restart slurmctld
   tags:
@@ -33,7 +31,6 @@
     owner: root
     group: root
     mode: "0644"
-  when: slurm_controller
   tags:
     - slurm
     - slurm_install_controller
@@ -43,9 +40,6 @@
     name: slurmctld
     state: started
     enabled: true
-  when: slurm_controller
   tags:
     - slurm
     - slurm_install_controller
-
-

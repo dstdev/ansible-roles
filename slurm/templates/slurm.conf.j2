@@ -1,38 +1,69 @@
 SlurmctldHost={{slurm_controller_hostname}}({{slurm_controller_ip}})
 AuthType=auth/munge
+{% if slurm_enable_restd %}
+AuthAltTypes=auth/jwt
+{% endif %}
 CryptoType=crypto/munge
 #MpiDefault=pmix
 ProctrackType=proctrack/{{slurm_proctrack_type}}
-ReturnToService=1
+ReturnToService={{slurm_conf_return_to_service}}
 SlurmctldPidFile=/var/run/slurm/slurmctld.pid
 SlurmctldPort={{slurm_controller_port}}
 SlurmdPidFile=/var/run/slurm/slurmd.pid
 SlurmdPort={{slurm_daemon_port}}
-SlurmdSpoolDir=/var/spool/slurm/d
+SlurmdSpoolDir={{slurm_daemon_spool_dir}}
 SlurmUser={{slurm_user}}
-StateSaveLocation=/var/spool/slurm/ctld
+StateSaveLocation={{slurm_state_save_location}}
 SwitchType=switch/none
-TaskPlugin=task/none
+TaskPlugin={{','.join(slurm_conf_task_plugin)}}
+MPIDefault=none
 InactiveLimit=0
 KillWait=30
 MinJobAge=300
 SlurmctldTimeout=120
 SlurmdTimeout=300
 Waittime=0
-SchedulerType=sched/backfill
+SchedulerType=sched/{{slurm_scheduler_type}}
 SelectType="{{slurm_select_type}}"
 SelectTypeParameters="{{slurm_select_type_parameters}}"
 SlurmctldParameters=enable_configless
 SlurmctldLogFile=/var/log/slurm/slurmctld.log # Need to configure
+SlurmdLogFile=/var/log/slurm/slurmd.log # Need to configure
+{% if slurm_accounting_storage_enforce %}
+AccountingStorageEnforce={{slurm_accounting_storage_enforce}}
+{% endif %}
+{% if slurm_conf_prolog_flags %}
+PrologFlags={{','.join(slurm_conf_prolog_flags)}}
+{% endif %}
 
 AccountingStorageType=accounting_storage/slurmdbd
+AccountingStorageHost={{slurm_controller_hostname}}
+{% if slurm_conf_accounting_storage_tres %}
+AccountingStorageTRES={{','.join(slurm_conf_accounting_storage_tres)}}
+{% endif %}
+
+{% if slurm_priority_type != 'basic' %}
+PriorityType=priority/{{slurm_priority_type}}
+
+PriorityWeightAge={{slurm_priority_weight_age}}
+PriorityWeightAssoc={{slurm_priority_weight_assoc}}
+PriorityWeightFairShare={{slurm_priority_weight_fair_share}}
+PriorityWeightJobSize={{slurm_priority_weight_job_size}}
+PriorityWeightPartition={{slurm_priority_weight_partition}}
+PriorityWeightQOS={{slurm_priority_weight_qos}}
+PriorityWeightTRES={{slurm_priority_weight_tres}}
+{% endif %}
+
 
 ClusterName={{slurm_cluster_name}} # add as variable
-JobCompType=jobcomp/none
 JobAcctGatherFrequency=30
-JobAcctGatherType=jobacct_gather/none
+JobAcctGatherType={{slurm_conf_job_acct_gather_type}}
 SlurmctldDebug={{slurm_controller_debug}} # Add as variable
 SlurmdDebug={{slurm_daemon_debug}} # Add as variable
+
+{% if slurm_conf_gres_types %}
+GresTypes={{','.join(slurm_conf_gres_types)}}
+{% endif %}
 #NodeName=localhost CPUs=1 State=UNKNOWN
 {% for node in slurm_nodes %}
 {{node}}

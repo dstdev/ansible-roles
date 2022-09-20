@@ -4,14 +4,16 @@
   ansible.builtin.service:
     name: slurmctld
     state: restarted
+  when: not slurm_disable_restart
 
 - name: Restart slurmdbd
   ansible.builtin.service:
     name: slurmdbd
     state: restarted
+  when: not slurm_disable_restart
 
 - name: Restart slurmd
   ansible.builtin.service:
     name: slurmd
     state: restarted
-  when: not ansible_is_chroot
+  when: not ansible_is_chroot and not slurm_disable_restart

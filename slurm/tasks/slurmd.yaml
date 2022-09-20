@@ -5,7 +5,6 @@
     owner: root
     group: root
     mode: "0644"
-  when: slurm_slurmd
   tags:
     - slurm
     - slurm_install_slurmd
@@ -15,7 +14,7 @@
     name: slurmd
     state: started
     enabled: true
-  when: slurm_slurmd and not ansible_is_chroot
+  when: not ansible_is_chroot
   tags:
     - slurm
     - slurm_install_slurmd

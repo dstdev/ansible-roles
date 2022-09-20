@@ -11,9 +11,23 @@ slurm_required_packages:
   - python3
   - epel-release
   - "@Development tools"
+  - dbus-devel
+  - kernel-headers
 
 slurm_dbd_required_packages:
   - mariadb-server
   - mariadb-devel
   - python2-PyMySQL
   - python36-PyMySQL
+
+slurm_jwt_required_packages:
+  - jansson
+  - jansson-devel
+
+slurm_restapi_required_packages:
+  - libyaml
+  - libyaml-devel
+  - json-c
+  - json-c-devel
+  - http-parser
+  - http-parser-devel

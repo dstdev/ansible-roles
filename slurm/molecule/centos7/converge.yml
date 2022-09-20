@@ -1,6 +1,11 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    slurm_enable_restd: true
+    slurm_restd_host: "0.0.0.0"
+    slurm_restd_port: 9997
+    slurm_restd_user: apiuser
   tasks:
     - name: "Include slurm"
       ansible.builtin.include_role:

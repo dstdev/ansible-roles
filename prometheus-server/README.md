@@ -27,6 +27,7 @@ Role Variables
 
 All variables which can be overridden are stored in defaults/main.yml file with default values.
 
+
 Dependencies
 ------------
 

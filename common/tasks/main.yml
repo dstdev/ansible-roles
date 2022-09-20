@@ -11,22 +11,22 @@
     - common
 
 - name: create hpcadmin group
-  group:
+  ansible.builtin.group:
     name: hpcadmin
     state: present
   tags:
     - common
 
 - name: create dst user
-  user:
+  ansible.builtin.user:
     name: dst
-    password: "{{common_dst_user_password}}"
+    password: "{{ common_dst_user_password }}"
     groups:
       - hpcadmin
     state: present
     shell: /bin/bash
     createhome: yes
-    home: /usr/local/dst
+    home: "{{common_dst_user_home}}"
     uid: "{{common_dst_user_uid}}"
   tags:
     - common
@@ -52,9 +52,9 @@
     - common
 
 - name: Add dst user private_key
-  copy:
+  ansible.builtin.copy:
     content: "{{common_dst_private_key}}"
-    dest: "/usr/local/dst/.ssh/id_rsa"
+    dest: "{{common_dst_user_home}}/.ssh/id_rsa"
     owner: "dst"
     group: "dst"
     mode: "0600"
@@ -62,7 +62,7 @@
     - common
 
 - name: create users
-  user:
+  ansible.builtin.user:
     name: "{{item.name}}"
     state: "{{item.state|default('present')}}"
     password: "{{item.password}}"
@@ -70,6 +70,7 @@
       - hpcadmin
     createhome: yes
     expires: -1
+    uid: "{{item.uid}}"
   loop: "{{common_dst_users}}"
   tags:
     - common
@@ -115,5 +116,24 @@
     line: '{{item}}'
     backup: yes
   loop: "{{common_additional_etc_hosts}}"
+  tags:
+    - common
+
+      
+# Disable SELinux
+- name: Set SELinux to not enforcing
+  ansible.posix.selinux:
+    state: disabled
+  when: common_disable_selinux
+  tags:
+    - common
+
+- name: Disable SELinux
+  ansible.builtin.lineinfile:
+    dest: /etc/selinux/config
+    regexp: "^SELINUX="
+    line: "SELINUX=disabled"
+    state: present
+  when: common_disable_selinux
   tags:
     - common

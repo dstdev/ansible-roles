@@ -13,6 +13,8 @@ slurm_required_packages:
   - "@Development tools"
   - dbus-devel
   - kernel-headers
+  - lua
+  - lua-devel
 
 slurm_dbd_required_packages:
   - mariadb-server

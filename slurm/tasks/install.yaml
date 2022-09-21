@@ -1,9 +1,11 @@
 ---
 # tasks file for slurm-controller
 - name: Install required packages
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name: "{{item}}"
     state: present
+    enablerepo: powertools
+
   loop: "{{slurm_required_packages}}"
   tags:
     - slurm

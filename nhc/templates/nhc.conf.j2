@@ -1,0 +1,10 @@
+# Check that / is mounted read-write.
+* || check_fs_mount_rw /
+
+
+# Check that sshd is running and is owned by root.
+# * || check_ps_service -u root -S sshd
+
+{% if nhc_check_zombies %}
+* || check_zombies
+{% endif %}

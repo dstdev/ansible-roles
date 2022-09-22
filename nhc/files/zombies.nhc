@@ -1,0 +1,7 @@
+#!/bin/sh
+declare -a zombies
+
+function check_zombies() {
+    zombies=`ps -ef  | grep -v root | grep defunct | awk '{ print $3 }'  | grep "^1$" | wc -l`
+    return $zombies
+}

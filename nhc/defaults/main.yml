@@ -1,0 +1,4 @@
+---
+# defaults file for nhc
+nhc_version: 1.4.3
+nhc_check_zombies: true

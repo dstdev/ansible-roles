@@ -1,0 +1,5 @@
+---
+# vars file for nhc
+nhc_download_link: "https://github.com/mej/nhc/releases/download/{{nhc_version}}/lbnl-nhc-{{nhc_version}}-1.el{{ansible_distribution_major_version}}.noarch.rpm"
+nhc_scripts:
+  - zombies.nhc

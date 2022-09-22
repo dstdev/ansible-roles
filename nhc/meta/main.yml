@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  role_name: nhc
+  namespace: dstdev
+  author: Andrew Kail
+  description: Install and configure nhc
+  company: Data in Science Technologies
+
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  galaxy_tags: []
+
+dependencies: []

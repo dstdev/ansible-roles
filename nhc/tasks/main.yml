@@ -1,0 +1,36 @@
+---
+# tasks file for nhc
+- name: Install rpm using yum
+  ansible.builtin.yum:
+    name: "{{nhc_download_link}}"
+  when: ansible_distribution_major_version | int == 7
+  tags:
+    - nhc
+
+- name: Install rpm using dnf
+  ansible.builtin.yum:
+    name: "{{nhc_download_link}}"
+    disable_gpg_check: true
+  when: ansible_distribution_major_version | int == 8
+  tags:
+    - nhc
+
+- name: Create nhc.conf
+  ansible.builtin.template:
+    src: "templates/nhc.conf.j2"
+    dest: "/etc/nhc/nhc.conf"
+    backup: yes
+    mode: "0644"
+  tags:
+    - nhc
+
+- name: Copy extra scripts
+  ansible.builtin.copy:
+    src: "{{item}}"
+    dest: "/etc/nhc/scripts/"
+    backup: yes
+    mode: "0644"
+  with_items: "{{nhc_scripts}}"
+  when: nhc_scripts.0 | length >0
+  tags:
+    - nhc

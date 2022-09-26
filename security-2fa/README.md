@@ -1,23 +1,33 @@
-Role Name
+Security-2FA
 =========
 
-A brief description of the role goes here.
+Install google authenticator and cofigure local two factor authentication via PAM and SSHD. 
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Designed for RHEL or Debian based linux distros.
+Hosts will need a pkg repo configured that contains google auth.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+There are no configurable variables within the 2FA Role.
 
-Dependencies
+Prior to deployment the 'security-2fa/files/access-local.conf.2fasso' file needs to be updated with individual IPs or an IP range of your whitelisted systems.
+Whitelisted systems will not be required to complete 2FA for ssh connections.
+
+Description
 ------------
+This role backs up the existing existing ssh configurations, and deployes prewritten configuration files to enable 2FA. 
+The prewritten files are located in security-2fa/files/
+Below are the config files that are backed up and replaced.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+/etc/pam.d/sshd, /etc/ssh/sshd_config, /etc/security/access-local.conf 
 
+Additionally if the files below do not exist, a default copy will be deployed by this role. These files will not be overwritten if they already exist.
+/etc/pam.d/password-auth, /etc/pam.d/postlogin 
+	
 Example Playbook
 ----------------
 
@@ -34,5 +44,5 @@ BSD
 
 Author Information
 ------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Kalil Hasney,
+HPC Cyber Security Engineer

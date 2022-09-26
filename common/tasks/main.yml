@@ -137,3 +137,19 @@
   when: common_disable_selinux
   tags:
     - common
+
+- name: Install host extra packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{common_host_extra_packages}}"
+  tags:
+    - common
+
+- name: Install group extra packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{common_group_extra_packages}}"
+  tags:
+    - common

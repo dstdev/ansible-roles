@@ -1,0 +1,3 @@
+---
+# vars file for aws-cloud-config
+aws_cloud_config_preserver_hostname: true

@@ -22,13 +22,13 @@ Description
 This role backs up the existing existing ssh configurations, and deployes prewritten configuration files to enable 2FA. 
 The prewritten files are located in security-2fa/files/
 Below are the config files that are backed up and replaced.
-	/etc/pam.d/sshd
-	/etc/ssh/sshd_config
-	/etc/security/access-local.conf
+/etc/pam.d/sshd 
+/etc/ssh/sshd_config 
+/etc/security/access-local.conf 
 
 Additionally is the files below do not exist, a default copy will be deployed by this role.
-	/etc/pam.d/password-auth
-	/etc/pam.d/postlogin
+/etc/pam.d/password-auth 
+/etc/pam.d/postlogin 
 	
 Example Playbook
 ----------------

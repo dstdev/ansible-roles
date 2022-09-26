@@ -14,17 +14,27 @@
 
 - name: Install epel for RHEL
   when: ansible_distribution_file_variety == 'RedHat'
-  package:
+  ansible.builtin.package:
     name: "epel-release"
     state: present
   tags:
     - x2goserver
 
 - name: Install packages
-  package:
+  ansible.builtin.dnf:
     name: "{{item}}"
     state: present
+    enablerepo: powertools
   loop: "{{x2goserver_packages}}"
+  tags:
+    - x2goserver
+
+- name: Disable compositing
+  ansible.builtin.lineinfile:
+    path: /usr/share/xfwm4/defaults
+    regexp: "^use_compositing="
+    line: "use_compositing=false"
+    backup: true
   tags:
     - x2goserver
 

@@ -1,0 +1,12 @@
+---
+# tasks file for aws-cloud-config
+- name: Set preserve hostname
+  ansible.builtin.lineinfile:
+    path: /etc/cloud/cloud.cfg
+    regexp: '^preserve_hostname'
+    line: "preserve_hostname: true"
+    backup: true
+    state: present
+  tags:
+    - aws_cloud_config
+

@@ -1,4 +1,6 @@
 ---
+
+
 - name: get user home directory
   ansible.builtin.shell: >
     getent passwd {{ user }} | awk -F: '{ print $6 }'
@@ -13,13 +15,21 @@
     state: directory
     owner: "{{user}}"
     group: "{{user}}"
+  tags:
+    tmux
 
+- debug:
+    msg: "{{tmux_version}}"
+  tags:
+    - tmux
 - name: Copy tmux configuration
   ansible.builtin.template:
     src: "templates/tmux.conf.j2"
     dest: "{{user_home.stdout}}/.tmux.conf"
     owner: "{{user}}"
     group: "{{user}}"
+  tags:
+    tmux
 
 #- name: download tmux plugin manager
   #become: yes

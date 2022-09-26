@@ -1,0 +1,83 @@
+---
+# tasks file for security-2fa
+- name: PreInstall Google Auth RHEL Family
+  ansible.builtin.yum:
+    name: google-authenticator
+    state: absent
+  when: ansible_os_family == "RedHat"
+
+- name: PreInstall Google Auth Debian Family
+  ansible.builtin.apt:
+    pkg:
+      - libpam-google-authenticator
+    state: absent
+  when: ansible_os_family == "Debian"
+
+- name: Install Google Auth RHEL Family
+  ansible.builtin.yum:
+    name: google-authenticator
+    state: latest
+  when: ansible_os_family == "RedHat"
+
+- name: Install Google Auth Debian Family
+  ansible.builtin.apt:
+    pkg:
+      - libpam-google-authenticator
+    state: latest
+  when: ansible_os_family == "Debian"
+
+- name: Creating 2FA user group
+  ansible.builtin.group:
+    name: 2fa
+    state: present
+
+- name: Deploying 2FA Configuration 1/5 (pam.d/sshd)
+  ansible.builtin.copy:
+    src: files/sshd.2fasso
+    dest: /etc/pam.d/sshd
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+
+- name: Deploying 2FA Configuration 2/5 (ssh/sshd_config)
+  ansible.builtin.copy:
+    src: files/sshd_config.2fasso
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+
+- name: Deploying 2FA Configuration 3/5 (security/access-local.conf)
+  ansible.builtin.copy:
+    src: files/access-local.conf.2fasso
+    dest: /etc/security/access-local.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+
+- name: Deploying 2FA Configuration 4/5 (pam.d/password-auth)
+  ansible.builtin.copy:
+    src: files/password-auth
+    dest: /etc/pam.d/password-auth
+    owner: root
+    group: root
+    mode: '0644'
+    force: no
+
+- name: Deploying 2FA Configuration 5/5 (pam.d/postlogin)
+  ansible.builtin.copy:
+    src: files/postlogin
+    dest: /etc/pam.d/postlogin
+    owner: root
+    group: root
+    mode: '0644'
+    force: no
+
+- name: Restarting SSHD Service
+  ansible.builtin.systemd:
+    name: sshd
+    enabled: yes
+    state: restarted

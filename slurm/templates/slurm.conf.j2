@@ -1,5 +1,8 @@
 SlurmctldHost={{slurm_controller_hostname}}({{slurm_controller_ip}})
 AuthType=auth/munge
+{% if slurm_enable_restd %}
+AuthAltTypes=auth/jwt
+{% endif %}
 CryptoType=crypto/munge
 #MpiDefault=pmix
 ProctrackType=proctrack/{{slurm_proctrack_type}}

@@ -14,6 +14,8 @@ slurm_required_packages:
   - dbus-devel
   - kernel-headers
   - mailx
+  - lua
+  - lua-devel
 
 slurm_dbd_required_packages:
   - mariadb-server
@@ -28,6 +30,7 @@ slurm_jwt_required_packages:
 
 slurm_restapi_required_packages:
   - libyaml
+  - libyaml-devel
   - json-c
   - json-c-devel
   - http-parser

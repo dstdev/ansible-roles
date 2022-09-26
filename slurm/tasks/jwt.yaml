@@ -49,3 +49,17 @@
     - slurm
     - slurm_install_controller
     - slurm_install_slurmd
+
+- name: Create jwt key
+  ansible.builtin.copy:
+    dest: "{{slurm_state_save_location}}/jwt_hs256.key"
+    content: "{{slurm_restd_jwt_key}}"
+    owner: "{{slurm_uid}}"
+    group: "{{slurm_gid}}"
+    mode: "0600"
+  notify:
+    - Restart munge
+  tags:
+    - munge
+
+

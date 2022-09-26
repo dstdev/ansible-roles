@@ -1,9 +1,11 @@
 ---
 # tasks file for slurm-controller
 - name: Install required packages
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name: "{{item}}"
     state: present
+    enablerepo: powertools
+
   loop: "{{slurm_required_packages}}"
   tags:
     - slurm
@@ -83,6 +85,7 @@
     group: slurm
   tags:
     - slurm_install_slurmd
+
 - name: Create State Save Directory
   ansible.builtin.file:
     state: directory
@@ -143,7 +146,7 @@
 
 - name: Configure slurm
   command: "./configure --prefix=/{{slurm_install_directory}} --sysconfdir=/etc/slurm \
-            --localstatedir=/var --runstatedir=/run"
+            --localstatedir=/var --runstatedir=/run {% if slurm_enable_restd %}--with-jwt={{slurm_install_directory}}{% endif %}"
   args:
     chdir: "{{slurm_tmpdir}}/slurm-slurm-{{slurm_download_version}}"
   when: slurm_source_unpack is changed

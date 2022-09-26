@@ -22,6 +22,18 @@
   tags:
     - tmux
 
+- name: Get package facts
+  ansible.builtin.package_facts:
+    manager: auto
+  tags:
+    - tmux
+
+- name: Get tmux version
+  ansible.builtin.set_fact:
+    tmux_version: "{{ ansible_facts.packages['tmux'][0]['version']}}"
+  tags:
+    - tmux
+
 
 - include_tasks: tmux.yaml
   loop: "{{tmux_users}}"

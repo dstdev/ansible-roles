@@ -3,7 +3,7 @@
 # decision was made to not use systemd for use with images
 ---
 - name: Create nodeusr account to run node_exporter
-  user:
+  ansible.builtin.user:
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter

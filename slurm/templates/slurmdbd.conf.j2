@@ -11,6 +11,11 @@
 # Authentication info
 AuthType=auth/munge
 #AuthInfo=/var/run/munge/munge.socket.2
+
+{% if slurm_enable_restd %}
+AuthAltTypes=auth/jwt
+AuthAltParameters="jwt_key={{slurm_state_save_location}}/jwt_hs256.key"
+{% endif %}
 #
 # slurmDBD info
 DbdAddr={{slurm_dbd_address}}
@@ -33,4 +38,3 @@ StorageType=accounting_storage/mysql
 {%if slurm_dbd_password %}StoragePass={{slurm_dbd_password}}{%endif%}
 StorageUser={{slurm_dbd_storage_user}}
 #StorageLoc=slurm_acct_db
-

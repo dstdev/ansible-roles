@@ -14,14 +14,22 @@ Role Variables
 
 There are no configurable variables within the 2FA Role.
 
-Prior to deployment the 'security-2fa/files/access-local.conf.2fasso' file needs to be updated with individual IPs or an IP range of you whitelisted systems.
+Prior to deployment the 'security-2fa/files/access-local.conf.2fasso' file needs to be updated with individual IPs or an IP range of your whitelisted systems.
 Whitelisted systems will not be required to complete 2FA for ssh connections.
 
-Dependencies
+Description
 ------------
+This role backs up the existing existing ssh configurations, and deployes prewritten configuration files to enable 2FA. 
+The prewritten files are located in security-2fa/files/
+Below are the config files that are backed up and replaced.
+	/etc/pam.d/sshd
+	/etc/ssh/sshd_config
+	/etc/security/access-local.conf
 
-
-
+Additionally is the files below do not exist, a default copy will be deployed by this role.
+	/etc/pam.d/password-auth
+	/etc/pam.d/postlogin
+	
 Example Playbook
 ----------------
 
@@ -38,5 +46,5 @@ BSD
 
 Author Information
 ------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Kalil Hasney
+HPC Cyber Security Engineer

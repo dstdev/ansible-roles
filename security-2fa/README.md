@@ -25,8 +25,7 @@ Below are the config files that are backed up and replaced.
 
 /etc/pam.d/sshd, /etc/ssh/sshd_config, /etc/security/access-local.conf 
 
-Additionally is the files below do not exist, a default copy will be deployed by this role.
-
+Additionally if the files below do not exist, a default copy will be deployed by this role. These files will not be overwritten if they already exist.
 /etc/pam.d/password-auth, /etc/pam.d/postlogin 
 	
 Example Playbook
@@ -45,5 +44,5 @@ BSD
 
 Author Information
 ------------------
-Kalil Hasney
+Kalil Hasney,
 HPC Cyber Security Engineer

@@ -57,8 +57,6 @@
     owner: "{{slurm_uid}}"
     group: "{{slurm_gid}}"
     mode: "0600"
-  notify:
-    - Restart munge
   tags:
     - munge
 

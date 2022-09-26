@@ -1,16 +1,29 @@
 ---
 # tasks file for slurm-controller
-- name: Install required packages
+- name: Install required packages EL 8
   ansible.builtin.dnf:
     name: "{{item}}"
     state: present
     enablerepo: powertools
 
   loop: "{{slurm_required_packages}}"
+  when: ansible_distribution_major_version | int == 8
   tags:
     - slurm
     - slurm_install_controller
     - slurm_install_slurmd
+
+- name: Install required packages EL 7
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{slurm_required_packages}}"
+  when: ansible_distribution_major_version | int == 7
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
 
 - name: Install slurmdbd requirements
   ansible.builtin.package:

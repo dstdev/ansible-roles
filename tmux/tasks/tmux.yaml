@@ -9,6 +9,17 @@
   tags:
     tmux
 
+- name: If centos 7 add user to tty group
+  ansible.builtin.user:
+    name: "{{ user}}"
+    groups: tty
+    append: yes
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version | int == 7
+  tags:
+    tmux
+
 - name: Create tmux plugins directory
   ansible.builtin.file:
     path: "{{user_home.stdout}}/.tmux/plugins"

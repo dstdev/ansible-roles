@@ -22,7 +22,7 @@
     name: dst
     password: "{{ common_dst_user_password }}"
     groups:
-      - hpcadmin
+      "{{common_dst_user_groups}}"
     state: present
     shell: /bin/bash
     createhome: yes
@@ -61,7 +61,7 @@
   tags:
     - common
 
-- name: create users
+- name: Create users
   ansible.builtin.user:
     name: "{{item.name}}"
     state: "{{item.state|default('present')}}"

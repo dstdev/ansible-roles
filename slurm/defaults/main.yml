@@ -36,7 +36,7 @@ slurm_priority_weight_job_size: 1000
 slurm_priority_weight_partition: 1000
 slurm_priority_weight_qos: 0
 slurm_priority_weight_tres: CPU=0 
-slurm_priority_decay_half_lift: "7-0"
+slurm_priority_decay_half_life: "7-0"
 
 # slurm conf configs
 slurm_conf_return_to_service: 2

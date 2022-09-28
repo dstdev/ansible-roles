@@ -37,9 +37,11 @@ Role Variables
 | slurm_conf_return_to_service      | 2                     | Return to service: 0, 1, or 2                  |
 | slurm_conf_task_plugin            | ['task/cgroup']       | Task plugins to use                            |
 | slurm_conf_job_acct_gather_type   | jobacct_gather/cgroup | Job accouting collection type                  |
+| slurm_conf_job_submit_plugins     | False                 | Plugins to enable (lua)                        |
 | slurm_conf_gres_types             | []                    | GRES Types used                                |
 | slurm_conf_accouting_storage_tres | []                    | AccoutingStorageTres Parameter                 |
 | slurm_conf_prolog_flags           | ["X11"]               | PrologFlags                                    |
+| slurm_conf_max_array_size         | 1001                  | Maximum array size allowed                     |
 | slurm_select_type                 | select/cons_res       | Select type                                    |
 | slurm_select_type_parameters      | CR_CORE               | Select type parameter                          |
 | slurm_cgroup_automount            | yes                   | Automount cgroups                              |
@@ -60,6 +62,7 @@ Role Variables
 | slurm_priority_weight_partition   | 0                     | Partition contribution to priority             |
 | slurm_priority_weight_qos         | 0                     | QOS contribution to priority                   |
 | slurm_priority_weight_tres        | 0                     | TRES contribution to priority                  |
+| slurm_priority_decay_half_life    | "7-0"                 | PriorityDecayHalfLife in slurm.conf            |
 | slurm_enable_restd                | false                 | Build and install the slurm rest api           |
 | slurm_restd_user                  | Undefined             | User to run api as. Not slurm or root          |
 | slurm_rest_jwt_key                | Undefined             | Java Web Token Key                             |

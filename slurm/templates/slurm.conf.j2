@@ -20,6 +20,7 @@ MPIDefault=none
 InactiveLimit=0
 KillWait=30
 MinJobAge=300
+MaxArraySize={{slurm_conf_max_array_size}}
 SlurmctldTimeout=120
 SlurmdTimeout=300
 Waittime=0
@@ -52,13 +53,16 @@ PriorityWeightJobSize={{slurm_priority_weight_job_size}}
 PriorityWeightPartition={{slurm_priority_weight_partition}}
 PriorityWeightQOS={{slurm_priority_weight_qos}}
 PriorityWeightTRES={{slurm_priority_weight_tres}}
+PriorityDecayHalfLife={{slurm_priority_decay_half_lift}}
 {% endif %}
 
 
 ClusterName={{slurm_cluster_name}} # add as variable
 JobAcctGatherFrequency=30
 JobAcctGatherType={{slurm_conf_job_acct_gather_type}}
+{% if slurm_conf_job_submit_plugins %}
 JobSubmitPlugins={{slurm_conf_job_submit_plugins}}
+{% endif %}
 SlurmctldDebug={{slurm_controller_debug}} # Add as variable
 SlurmdDebug={{slurm_daemon_debug}} # Add as variable
 

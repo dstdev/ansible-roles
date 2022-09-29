@@ -28,6 +28,7 @@
     createhome: yes
     home: "{{common_dst_user_home}}"
     uid: "{{common_dst_user_uid}}"
+  when: common_create_dst_user
   tags:
     - common
 
@@ -48,6 +49,7 @@
     user: "dst"
     state: present
     key: "{{common_dst_authorized_key}}"
+  when: common_create_dst_user
   tags:
     - common
 
@@ -58,6 +60,7 @@
     owner: "dst"
     group: "dst"
     mode: "0600"
+  when: common_create_dst_user
   tags:
     - common
 

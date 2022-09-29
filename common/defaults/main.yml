@@ -11,3 +11,4 @@ common_additional_etc_hosts: []
 common_disable_selinux: true
 common_host_extra_packages: []
 common_group_extra_packages: []
+common_create_dst_user: true

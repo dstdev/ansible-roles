@@ -24,6 +24,12 @@
     name: grafana
     state: present
 
+- name: Set grafan admin password
+  ansible.builtin.lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: "^;admin_password"
+    line: "admin_password = {{ grafana_admin_password }} "
+
 - name: grafana is installed
   yum:
     name=grafana

@@ -1,6 +1,7 @@
 ---
 # defaults file for grafana-server-dev
 grafana_url: http://localhost:3000
+grafana_admin_password: admin
 datasource_url: http://localhost:9090
 grafana_datasources: []
 #  - name: "Prometheus"

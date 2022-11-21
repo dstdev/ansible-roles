@@ -35,7 +35,7 @@ slurm_priority_weight_fair_share: 10000
 slurm_priority_weight_job_size: 1000
 slurm_priority_weight_partition: 1000
 slurm_priority_weight_qos: 0
-slurm_priority_weight_tres: CPU=0 
+slurm_priority_weight_tres: "CPU=0"
 slurm_priority_decay_half_life: "7-0"
 
 # slurm conf configs
@@ -50,7 +50,7 @@ slurm_conf_prolog_flags:
 slurm_conf_job_submit_plugins: false
 
 slurm_select_type: "select/cons_res"
-slurm_select_type_parameters: "CR_Core"
+slurm_select_type_parameters: "CR_Core_Memory"
 
 
 # cgroup settings

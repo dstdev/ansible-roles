@@ -42,6 +42,7 @@ slurm_priority_decay_half_life: "7-0"
 slurm_conf_return_to_service: 2
 slurm_conf_task_plugin: 
   - task/cgroup
+  - task/affinity
 slurm_conf_job_acct_gather_type: jobacct_gather/cgroup
 slurm_conf_gres_types: []
 slurm_conf_accounting_storage_tres: []

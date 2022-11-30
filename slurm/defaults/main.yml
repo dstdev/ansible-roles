@@ -25,6 +25,7 @@ slurm_state_save_location: /var/spool/slurmctld
 slurm_scheduler_type: backfill
 slurm_accounting_storage_enforce: 0
 slurm_conf_max_array_size: 1001
+slurm_propagate_resource_limits: "NONE"
 
 ## Priority settings
 slurm_priority_type: basic

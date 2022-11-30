@@ -30,6 +30,7 @@ SelectTypeParameters="{{slurm_select_type_parameters}}"
 SlurmctldParameters=enable_configless
 SlurmctldLogFile=/var/log/slurm/slurmctld.log # Need to configure
 SlurmdLogFile=/var/log/slurm/slurmd.log # Need to configure
+PropagateResourceLimits={{slurm_propagate_resource_limits}}
 {% if slurm_accounting_storage_enforce %}
 AccountingStorageEnforce={{slurm_accounting_storage_enforce}}
 {% endif %}

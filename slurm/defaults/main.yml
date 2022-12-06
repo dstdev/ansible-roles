@@ -78,3 +78,8 @@ slurm_restd_port: 8911
 slurm_restd_host: "0.0.0.0"
 slurm_restd_user: "{{undef(hint='You must specify the slurm rest api user')}}"
 slurm_restd_jwt_key: "{{undef(hint='You must specify the jwt key value')}}"
+
+
+# Slurm profile variables
+slurm_profile_csh_append: ""
+slurm_profile_bash_append: ""

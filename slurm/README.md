@@ -43,7 +43,7 @@ Role Variables
 | slurm_conf_prolog_flags           | ["X11"]               | PrologFlags                                    |
 | slurm_conf_max_array_size         | 1001                  | Maximum array size allowed                     |
 | slurm_select_type                 | select/cons_res       | Select type                                    |
-| slurm_select_type_parameters      | CR_CORE               | Select type parameter                          |
+| slurm_select_type_parameters      | CR_Core_Memory        | Select type parameter                          |
 | slurm_cgroup_automount            | yes                   | Automount cgroups                              |
 | slurm_cgroup_constrain_cores      | yes                   | Constrain cores available                      |
 | slurm_cgroup_constrain_ram_space  | yes                   | Constrain ram space                            |
@@ -69,6 +69,8 @@ Role Variables
 | slurm_restd_port                  | 8911                  | Restapi port                                   |
 | slurm_restd_host                  | 0.0.0.0               | Restapi host                                   |
 | slurm_disable_restart             | false                 | Disable service restart when files are updated |
+| slurm_profile_csh                 | ""                    | Append slurm csh profile scripts               |
+| slurm_profile_bash_append         | ""                    | Append slurm bash profile scripts              |
 
 
 To create the jwt key, use the following command:

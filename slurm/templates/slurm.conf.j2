@@ -38,6 +38,9 @@ AccountingStorageEnforce={{slurm_accounting_storage_enforce}}
 PrologFlags={{','.join(slurm_conf_prolog_flags)}}
 {% endif %}
 
+Prolog=/etc/slurm/job-prolog.sh
+Epilog=/etc/slurm/job-epilog.sh
+
 AccountingStorageType=accounting_storage/slurmdbd
 AccountingStorageHost={{slurm_controller_hostname}}
 {% if slurm_conf_accounting_storage_tres %}

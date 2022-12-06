@@ -50,6 +50,8 @@ slurm_conf_accounting_storage_tres: []
 slurm_conf_prolog_flags:
   - X11
 slurm_conf_job_submit_plugins: false
+slurm_job_temporary_directories:
+  - "/tmp/$SLURM_JOBID"
 
 slurm_select_type: "select/cons_res"
 slurm_select_type_parameters: "CR_Core_Memory"

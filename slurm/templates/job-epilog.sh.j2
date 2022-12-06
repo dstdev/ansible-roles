@@ -1,0 +1,7 @@
+#!/bin/bash
+
+{% for slurm_tmp_folder in slurm_job_temporary_directories %}
+TMP_{{loop.index}}={{slurm_tmp_folder}}
+
+rm -rf $TMP_{{loop.index}} 2>/dev/null >/dev/null
+{% endfor %}

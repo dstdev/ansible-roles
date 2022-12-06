@@ -11,6 +11,32 @@
     - slurm
     - slurm_configure
 
+- name: Create prolog scripts
+  ansible.builtin.template:
+    src: templates/job-prolog.sh.j2
+    dest: /etc/slurm/job-prolog.sh
+    owner: root
+    group: root
+    mode: 755
+  notify:
+    - Restart slurmctld
+  tags:
+    - slurm
+    - slurm_configure
+
+- name: Create epilog scripts
+  ansible.builtin.template:
+    src: templates/job-epilog.sh.j2
+    dest: /etc/slurm/job-epilog.sh
+    owner: root
+    group: root
+    mode: 755
+  notify:
+    - Restart slurmctld
+  tags:
+    - slurm
+    - slurm_configure
+
 - name: Create cgroup configuration file
   ansible.builtin.template:
     src: templates/cgroup.conf.j2

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TMP_DIRS=({{ " ".join(slurm_job_temporary_directories) }})
+for DIRECTORY in ${TMP_DIRS[@]};do
+
+  if [ ! -d "$DIRECTORY" ]; then
+      mkdir -p $DIRECTORY
+      chown $SLURM_JOB_USER $DIRECTORY
+      chmod 700 $DIRECTORY
+  fi
+
+done
+

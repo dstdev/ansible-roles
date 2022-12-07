@@ -17,7 +17,7 @@
     dest: /etc/slurm/job-prolog.sh
     owner: root
     group: root
-    mode: 755
+    mode: "0755"
   notify:
     - Restart slurmctld
   tags:
@@ -30,7 +30,7 @@
     dest: /etc/slurm/job-epilog.sh
     owner: root
     group: root
-    mode: 755
+    mode: "0755"
   notify:
     - Restart slurmctld
   tags:

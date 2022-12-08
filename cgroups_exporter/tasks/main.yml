@@ -44,3 +44,10 @@
     name: cgroup_exporter
     state: started
   when: ansible_is_chroot == False
+
+- name: cleanup tmp files
+  become: yes
+  shell: "rm -rf /tmp/cgroups_exporter && rm -rf /tmp/go"
+  args:
+    chdir: /tmp
+  tags: cleanup

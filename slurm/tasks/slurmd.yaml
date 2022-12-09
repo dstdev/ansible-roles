@@ -9,6 +9,40 @@
     - slurm
     - slurm_install_slurmd
 
+- name: Create prolog scripts
+  ansible.builtin.template:
+    src: templates/job-prolog.sh.j2
+    dest: /etc/slurm/job-prolog.sh
+    owner: root
+    group: root
+    mode: "0755"
+  tags:
+    - slurm
+    - slurm_configure
+
+- name: Create epilog scripts
+  ansible.builtin.template:
+    src: templates/job-epilog.sh.j2
+    dest: /etc/slurm/job-epilog.sh
+    owner: root
+    group: root
+    mode: "0755"
+  tags:
+    - slurm
+    - slurm_configure
+
+- name: Create unkillable step script
+  ansible.builtin.template:
+    src: templates/kill_step.sh.j2
+    dest: /etc/slurm/kill_step.sh
+    owner: root
+    group: root
+    mode: "0755"
+  when: slurm_kill_step_enabled
+  tags:
+    - slurm
+    - slurm_configure
+
 - name: Start slurmd service
   ansible.builtin.service:
     name: slurmd

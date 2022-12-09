@@ -69,9 +69,11 @@ Role Variables
 | slurm_restd_port                  | 8911                  | Restapi port                                                                      |
 | slurm_restd_host                  | 0.0.0.0               | Restapi host                                                                      |
 | slurm_disable_restart             | false                 | Disable service restart when files are updated                                    |
-| slurm_profile_csh                 | ""                    | Append slurm csh profile scripts                                                  |
+| slurm_profile_csh_append          | ""                    | Append slurm csh profile scripts                                                  |
 | slurm_profile_bash_append         | ""                    | Append slurm bash profile scripts                                                 |
 | slurm_job_temporary_directories   | "/tmp/$SLURM_JOBID"   | Temporary slurm directories to create per job.  Can leverage enviroment variables |
+| slurm_script_directory            | "/etc/slurm"          | Location to write prolog and epilog scripts for all nodes to access               |
+| slurm_kill_step_enabled           | false                 | Enable kill step program and write defaults                                       |
 
 
 

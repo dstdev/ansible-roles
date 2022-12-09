@@ -85,3 +85,5 @@ slurm_restd_jwt_key: "{{undef(hint='You must specify the jwt key value')}}"
 # Slurm profile variables
 slurm_profile_csh_append: ""
 slurm_profile_bash_append: ""
+
+slurm_kill_step_enabled: false

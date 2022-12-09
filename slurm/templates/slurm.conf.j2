@@ -70,6 +70,10 @@ JobSubmitPlugins={{slurm_conf_job_submit_plugins}}
 SlurmctldDebug={{slurm_controller_debug}} # Add as variable
 SlurmdDebug={{slurm_daemon_debug}} # Add as variable
 
+{% if slurm_kill_step_enabled %}
+UnkillableStepProgram=/etc/slurm/kill_step.sh
+{% endif %}
+
 {% if slurm_conf_gres_types %}
 GresTypes={{','.join(slurm_conf_gres_types)}}
 {% endif %}

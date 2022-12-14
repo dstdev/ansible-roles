@@ -1,0 +1,3 @@
+---
+# vars file for easybuild
+easybuild_tmp_dir: "/tmp/easybuild"

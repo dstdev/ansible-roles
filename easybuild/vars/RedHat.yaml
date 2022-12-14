@@ -1,0 +1,7 @@
+---
+easybuild_required_packages:
+  - epel-release
+  - python36
+  - python3-pip
+  - python3-virtualenv
+  - '@Development Tools'

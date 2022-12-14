@@ -1,0 +1,3 @@
+---
+# defaults file for easybuild
+easybuild_install_dir: "/opt/easybuild"

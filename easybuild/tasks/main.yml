@@ -1,0 +1,85 @@
+---
+# tasks file for easybuild
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    easybuild
+
+- name: Install required packages
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: present
+    enablerepo: powertools
+  loop: "{{easybuild_required_packages}}"
+  tags:
+    - easybuild
+
+- name: Detect installed easybuild
+  ansible.builtin.stat:
+    path: "{{easybuild_install_dir}}/software"
+  register: easybuild_installed
+  changed_when: false
+  tags:
+    - easybuild
+
+- name: status of eb dir
+  debug:
+    msg: "{{easybuild_installed.stat.exists}}"
+
+- name: Install temporary easybuild
+  ansible.builtin.pip:
+    virtualenv: "{{easybuild_tmp_dir}}"
+    name: easybuild
+  when: not easybuild_installed.stat.exists
+  tags:
+    - easybuild
+
+- name: Get python version from tmp dir
+  ansible.builtin.shell: "/bin/ls -rtd -1 {{easybuild_tmp_dir}}/lib*/python*/site-packages | tail -1"
+  register: command_output
+  changed_when: false
+  when: not easybuild_installed.stat.exists
+  tags:
+    - easybuild
+
+- name: Set python version fact
+  ansible.builtin.set_fact:
+    eb_python_version: "{{ command_output.stdout }}"
+  changed_when: false
+  when: not easybuild_installed.stat.exists
+  tags:
+    - easybuild
+
+- name: Install proper easybuild
+  ansible.builtin.shell:
+    cmd: "source /etc/profile.d/z00-lmod.sh; eb --install-latest-eb-release --allow-use-as-root-and-accept-consequences --prefix {{easybuild_install_dir}}"
+  environment:
+    PATH: "{{easybuild_tmp_dir}}/bin:{{ansible_env.PATH}}"
+    PYTHONPATH: "{{easybuild_tmp_dir}}/lib/{{eb_python_version}}/site-packages"
+    EB_PYTHON: "/usr/bin/python3"
+  when: not easybuild_installed.stat.exists
+  tags:
+    - easybuild
+
+- name: Detect temporary easybuild install 
+  ansible.builtin.stat:
+    path: "{{easybuild_tmp_dir}}/bin/eb"
+  register: easybuild_tmp_installed
+  changed_when: false
+  tags:
+    - easybuild
+
+- name: Clean up temp eb
+  ansible.builtin.file:
+    state: absent
+    path: "{{easybuild_tmp_dir}}"
+  when: easybuild_tmp_installed.stat.exists
+  tags:
+    - easybuild

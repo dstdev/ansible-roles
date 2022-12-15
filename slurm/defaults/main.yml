@@ -87,3 +87,8 @@ slurm_profile_csh_append: ""
 slurm_profile_bash_append: ""
 
 slurm_kill_step_enabled: false
+slurm_kill_step_script: |
+  "ps auwx| grep slurmstepd| grep $SLURM_JOBID.extern| grep -v grep |awk '{print $2}'| xargs kill -9"
+
+slurm_prolog_append: ""
+slurm_epilog_append: ""

@@ -4,6 +4,7 @@ slurm_required_packages:
   - zlib
   - bzip2
   - bzip2-devel
+  - git
   - openssl
   - openssl-devel
   - pkgconfig

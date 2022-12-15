@@ -38,7 +38,6 @@
     owner: root
     group: root
     mode: "0755"
-  when: slurm_kill_step_enabled
   tags:
     - slurm
     - slurm_configure

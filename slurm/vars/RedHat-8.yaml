@@ -5,6 +5,7 @@ slurm_required_packages:
   - bzip2
   - bzip2-devel
   - openssl
+  - git
   - openssl-devel
   - pkgconfig
   - wget

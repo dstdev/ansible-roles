@@ -9,9 +9,14 @@ global:
 {% endif %}
 
 route:
-  receiver: 'slack-notifications'
+  receiver: 'default-receiver'
+  routes:
+    - matchers:
+        - severity="critical"
+      receiver: 'slack-notifications'
 
 receivers:
+- name: 'default-receiver'
 - name: 'slack-notifications'
   slack_configs:
   - channel: {{ alertmanager_slack_channel }}
@@ -58,8 +63,8 @@ receivers:
       url: '{{ template "__alert_silence_link" . }}'
     - type: button
       text: '{{ template "slack.monzo.link_button_text" . }}'
-      url: '{{ .CommonAnnotations.link_url }}'   
-{% endraw %} 
+      url: '{{ .CommonAnnotations.link_url }}'
+{% endraw %}
 
 
 templates:

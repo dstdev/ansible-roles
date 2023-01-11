@@ -113,6 +113,15 @@
   with_dict: "{{ prometheus_targets }}"
   when: prometheus_targets != {}
 
+- name: Set cronjob for gpfs_mmdf_exporter
+  cron:
+    name: "run gpfs_mmdf_exporter to node_exporter collector"
+    hour: "*/4"
+    job: "gpfs_mmdf_exporter --collector.mmdf.timeout=600  --output /var/lib/node_exporter/textfile_collector/gpfs_mmdf_exporter.prom 2>&1"
+  tags:
+    - gpfs_mmdf_exporter
+    - never
+
 # - name: copy prometheus custom static targets
 #   copy:
 #     src: "{{ item }}"

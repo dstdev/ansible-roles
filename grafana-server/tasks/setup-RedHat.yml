@@ -10,6 +10,7 @@
   rpm_key:
     key: https://packages.grafana.com/gpg.key
     state: present
+    validate_certs: no
 
 - name: install grafana  rpm repository
   yum_repository:

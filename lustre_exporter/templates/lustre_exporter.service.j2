@@ -1,0 +1,10 @@
+[Unit]
+Description=Lustre Exporter
+After=network.target
+[Service]
+User=nodeusr
+Group=nodeusr
+Type=simple
+ExecStart={{ lustre_exporter_executable_path }}/lustre_exporter
+[Install]
+WantedBy=multi-user.target

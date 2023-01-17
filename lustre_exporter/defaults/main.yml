@@ -1,0 +1,3 @@
+---
+lustre_exporter_executable_path: /var/lib/lustre_exporter/
+prometheus_exporter_uid: 440

@@ -73,6 +73,7 @@ JobSubmitPlugins={{slurm_conf_job_submit_plugins}}
 SlurmctldDebug={{slurm_controller_debug}} # Add as variable
 SlurmdDebug={{slurm_daemon_debug}} # Add as variable
 
+UnkillableStepTimeout={{slurm_unkillable_step_timeout}}
 {% if slurm_kill_step_enabled %}
 UnkillableStepProgram=/etc/slurm/kill_step.sh
 {% endif %}

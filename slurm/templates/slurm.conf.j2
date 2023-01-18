@@ -40,6 +40,9 @@ PrologFlags={{','.join(slurm_conf_prolog_flags)}}
 
 Prolog=/etc/slurm/job-prolog.sh
 Epilog=/etc/slurm/job-epilog.sh
+TaskProlog=/etc/slurm/task-prolog.sh
+TaskEpilog=/etc/slurm/task-epilog.sh
+
 
 AccountingStorageType=accounting_storage/slurmdbd
 AccountingStorageHost={{slurm_controller_hostname}}

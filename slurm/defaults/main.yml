@@ -90,5 +90,11 @@ slurm_kill_step_enabled: false
 slurm_kill_step_script: |
   "ps auwx| grep slurmstepd| grep $SLURM_JOBID.extern| grep -v grep |awk '{print $2}'| xargs kill -9"
 
+  # The below are legacy and need to be removed AAK 2023-01-28 ###
 slurm_prolog_append: ""
 slurm_epilog_append: ""
+##################################################################
+slurm_job_prolog_append: "{{slurm_prolog_append}}"
+slurm_job_epilog_append: "{{slurm_epilog_append}}"
+slurm_task_prolog_append: ""
+slurm_task_epilog_append: ""

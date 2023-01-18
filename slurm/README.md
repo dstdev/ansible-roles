@@ -74,8 +74,10 @@ Role Variables
 | slurm_job_temporary_directories   | "/tmp/$SLURM_JOBID"   | Temporary slurm directories to create per job.  Can leverage enviroment variables |
 | slurm_script_directory            | "/etc/slurm"          | Location to write prolog and epilog scripts for all nodes to access               |
 | slurm_kill_step_enabled           | false                 | Enable kill step program and write defaults                                       |
-| slurm_prolog_append               | ""                    | Append to job prolog script                                                       |
-| slurm_epilog_append               | ""                    | Append to job epilog script                                                       |
+| slurm_job_prolog_append           | ""                    | Append to job prolog script                                                       |
+| slurm_job_epilog_append           | ""                    | Append to job epilog script                                                       |
+| slurm_task_prolog_append          | ""                    | Append to task prolog script                                                      |
+| slurm_task_epilog_append          | ""                    | Append to tas epilog script                                                       |
 
 
 

@@ -31,6 +31,28 @@
     - slurm
     - slurm_configure
 
+- name: Create task prolog scripts
+  ansible.builtin.template:
+    src: templates/task-prolog.sh.j2
+    dest: /etc/slurm/task-prolog.sh
+    owner: root
+    group: root
+    mode: "0755"
+  tags:
+    - slurm
+    - slurm_configure
+
+- name: Create task epilog scripts
+  ansible.builtin.template:
+    src: templates/task-epilog.sh.j2
+    dest: /etc/slurm/task-epilog.sh
+    owner: root
+    group: root
+    mode: "0755"
+  tags:
+    - slurm
+    - slurm_configure
+
 - name: Create unkillable step script
   ansible.builtin.template:
     src: templates/kill_step.sh.j2

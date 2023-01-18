@@ -25,7 +25,7 @@
 
 - name: Compile and install lustre_exporter
   become: yes
-  shell: "make build && chown nodeusr:nodeusr lustre_exporter && cp /tmp/lustre_exporter/lustre_exporter {{ lustre_exporter_executable_path }}"
+  shell: "make build && chown nodeusr:nodeusr lustre_exporter && mkdir -p {{ lustre_exporter_executable_path }} && cp /tmp/lustre_exporter/lustre_exporter {{ lustre_exporter_executable_path }}"
   environment:
     PATH: "/tmp/go/bin:{{ ansible_env.PATH }}"
   args:

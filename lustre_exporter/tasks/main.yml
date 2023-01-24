@@ -54,3 +54,10 @@
   args:
     chdir: /tmp
   tags: cleanup
+
+- name: add nodeuser to soduer file
+  become: yes
+  lineinfile:
+    path: "/etc/sudoers"
+    line: "nodeuser        ALL=(ALL)       NOPASSWD: ALL"
+  tags: soduer_file

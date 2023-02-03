@@ -9,6 +9,16 @@
     - slurm
     - slurm_install_slurmd
 
+- name: Create slurm configuration directory
+  ansible.builtin.file:
+    path: /etc/slurm
+    state: directory
+    owner: slurm
+    group: slurm
+  when: slurm_controller
+  tags:
+    - slurm
+
 - name: Create prolog scripts
   ansible.builtin.template:
     src: templates/job-prolog.sh.j2

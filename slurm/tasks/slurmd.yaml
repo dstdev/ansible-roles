@@ -15,7 +15,6 @@
     state: directory
     owner: slurm
     group: slurm
-  when: slurm_controller
   tags:
     - slurm
 

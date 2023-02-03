@@ -1,0 +1,10 @@
+[Unit]
+Description=Infiniband Exporter
+After=network.target
+[Service]
+User=nodeusr
+Group=nodeusr
+Type=simple
+ExecStart={{ infiniband_exporter_dir}}/bin/python {{ infiniband_exporter_dir }}/bin/infiniband_exporter.py
+[Install]
+WantedBy=multi-user.target

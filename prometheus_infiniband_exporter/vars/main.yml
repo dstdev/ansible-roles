@@ -1,0 +1,4 @@
+---
+# vars file for prometheus_infiniband_exporter
+infiniband_python_packages:
+  - prometheus-client

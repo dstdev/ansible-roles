@@ -1,0 +1,68 @@
+---
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - infiniband_exporter
+
+- name: Create nodeusr account to run dcgm_exporter
+  user:
+    name: nodeusr
+    shell: /sbin/nologin
+    home: /var/lib/node_exporter
+    uid: "{{ prometheus_exporter_uid }}"
+  tags:
+    - infiniband_exporter
+
+- name: Install python dependencies
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{infiniband_required_packages}}"
+  tags:
+    - infiniband_exporter
+
+- name: Create python virtual environment
+  ansible.builtin.pip:
+    name: "{{ infiniband_python_packages }}"
+    virtualenv: "{{ infiniband_exporter_dir }}"
+  tags:
+    - infiniband_exporter
+
+- name: Install Infiniband Exporter
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/guilbaults/infiniband-exporter/master/infiniband-exporter.py
+    dest: "{{infiniband_exporter_dir}}/bin/infiniband_exporter.py"
+    mode: "0750"
+    owner: "{{ prometheus_exporter_uid}}"
+  tags:
+    - infiniband_exporter
+
+- name: Create systemd service file
+  ansible.builtin.template:
+    src: infiniband_exporter.service.j2
+    dest: /etc/systemd/system/infiniband_exporter.service
+  tags:
+    - infiniband_exporter
+
+- name: Enable the systemd service file manually
+  ansible.builtin.file:
+    state: link
+    src: /etc/systemd/system/infiniband_exporter.service
+    dest: /etc/systemd/system/multi-user.target.wants/infiniband_exporter.service
+  tags:
+    - infiniband_exporter
+
+- name: Start the systemd service file if this is not a chroot
+  ansible.builtin.service:
+    name: infiniband_exporter
+    state: started
+  when: not ansible_is_chroot
+  tags:
+    - infiniband_exporter

@@ -5,6 +5,9 @@
     port: 3000/tcp
     permanent: yes
     state: enabled
+  tags:
+  - firewall
+  - never
 
 - name: install grafana rpm key
   rpm_key:

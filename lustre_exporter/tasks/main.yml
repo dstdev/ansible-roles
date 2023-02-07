@@ -22,6 +22,7 @@
     dest: /tmp/lustre_exporter
     clone: yes
     update: yes
+    validate_certs: no
 
 - name: Compile and install lustre_exporter
   become: yes

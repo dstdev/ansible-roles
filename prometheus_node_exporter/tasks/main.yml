@@ -23,6 +23,7 @@
     owner: nodeusr
     group: nodeusr
     remote_src: yes
+    validate_certs: no
   tags:
     - prometheus_node_exporter
 

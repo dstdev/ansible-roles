@@ -2,6 +2,11 @@
 # Creates a systemd file for starting, without actually using systemd. Design
 # decision was made to not use systemd for use with images
 ---
+- name: install python3
+  yum:
+    name: python3
+    state: present
+
 - name: Create nodeusr account to run node_exporter
   ansible.builtin.user:
     name: nodeusr

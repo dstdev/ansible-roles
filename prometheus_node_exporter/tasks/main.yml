@@ -65,7 +65,8 @@
     name: smartmontools
     state: latest
   tags:
-    - prometheus_node_exporter
+    - smartmontools
+    - never
 
 - name: Fetch smartmon shell script file
   copy:
@@ -73,7 +74,8 @@
     dest: "/var/lib/node_exporter/smartmon.sh"
     mode: 0755
   tags:
-    - prometheus_node_exporter
+    - smartmontools
+    - never
 
 - name: Verify cron is installed
   package:
@@ -81,7 +83,8 @@
     state: present
   when: ansible_os_family == 'RedHat'
   tags:
-    - prometheus_node_exporter
+    - smartmontools
+    - never
 
 - name: Verify cron is installed
   apt:
@@ -89,7 +92,8 @@
     state: present
   when: ansible_os_family == 'Debian'
   tags:
-    - prometheus_node_exporter
+    - smartmontools
+    - never
 
 - name: Crontab the smartmon shell script file
   cron:
@@ -97,4 +101,5 @@
     special_time: hourly
     job: "/var/lib/node_exporter/smartmon.sh > /var/lib/node_exporter/textfile_collector/smart_status.prom 2>&1"
   tags:
-    - prometheus_node_exporter
+    - smartmontools
+    - never

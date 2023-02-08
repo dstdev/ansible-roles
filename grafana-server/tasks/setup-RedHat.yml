@@ -93,6 +93,18 @@
     - s-m-a-r-t-disk-monitoring-for-prometheus-dashboard_rev1.json
     - smart-disk-data_rev2.json
     - network_traffic.json
+    - infiniband_rev1.json
+  tags:
+  - configuration
+
+- name: Import Grafana dashboard infiniband_rev1.json
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_url }}"
+    # grafana_api_key: "{{ grafana_api_key }}"
+    state: present
+    commit_message: Updated by ansible
+    overwrite: yes
+    path: /tmp/infiniband_rev1.json
   tags:
   - configuration
 

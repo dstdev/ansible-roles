@@ -22,6 +22,8 @@
     dest: /tmp/lustre_exporter
     clone: yes
     update: yes
+  environment:
+    - GIT_SSL_NO_VERIFY: "true"
 
 - name: Compile and install lustre_exporter
   become: yes

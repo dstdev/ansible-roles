@@ -32,6 +32,7 @@
   ansible.builtin.pip:
     name: "{{ infiniband_python_packages }}"
     virtualenv: "{{ infiniband_exporter_dir }}"
+    virtualenv_python: "python3"
   tags:
     - infiniband_exporter
 

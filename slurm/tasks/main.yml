@@ -39,7 +39,7 @@
 - name: Include firewall tasks
   ansible.builtin.include_tasks: "firewall.yaml"
   tags:
-    - any
+    - always
 
 - name: Include slurmdbd tasks
   ansible.builtin.include_tasks: "slurmdbd.yaml"

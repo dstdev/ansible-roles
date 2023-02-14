@@ -78,6 +78,8 @@ Role Variables
 | slurm_job_epilog_append           | ""                    | Append to job epilog script                                                       |
 | slurm_task_prolog_append          | ""                    | Append to task prolog script                                                      |
 | slurm_task_epilog_append          | ""                    | Append to tas epilog script                                                       |
+| slurm_firewalld_enabled           | false                 | Enable firewalld rules for a defined subnet                                       |
+| slurm_firewalld_subnet            | 10.141.0.0/16         | Firewalld opened subnet                                                           |
 
 
 

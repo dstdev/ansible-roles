@@ -1,0 +1,16 @@
+---
+# tasks file for slurm-controller
+- name: Configure firewalld
+  block:
+    - name: Open internal network
+      ansible.posix.firewalld:
+        source: "{{slurm_firewalld_subnet}}"
+        state: enabled
+        permanent: true
+        port: 6817-6819/tcp
+        zone: internal
+  when: slurm_firewalld_enabled
+  become: yes
+
+  tags:
+    - slurm

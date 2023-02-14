@@ -100,3 +100,6 @@ slurm_job_epilog_append: "{{slurm_epilog_append}}"
 slurm_task_prolog_append: ""
 slurm_task_epilog_append: ""
 
+# Firewall rules
+slurm_firewalld_enabled: false
+slurm_firewalld_subnet: "10.141.0.0/16"

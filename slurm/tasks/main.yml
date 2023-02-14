@@ -36,6 +36,11 @@
   tags:
     - any
 
+- name: Include firewall tasks
+  ansible.builtin.include_tasks: "firewall.yaml"
+  tags:
+    - any
+
 - name: Include slurmdbd tasks
   ansible.builtin.include_tasks: "slurmdbd.yaml"
   when: slurm_controller

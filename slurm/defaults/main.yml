@@ -103,3 +103,4 @@ slurm_task_epilog_append: ""
 # Firewall rules
 slurm_firewalld_enabled: false
 slurm_firewalld_subnet: "10.141.0.0/16"
+slurm_firewalld_python_interpreter: "/usr/bin/python"

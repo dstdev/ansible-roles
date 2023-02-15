@@ -10,13 +10,13 @@
 
     - name: Open internal network
       ansible.posix.firewalld:
-        source: "{{slurm_firewalld_subnet}}"
+        rich_rule: "rule family=ipv4 source address={{slurm_firewalld_subnet}} port port=6817-6819 protocol=tcp accept"
         state: enabled
         permanent: true
-        port: 6817-6819/tcp
         zone: internal
       vars:
         ansible_python_interpreter: "{{slurm_firewalld_python_interpreter}}"
+      notify: Reload firewalld
 
   when: slurm_firewalld_enabled
   become: yes

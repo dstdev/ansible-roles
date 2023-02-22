@@ -30,12 +30,19 @@ SelectTypeParameters="{{slurm_select_type_parameters}}"
 SlurmctldParameters=enable_configless
 SlurmctldLogFile=/var/log/slurm/slurmctld.log # Need to configure
 SlurmdLogFile=/var/log/slurm/slurmd.log # Need to configure
+PropagateResourceLimits={{slurm_propagate_resource_limits}}
 {% if slurm_accounting_storage_enforce %}
 AccountingStorageEnforce={{slurm_accounting_storage_enforce}}
 {% endif %}
 {% if slurm_conf_prolog_flags %}
 PrologFlags={{','.join(slurm_conf_prolog_flags)}}
 {% endif %}
+
+Prolog=/etc/slurm/job-prolog.sh
+Epilog=/etc/slurm/job-epilog.sh
+TaskProlog=/etc/slurm/task-prolog.sh
+TaskEpilog=/etc/slurm/task-epilog.sh
+
 
 AccountingStorageType=accounting_storage/slurmdbd
 AccountingStorageHost={{slurm_controller_hostname}}
@@ -58,13 +65,18 @@ PriorityDecayHalfLife={{slurm_priority_decay_half_life}}
 
 
 ClusterName={{slurm_cluster_name}} # add as variable
-JobAcctGatherFrequency=30
+JobAcctGatherFrequency={{slurm_conf_job_acct_gather_frequency}}
 JobAcctGatherType={{slurm_conf_job_acct_gather_type}}
 {% if slurm_conf_job_submit_plugins %}
 JobSubmitPlugins={{slurm_conf_job_submit_plugins}}
 {% endif %}
 SlurmctldDebug={{slurm_controller_debug}} # Add as variable
 SlurmdDebug={{slurm_daemon_debug}} # Add as variable
+
+UnkillableStepTimeout={{slurm_unkillable_step_timeout}}
+{% if slurm_kill_step_enabled %}
+UnkillableStepProgram=/etc/slurm/kill_step.sh
+{% endif %}
 
 {% if slurm_conf_gres_types %}
 GresTypes={{','.join(slurm_conf_gres_types)}}

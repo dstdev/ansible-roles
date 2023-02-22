@@ -1,0 +1,10 @@
+[Unit]
+Description=Cgroup Exporter
+After=network.target
+[Service]
+User=nodeusr
+Group=nodeusr
+Type=simple
+ExecStart={{ cgroup_exporter_executable_path }}/cgroups_exporter -method slurm
+[Install]
+WantedBy=multi-user.target

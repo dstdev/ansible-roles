@@ -1,0 +1,5 @@
+infiniband_required_packages:
+  - python3
+  - python3-virtualenv
+  - python3-setuptools
+  - python3-pip

@@ -19,6 +19,7 @@
       - task/none
     slurm_conf_job_acct_gather_type: jobacct_gather/none
     slurm_priority_type: multifactor
+    slurm_kill_step_enabled: true
   tasks:
     - name: create restd user
       ansible.builtin.user:

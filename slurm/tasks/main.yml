@@ -13,6 +13,7 @@
     - slurm
     - slurm_install_controller
     - slurm_install_slurmd
+    - slurm_firewall
 
 - name: Set slurm download version
   ansible.builtin.set_fact:
@@ -35,6 +36,11 @@
   ansible.builtin.include_tasks: "install.yaml"
   tags:
     - any
+
+- name: Include firewall tasks
+  ansible.builtin.include_tasks: "firewall.yaml"
+  tags:
+    - always
 
 - name: Include slurmdbd tasks
   ansible.builtin.include_tasks: "slurmdbd.yaml"

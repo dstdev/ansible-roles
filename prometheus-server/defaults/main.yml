@@ -16,9 +16,9 @@ alertmanager_resolve_timeout: 1m
 prometheus_user:   prometheus
 prometheus_group:  prometheus
 
-prometheus_version:                 2.34.0
+prometheus_version:                 2.41.0
 prometheus_node_exporter_version:   1.3.1
-prometheus_alertmanager_version:    0.23.0
+prometheus_alertmanager_version:    0.25.0
 prometheus_systemd_version: 219
 prometheus_platform_suffix: "linux-amd64"
 
@@ -33,6 +33,7 @@ prometheus_alertmanager_db_path: /var/lib/alertmanager
 prometheus_read_only_dirs: []
 
 prometheus_slurm_exporter_host: localhost
+prometheus_blackbox_exporter_host: localhost:9115
 
 prometheus_web_listen_address: "0.0.0.0:9090"
 prometheus_web_external_url: ''
@@ -95,15 +96,69 @@ prometheus_scrape_configs:
     static_configs:
       - targets:
           - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
+
   - job_name: "node"
     file_sd_configs:
       - files:
           - "{{ prometheus_file_sd_config_path }}/node.yml"
+
+  - job_name: "gpfs"
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_file_sd_config_path }}/gpfs.yml"
+
   - job_name: "slurm"
     metrics_path: "{{ prometheus_metrics_path }}"
     static_configs:
       - targets:
           - "{{ prometheus_slurm_exporter_host | default('localhost') }}:9200"
+
+  - job_name: "blackbox_icmp"
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_file_sd_config_path }}/blackbox_icmp.yml"
+    params:
+      module: [icmp]
+    metrics_path: "/probe"
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: "{{prometheus_blackbox_exporter_host}}"
+
+  - job_name: "blackbox_ssh"
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_file_sd_config_path }}/blackbox_ssh.yml"
+    params:
+      module: [ssh_banner]
+    metrics_path: "/probe"
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*?)(:.*)?
+        replacement: ${1}:22
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: "{{prometheus_blackbox_exporter_host}}"
+
+  - job_name: "blackbox_dns"
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_file_sd_config_path }}/blackbox_dns.yml"
+    params:
+      module: [dns_test]
+    metrics_path: "/probe"
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: "{{prometheus_blackbox_exporter_host}}"
 
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'

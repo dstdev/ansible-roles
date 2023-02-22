@@ -25,6 +25,7 @@ slurm_state_save_location: /var/spool/slurmctld
 slurm_scheduler_type: backfill
 slurm_accounting_storage_enforce: 0
 slurm_conf_max_array_size: 1001
+slurm_propagate_resource_limits: "NONE"
 
 ## Priority settings
 slurm_priority_type: basic
@@ -35,22 +36,25 @@ slurm_priority_weight_fair_share: 10000
 slurm_priority_weight_job_size: 1000
 slurm_priority_weight_partition: 1000
 slurm_priority_weight_qos: 0
-slurm_priority_weight_tres: CPU=0 
+slurm_priority_weight_tres: "CPU=0"
 slurm_priority_decay_half_life: "7-0"
 
 # slurm conf configs
 slurm_conf_return_to_service: 2
 slurm_conf_task_plugin: 
   - task/cgroup
+  - task/affinity
+slurm_conf_job_acct_gather_frequency: 30
 slurm_conf_job_acct_gather_type: jobacct_gather/cgroup
-slurm_conf_gres_types: []
 slurm_conf_accounting_storage_tres: []
 slurm_conf_prolog_flags:
   - X11
 slurm_conf_job_submit_plugins: false
+slurm_job_temporary_directories:
+  - "/tmp/$SLURM_JOBID"
 
 slurm_select_type: "select/cons_res"
-slurm_select_type_parameters: "CR_Core"
+slurm_select_type_parameters: "CR_Core_Memory"
 
 
 # cgroup settings
@@ -76,3 +80,31 @@ slurm_restd_port: 8911
 slurm_restd_host: "0.0.0.0"
 slurm_restd_user: "{{undef(hint='You must specify the slurm rest api user')}}"
 slurm_restd_jwt_key: "{{undef(hint='You must specify the jwt key value')}}"
+
+
+# Slurm profile variables
+slurm_profile_csh_append: ""
+slurm_profile_bash_append: ""
+
+slurm_unkillable_step_timeout: 60
+slurm_kill_step_enabled: false
+slurm_kill_step_script: |
+  "ps auwx| grep slurmstepd| grep $SLURM_JOBID.extern| grep -v grep |awk '{print $2}'| xargs kill -9"
+
+  # The below are legacy and need to be removed AAK 2023-01-28 ###
+slurm_prolog_append: ""
+slurm_epilog_append: ""
+##################################################################
+slurm_job_prolog_append: "{{slurm_prolog_append}}"
+slurm_job_epilog_append: "{{slurm_epilog_append}}"
+slurm_task_prolog_append: ""
+slurm_task_epilog_append: ""
+
+# Firewall rules
+slurm_firewalld_enabled: false
+slurm_firewalld_subnet: "10.141.0.0/16"
+slurm_firewalld_python_interpreter: "/usr/bin/python"
+
+# Gres information
+slurm_conf_gres_types: []
+slurm_gres_conf_entries: []

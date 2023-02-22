@@ -1,0 +1,24 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    common_create_dst_user: true
+    common_dst_user_password: testing
+    lmod_install: yes
+    lmod_module_root_path: '{{ lmod_prefix }}/modulefiles'
+    lmod_module_paths:
+      - /opt/easybuild/modules/all
+  tasks:
+    - name: Install procps
+      ansible.builtin.package:
+        name: procps
+        state: present
+    - name: "Include common"
+      ansible.builtin.include_role:
+        name: "common"
+    - name: "Include lmod"
+      ansible.builtin.include_role:
+        name: "lmod"
+    - name: "Include easybuild"
+      ansible.builtin.include_role:
+        name: "easybuild"

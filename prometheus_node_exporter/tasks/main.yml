@@ -2,6 +2,11 @@
 # Creates a systemd file for starting, without actually using systemd. Design
 # decision was made to not use systemd for use with images
 ---
+# - name: install python3
+#   yum:
+#     name: python3
+#     state: present
+
 - name: Create nodeusr account to run node_exporter
   ansible.builtin.user:
     name: nodeusr
@@ -18,6 +23,7 @@
     owner: nodeusr
     group: nodeusr
     remote_src: yes
+    validate_certs: no
   tags:
     - prometheus_node_exporter
 
@@ -25,6 +31,8 @@
   template:
     src: node_exporter.service.j2
     dest: /etc/systemd/system/node_exporter.service
+  notify:
+    - restart node exporter           
   tags:
     - prometheus_node_exporter
 
@@ -57,7 +65,8 @@
     name: smartmontools
     state: latest
   tags:
-    - prometheus_node_exporter
+    - smartmontools
+    - never
 
 - name: Fetch smartmon shell script file
   copy:
@@ -65,7 +74,8 @@
     dest: "/var/lib/node_exporter/smartmon.sh"
     mode: 0755
   tags:
-    - prometheus_node_exporter
+    - smartmontools
+    - never
 
 - name: Verify cron is installed
   package:
@@ -73,7 +83,8 @@
     state: present
   when: ansible_os_family == 'RedHat'
   tags:
-    - prometheus_node_exporter
+    - smartmontools
+    - never
 
 - name: Verify cron is installed
   apt:
@@ -81,7 +92,8 @@
     state: present
   when: ansible_os_family == 'Debian'
   tags:
-    - prometheus_node_exporter
+    - smartmontools
+    - never
 
 - name: Crontab the smartmon shell script file
   cron:
@@ -89,4 +101,5 @@
     special_time: hourly
     job: "/var/lib/node_exporter/smartmon.sh > /var/lib/node_exporter/textfile_collector/smart_status.prom 2>&1"
   tags:
-    - prometheus_node_exporter
+    - smartmontools
+    - never

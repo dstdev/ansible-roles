@@ -1,0 +1,4 @@
+---
+# defaults file for prometheus_infiniband_exporter
+prometheus_exporter_uid: 440
+infiniband_exporter_dir: "/opt/infiniband_exporter"

@@ -1,0 +1,3 @@
+---
+cgroup_exporter_executable_path: /var/lib/node_exporter/
+prometheus_exporter_uid: 440

@@ -51,6 +51,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     alertmanager_slack_api_url: 'https://hooks.slack.com/services/API'
     alertmanager_slack_channel: '#alerts-testing'
+    prometheus_db_path: '/var/lib/prometheus'
     prometheus_targets:
       node:
       - targets:

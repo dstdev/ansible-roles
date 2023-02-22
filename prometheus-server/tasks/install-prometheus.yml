@@ -113,6 +113,7 @@
   with_dict: "{{ prometheus_targets }}"
   when: prometheus_targets != {}
 
+
 # - name: copy prometheus custom static targets
 #   copy:
 #     src: "{{ item }}"

@@ -1,0 +1,4 @@
+roles:
+  - src: https://github.com/akail/ansible-role-lmod
+    scm: git
+    name: lmod

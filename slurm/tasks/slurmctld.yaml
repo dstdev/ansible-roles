@@ -11,6 +11,20 @@
     - slurm
     - slurm_configure
 
+- name: Create gres configuration file
+  ansible.builtin.template:
+    src: templates/gres.conf.j2
+    dest: /etc/slurm/gres.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: slurm_gres_conf_entries
+  notify:
+    - Restart slurmctld
+  tags:
+    - slurm
+    - slurm_configure
+
 - name: Create cgroup configuration file
   ansible.builtin.template:
     src: templates/cgroup.conf.j2

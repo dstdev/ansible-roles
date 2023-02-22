@@ -39,6 +39,7 @@ Role Variables
 | slurm_conf_job_acct_gather_type   | jobacct_gather/cgroup | Job accouting collection type                                                     |
 | slurm_conf_job_submit_plugins     | False                 | Plugins to enable (lua)                                                           |
 | slurm_conf_gres_types             | []                    | GRES Types used                                                                   |
+| slurm_gres_conf_entries           | []                    | List of entires in gres.conf                                                      |
 | slurm_conf_accouting_storage_tres | []                    | AccoutingStorageTres Parameter                                                    |
 | slurm_conf_prolog_flags           | ["X11"]               | PrologFlags                                                                       |
 | slurm_conf_max_array_size         | 1001                  | Maximum array size allowed                                                        |

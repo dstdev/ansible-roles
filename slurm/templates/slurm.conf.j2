@@ -65,7 +65,7 @@ PriorityDecayHalfLife={{slurm_priority_decay_half_life}}
 
 
 ClusterName={{slurm_cluster_name}} # add as variable
-JobAcctGatherFrequency=30
+JobAcctGatherFrequency={{slurm_conf_job_acct_gather_frequency}}
 JobAcctGatherType={{slurm_conf_job_acct_gather_type}}
 {% if slurm_conf_job_submit_plugins %}
 JobSubmitPlugins={{slurm_conf_job_submit_plugins}}

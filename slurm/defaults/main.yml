@@ -44,8 +44,8 @@ slurm_conf_return_to_service: 2
 slurm_conf_task_plugin: 
   - task/cgroup
   - task/affinity
+slurm_conf_job_acct_gather_frequency: 30
 slurm_conf_job_acct_gather_type: jobacct_gather/cgroup
-slurm_conf_gres_types: []
 slurm_conf_accounting_storage_tres: []
 slurm_conf_prolog_flags:
   - X11
@@ -104,3 +104,7 @@ slurm_task_epilog_append: ""
 slurm_firewalld_enabled: false
 slurm_firewalld_subnet: "10.141.0.0/16"
 slurm_firewalld_python_interpreter: "/usr/bin/python"
+
+# Gres information
+slurm_conf_gres_types: []
+slurm_gres_conf_entries: []

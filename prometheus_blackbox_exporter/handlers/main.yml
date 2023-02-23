@@ -1,0 +1,8 @@
+- name: reload blackbox exporter
+  become: true
+  ansible.builtin.systemd:
+    name: blackbox_exporter
+    state: reloaded
+  when: not ansible_is_chroot
+  tags:
+    blackbox_exporter

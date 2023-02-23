@@ -5,6 +5,7 @@ After=network.target
 User=nodeusr
 Group=nodeusr
 Type=simple
+AmbientCapabilities=CAP_NET_RAW
 ExecStart=/var/lib/node_exporter/blackbox_exporter-{{blackbox_exporter_version}}.linux-amd64/blackbox_exporter --config.file=/etc/blackbox_exporter.yml
 [Install]
 WantedBy=multi-user.target

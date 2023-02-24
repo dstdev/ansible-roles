@@ -12,6 +12,7 @@ Rocky 8 Linux installations only
 Role Variables
 --------------
 | Name                             | Devault Value  | Description                             |
+| --- | --- | --- |
 | cobbler_root_password            | Required       | Unsalted root password                  |
 | cobbler_server                   | 127.0.0.1      | External ip                             |
 | cobbler_next_server_v4           | 127.0.0.1      | External ip                             |

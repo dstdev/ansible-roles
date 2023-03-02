@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd {{mkdocs_repo_dest}}
+git pull
+source {{mkdocs_venv}}/bin/activate
+mkdocs build
+rsync -a site/ {{mkdocs_www_dest}}/

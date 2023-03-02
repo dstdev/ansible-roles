@@ -1,2 +1,8 @@
 ---
 # vars file for MkDocs
+mkdocs_repo_dest: "{{mkdocs_root_dir}}/repo"
+mkdocs_venv: "{{mkdocs_root_dir}}/venv"
+mkdocs_python_packages:
+  - mkdocs
+  - mkdocs-material
+  - mkdocs-macros-plugin

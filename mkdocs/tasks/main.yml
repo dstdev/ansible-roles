@@ -1,18 +1,79 @@
 ---
-- name: "docs git update"
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - mkdocs
+
+- name: Create mkdocs root directory
+  ansible.builtin.file:
+    path: "{{mkdocs_root_dir}}"
+    state: directory
+  tags:
+    - mkdocs 
+      
+- name: Create mkdocs dest directory
+  ansible.builtin.file:
+    path: "{{mkdocs_www_dest}}"
+    state: directory
+  tags:
+    - mkdocs 
+
+- name: Install python dependencies
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{mkdocs_required_packages}}"
+  tags:
+    - mkdocs
+
+- name: "Clone repository"
   ansible.builtin.git:
     repo: "{{mkdocs_repo_url}}"
     dest: "{{mkdocs_repo_dest}}"
+  tags:
+    - mkdocs
 
-# where is mkdocs installed? 
-# example here: https://github.com/dstdev/ansible-roles/blob/development/datalake/tasks/main.yml to create a virtual environment at {{mkdocs_venv}}
+- name: Install mkdocs
+  ansible.builtin.pip:
+    name: "{{mkdocs_python_packages}}"
+    virtualenv: "{{mkdocs_venv}}"
+    virtualenv_python: "python3"
+  tags:
+    - mkdocs
 
-# create a cronjob script to periodically pull and build
-# use a template file to copy to /etc/cron.hourly to run every hour
-# ansible.builtin.template
+- name: Create build script
+  ansible.builtin.template:
+    src: mkdocs_build.j2
+    dest: "{{mkdocs_venv}}/bin/mkdocs_build"
+    mode: "0770"
+  tags:
+    - mkdocs
 
-- name: "docs build command"
-  ansible.builtin.shell: mkdocs build -f ../files/mkdocs.yml
+- name: Create cronjob
+  ansible.builtin.cron:
+    name: "Mkdocs build"
+    state: present
+    special_time: "hourly"
+    job: "{{mkdocs_venv}}/bin/mkdocs_build"
+  tags:
+    - mkdocs
 
-- name: "move new site dir to apache dir"
-  ansible.builtin.shell: mv -f ../files/site var/www/html/www.docs 
+- name: Check index.html exists
+  ansible.builtin.stat:
+    path: "{{mkdocs_www_dest}}/index.html"
+  register: index_exists
+  tags:
+    - mkdocs
+
+- name: Run cronjob if index.html does not exist
+  shell: "{{mkdocs_venv}}/bin/mkdocs_build"
+  when: not index_exists.stat.exists
+  tags:
+    - mkdocs

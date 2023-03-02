@@ -1,6 +1,5 @@
 ---
 # defaults file for MkDocs
-mkdocs_repo_url: git@github.com:dstdev/slu-cluster-docs.git
-mkdocs_repo_dest: "/opt/mkdocs/repo"
-mkdocs_venv: "/opt/mkdocs/venv"
+mkdocs_repo_url: https://github.com/dstdev/base-cluster-docs.git
+mkdocs_root_dir: "/opt/mkdocs/"
 mkdocs_www_dest: "/var/www/html/docs"

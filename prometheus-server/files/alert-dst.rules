@@ -56,7 +56,7 @@ groups:
         expr: increase(infiniband_portmalformedpkterrors_total [5m]) > 100
         for: 5m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_portxmitdiscards_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portxmitdiscards_total increase {{ printf "%.0f" $value }} in 5m.'
@@ -64,7 +64,7 @@ groups:
         expr: increase(infiniband_portxmitdiscards_total[5m]) > 100
         for: 5m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_portswhoqlifetimelimitdiscards_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portswhoqlifetimelimitdiscards_total increase {{ printf "%.0f" $value }} in 5m.'
@@ -72,7 +72,7 @@ groups:
         expr: increase(infiniband_portxinfiniband_portswhoqlifetimelimitdiscards_total[5m]) > 100
         for: 5m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_portrcverrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portrcverrors_total increase {{ printf "%.0f" $value }} in 5m.'
@@ -80,7 +80,7 @@ groups:
         expr: increase(infiniband_portrcverrors_total[5m]) > 100
         for: 5m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_portbufferoverrunerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portbufferoverrunerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -88,7 +88,7 @@ groups:
         expr: increase(infiniband_portbufferoverrunerrors_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_portlocalphysicalerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portlocalphysicalerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -96,7 +96,7 @@ groups:
         expr: increase(infiniband_portlocalphysicalerrors_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_portrcvremotephysicalerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portrcvremotephysicalerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -104,7 +104,7 @@ groups:
         expr: increase(infiniband_portrcvremotephysicalerrors_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_portinactivediscards_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portinactivediscards_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -112,7 +112,7 @@ groups:
         expr: increase(infiniband_portinactivediscards_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_portdlidmappingerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portdlidmappingerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -120,7 +120,7 @@ groups:
         expr: increase(infiniband_portdlidmappingerrors_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_linkerrorrecoverycounter_total
         annotations:
           description: '{{ $labels.instance }} infiniband_linkerrorrecoverycounter_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -128,7 +128,7 @@ groups:
         expr: increase(infiniband_linkerrorrecoverycounter_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_locallinkintegrityerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_locallinkintegrityerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -136,7 +136,7 @@ groups:
         expr: increase(infiniband_locallinkintegrityerrors_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_vl15dropped_total
         annotations:
           description: '{{ $labels.instance }} infiniband_vl15dropped_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -144,7 +144,7 @@ groups:
         expr: increase(infiniband_vl15dropped_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_portneighbormtudiscards_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portneighbormtudiscards_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -152,7 +152,7 @@ groups:
         expr: increase(infiniband_portneighbormtudiscards_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_portrcvconstrainterrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portrcvconstrainterrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -160,7 +160,7 @@ groups:
         expr: increase(infiniband_portrcvconstrainterrors_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
       - alert: infiniband_excessivebufferoverrunerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_excessivebufferoverrunerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -168,7 +168,106 @@ groups:
         expr: increase(infiniband_excessivebufferoverrunerrors_total[60m]) > 1000
         for: 60m
         labels:
-          severity: critica
+          severity: critical
+
+  - name: lustre_rules
+    rules:
+      - alert: lustre_available_kilobytes is less than 10%
+        annotations:
+          description: "Number of kilobytes readily available in the pool"
+          summary: lustre_available_kilobytes on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left
+        expr: (lustre_available_kilobytes / lustre_capacity_kilobytes * 100 < 10 and lustre_available_kilobytes == 0)
+        for: 1h
+        labels:
+          severity: critical
+      - alert: lustre_free_kilobytes is less than 10%
+        annotations:
+          description: "Number of kilobytes readily available in the pool"
+          summary: lustre_free_kilobytes on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left
+        expr: (lustre_free_kilobytes / lustre_capacity_kilobytes * 100 < 10 and lustre_free_kilobytes == 0)
+        for: 1h
+        labels:
+          severity: critical
+      - alert: lustre_free_page_low
+        annotations:
+          description: "{{ $labels.instance }} lustre_free_page_low"
+          summary: Lowest number of free pages reached.
+        expr: (lustre_free_page_low) > 0
+        for: 1h
+        labels:
+          severity: critical
+      - alert: lustre_degraded
+        annotations:
+          description: "{{ $labels.instance }} lustre_degraded"
+          summary: Binary indicator as to whether or not the pool is degraded - 0 for not degraded  1 for degraded.
+        expr: (lustre_degraded) > 0
+        for: 1h
+        labels:
+          severity: critical
+      - alert: lustre_exports_dirty_total
+        annotations:
+          description: '{{ $labels.instance }} lustre_exports_dirty_total increase {{ printf "%.0f" $value }} in 1h.'
+          summary: Total number of exports that have been marked dirty.
+        expr: increase(lustre_exports_dirty_total[60m]) > 0
+        for: 1h
+        labels:
+          severity: critical
+      - alert: lustre_grows_failure_total increase
+        annotations:
+          description: '{{ $labels.instance }} lustre_grows_failure_total increase {{ printf "%.0f" $value }} in 1h.'
+          summary: Total number of failures while attempting to add pages increase.
+        expr: increase(lustre_grows_failure_total[60m]) > 0
+        for: 1h
+        labels:
+          severity: critical
+      - alert: lustre_health_check
+        annotations:
+          description: "{{ $labels.instance }} unhealthy"
+          summary: Current health status for the indicated instance 1 refers to 'healthy'  0 refers to 'unhealthy'.
+        expr: (lustre_health_check) < 1
+        for: 60m
+        labels:
+          severity: critical
+      - alert: lustre_inodes_free is less than 10%
+        annotations:
+          description: "The number of inodes (objects) available"
+          summary: lustre_inodes_free on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left
+        expr: (lustre_inodes_free / lustre_inodes_maximum * 100 < 10 and lustre_available_kilobytes == 0)
+        for: 1h
+        labels:
+          severity: critical
+      - alert: lustre_lock_contended
+        annotations:
+          description: "{{ $labels.instance }} lustre_lock_contended is higher than 1000"
+          summary: Number of contended locks.
+        expr: (lustre_lock_contended) > 1000
+        for: 1h
+        labels:
+          severity: critical
+      - alert: lustre_lock_contention_seconds
+        annotations:
+          description: "{{ $labels.instance }} lustre_lock_contention_seconds is higher than 60s"
+          summary: Time in seconds during which locks were contended.
+        expr: (lustre_lock_contention_seconds) > 60
+        for: 1h
+        labels:
+          severity: critical
+      - alert: lustre_lock_count
+        annotations:
+          description: "{{ $labels.instance }} lustre_lock_count is higher than 5000"
+          summary: Number of locks.
+        expr: (lustre_lock_count) > 5000
+        for: 1h
+        labels:
+          severity: critical
+      - alert: lustre_lock_timeout
+        annotations:
+          description: '{{ $labels.instance }} lustre_lock_timeout increase {{ printf "%.0f" $value }} in 1h.'
+          summary: Number of lock timeouts increase of more than 100  per hour
+        expr: increase(lustre_lock_timeout[60m]) > 100
+        for: 1h
+        labels:
+          severity: critical
 
   - name: smartmon_rules
     rules:

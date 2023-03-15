@@ -1,18 +1,15 @@
 ---
 # defaults file for dst
-common_dst_admin_group_name: "dstadmin"
-common_dst_user_name: "dstadmin"
 common_dst_user_password: '{{ undef(hint="You must specify a password for dst user") }}'
 common_dst_user_uid: 10000
+commond_dst_user_home: /usr/local/dst
+common_dst_user_groups:
+  - hpcadmin
 common_dst_users: []
-common_dst_user_home: /usr/local/dstadmin
 common_hostname: false
 common_timezone: "US/Eastern"
 common_dst_authorized_key: ""
-common_dst_private_key: ""
 common_additional_etc_hosts: []
-common_disable_selinux: false
+common_disable_selinux: true
 common_host_extra_packages: []
 common_group_extra_packages: []
-common_create_dst_user: true
-common_dst_user_groups: []

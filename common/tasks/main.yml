@@ -6,26 +6,58 @@
   apt:
     update_cache: yes
     cache_valid_time: 3600
+  changed_when: false
   when: ansible_distribution == 'Debian'
   tags:
     - common
 
-- name: create hpcadmin group
+- name: Update dnf cache if out of date
+  ansible.builtin.dnf:
+    update_cache: yes
+    cache_valid_time: 3600
+  changed_when: false
+  when: ansible_distribution == 'RedHat'
+  tags:
+    - common
+
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - common
+
+- name: Install required packages
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: present
+    enablerepo: powertools
+  loop: "{{common_required_packages}}"
+  tags:
+    - easybuild
+
+- name: create admin group
   ansible.builtin.group:
-    name: hpcadmin
+    name: "{{common_dst_admin_group_name}}"
     state: present
   tags:
     - common
 
 - name: create dst user
   ansible.builtin.user:
-    name: dst
+    name: "{{ common_dst_user_name }}"
     password: "{{ common_dst_user_password }}"
     groups:
-      "{{common_dst_user_groups}}"
+      - "{{ common_dst_admin_group_name }}"
+    append: true
     state: present
     shell: /bin/bash
-    createhome: yes
+    createhome: true
     home: "{{common_dst_user_home}}"
     uid: "{{common_dst_user_uid}}"
   when: common_create_dst_user
@@ -33,13 +65,13 @@
     - common
 
 # Needs to be configured after setting the password for the user
-- name: Allow 'hpcadmin' group to have password sudo
+- name: Allow admin group to have password sudo
   lineinfile:
-    dest: /etc/sudoers.d/hpcadmin
+    dest: "/etc/sudoers.d/{{ common_dst_admin_group_name }}"
     create: yes
     state: present
-    regexp: '^%hpcadmin'
-    line: '%hpcadmin ALL=(ALL) PASSWD: ALL'
+    regexp: '^%{{ common_dst_admin_group_name }}'
+    line: '%{{ common_dst_admin_group_name }} ALL=(ALL) PASSWD: ALL'
     validate: visudo -cf %s
   tags:
     - common
@@ -49,7 +81,7 @@
     user: "dst"
     state: present
     key: "{{common_dst_authorized_key}}"
-  when: common_create_dst_user
+  when: common_create_dst_user and common_dst_authorized_key
   tags:
     - common
 
@@ -60,7 +92,7 @@
     owner: "dst"
     group: "dst"
     mode: "0600"
-  when: common_create_dst_user
+  when: common_create_dst_user and common_dst_private_key
   tags:
     - common
 
@@ -70,10 +102,11 @@
     state: "{{item.state|default('present')}}"
     password: "{{item.password}}"
     groups:
-      - hpcadmin
+      - "{{ common_dst_admin_group_name }}"
     createhome: yes
     expires: -1
     uid: "{{item.uid}}"
+    append: true
   loop: "{{common_dst_users}}"
   tags:
     - common

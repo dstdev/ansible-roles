@@ -1,0 +1,3 @@
+common_required_packages:
+  - sudo
+  - python3-libselinux

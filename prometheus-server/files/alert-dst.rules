@@ -689,3 +689,12 @@ groups:
         annotations:
           summary: Slurm job {{ $labels.jobid }} pending more than 2 days
           description: "Slurm job pending 2days\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+ 
+      - alert: Services moving to failed state
+        expr: increase(node_systemd_units{state="failed"}[1h]) > 0
+        for: 1h
+        labels:
+          severity: critical
+        annotations:
+          summary: Services moving to failed state on (instance {{ $labels.instance }}) in the last 60m.
+          description: "Number of services moving to failed state in the last 60m \n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"

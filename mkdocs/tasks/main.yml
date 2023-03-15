@@ -44,7 +44,7 @@
   ansible.builtin.pip:
     name: "{{mkdocs_python_packages}}"
     virtualenv: "{{mkdocs_venv}}"
-    virtualenv_python: "python3"
+    virtualenv_command: "/bin/virtualenv-3"
   tags:
     - mkdocs
 

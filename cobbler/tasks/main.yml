@@ -64,7 +64,8 @@
     #dest: /etc/cobbler/settings.yaml
     #owner: root
     #group: apache
-- name: Update lins in configuration file
+ 
+- name: Update lines in configuration file
   ansible.builtin.lineinfile:
     path: /etc/cobbler/settings.yaml
     regexp: '^{{item.key}}: {{item.value}}'

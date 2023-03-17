@@ -23,7 +23,7 @@
     - python3-kickstart
 
 - name: "Enable cobbler module"
-  command: dnf module enable -y cobbler:3.3
+  command: "dnf module enable --enablerepo=epel-modular -y cobbler:3.3"
   register: result
   changed_when:
     - '"Enabling module streams" in result.stdout'
@@ -32,6 +32,7 @@
   ansible.builtin.dnf:
     name: cobbler
     state: present
+    enablerepo: epel-modular
 
 - name: Check for symlink to web root
   ansible.builtin.stat:
@@ -76,8 +77,12 @@
       value: "{{cobbler_manage_dhcp}}"
     - key: manage_dhcp_v4
       value: "{{cobbler_manage_dhcp}}"
+    - key: manage_dhcp_v6
+      value: "{{cobbler_manage_dhcp_v4}}"
     - key: next_server_v4
       value: "{{cobbler_next_server_v4}}"
+    - key: next_server_v6
+      value: "{{cobbler_next_server_v6}}"
     - key: server
       value: "{{cobbler_server}}"
   notify: Restart cobblerd

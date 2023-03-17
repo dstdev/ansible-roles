@@ -75,9 +75,9 @@
     - key: default_password_crypted
       value: "{{cobbler_root_password | password_hash('sha512', 'somesaltything')}}"
     - key: manage_dhcp
-      value: "{{cobbler_manage_dhcp}}"
+      value: "{{cobbler_manage_dhcp_v4}}"
     - key: manage_dhcp_v4
-      value: "{{cobbler_manage_dhcp}}"
+      value: "{{cobbler_manage_dhcp_v4}}"
     - key: manage_dhcp_v6
       value: "{{cobbler_manage_dhcp_v4}}"
     - key: next_server_v4

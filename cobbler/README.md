@@ -23,7 +23,7 @@ Role Variables
 | cobbler_dhcp_dynamic_bootp_start | 192.168.1.100  | Dynamic IP range start                  |
 | cobbler_dhcp_dynamic_bootp_end   | 192.168.1.254  | Dynamic IP range end                    |
 | cobbler_webroot                  | "/opt/cobbler" | Location of webroot data (for symlink)  |
-| cobbler_manage_dhcp              | "true"         | Whether to manage dhcp here (dangerous) |
+| cobbler_manage_dhcp_v4           | "true"         | Whether to manage dhcp here (dangerous) |
 
 Dependencies
 ------------

@@ -4,6 +4,8 @@
     name: "{{ prometheus_group }}"
     system: true
     state: present
+  tags:
+    - prometheus-server
 
 - name: create Prometheus user
   user:
@@ -15,6 +17,8 @@
     comment: "Prometheus User"
     home: "{{ prometheus_db_path }}"
     state: present
+  tags:
+    - prometheus-server
 
 - name: mkdir for general cases
   file:
@@ -28,15 +32,23 @@
     - "{{ prometheus_config_path }}"
     - "{{ prometheus_log_path }}"
     - "{{ prometheus_pid_path }}"
+  tags:
+    - prometheus-server
 
 - name: install prometheus
   import_tasks: install-prometheus.yml
   when: '"prometheus" in prometheus_components'
+  tags:
+    - prometheus-server
 
 - name: install node-exporter
   import_tasks: install-node-exporter.yml
   when: '"node_exporter" in prometheus_components'
+  tags:
+    - prometheus-server
 
 - name: install alertmanager
   import_tasks: install-alertmanager.yml
   when: '"alertmanager" in prometheus_components'
+  tags:
+    - prometheus-server

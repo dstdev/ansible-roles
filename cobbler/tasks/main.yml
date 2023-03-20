@@ -16,6 +16,7 @@
     - yum-utils
     - syslinux
     - syslinux-tftpboot
+    - grub2-efi-x64-modules
     - fence-agents-all
     - iproute
     - debmirror

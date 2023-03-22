@@ -128,3 +128,11 @@ Including an example of how to use your role (for instance, with variables passe
     - hosts: device_roles_login-node
       roles:
         - slurm
+
+Updating Slurm
+--------------
+
+Updates should not be taken lightly.  Before doing a version update of slurm,
+set the `slurm_disable_restart` to prevent the role from restarting any
+important services like slurmdbd and slurmctld.  These should be started
+following the instructions provided by [Schedmd](https://slurm.schedmd.com/quickstart_admin.html#upgrade).

@@ -51,6 +51,7 @@ slurm_conf_accounting_storage_tres: []
 slurm_conf_prolog_flags:
   - X11
 slurm_conf_job_submit_plugins: false
+slurm_conf_cli_filter_plugins: []
 slurm_job_temporary_directories:
   - "/tmp/$SLURM_JOBID"
 

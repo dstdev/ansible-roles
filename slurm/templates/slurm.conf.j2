@@ -16,6 +16,9 @@ SlurmUser={{slurm_user}}
 StateSaveLocation={{slurm_state_save_location}}
 SwitchType=switch/none
 TaskPlugin={{','.join(slurm_conf_task_plugin)}}
+{% if slurm_conf_cli_filter_plugins %}
+CliFilterPlugins={{','.join(slurm_conf_cli_filter_plugins)}}
+{% endif %}
 MPIDefault=none
 InactiveLimit=0
 KillWait=30

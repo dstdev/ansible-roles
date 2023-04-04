@@ -40,10 +40,31 @@
   tags:
     - munge
 
-- name: Enable munge service
-  service:
+- name: Fix munge file if needed
+  ansible.builtin.lineinfile:
+    backup: true
+    path: /lib/systemd/system/munge.service
+    state: present
+    insertafter: "\\[Install\\]"
+    regexp: "^WantedBy=multi-user.target"
+    line: "WantedBy=multi-user.target"
+  notify:
+    - Reload munge
+    - Restart munge
+  tags:
+    - munge
+
+- name: Start munge service
+  ansible.builtin.service:
     name: munge
     state: started
     enabled: true
+  when: not ansible_is_chroot
+  tags:
+    - munge
+
+- name: Enable munge on image
+  ansible.builtin.shell: systemctl enable munge
+  when: ansible_is_chroot
   tags:
     - munge

@@ -2,4 +2,4 @@
 munge_packages:
   - epel-release
   - munge
-  - munge-libs
+  #- munge-libs

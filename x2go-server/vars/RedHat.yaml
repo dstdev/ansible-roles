@@ -1,4 +1,0 @@
-x2goserver_packages:
-  - "@xfce"
-  - x2goserver
-  - x2goserver-xsession

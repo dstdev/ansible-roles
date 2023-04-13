@@ -1,7 +1,0 @@
----
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "Include virtualgl"
-      include_role:
-        name: "virtualgl"

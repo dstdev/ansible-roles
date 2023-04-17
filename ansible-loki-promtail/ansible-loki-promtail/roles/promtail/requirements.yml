@@ -1,0 +1,7 @@
+roles:
+  - name: loki
+    src: ../loki
+  - name: promtail
+    src: ../promtail
+
+

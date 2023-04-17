@@ -1,0 +1,45 @@
+galaxy_info:
+  role_name: promtail
+  namespace: mjay_kerberos
+  author: Juliet Meza
+  description: Ansible role for installing and configuring Loki and Promtail
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+    - name: CentOS
+      versions:
+        - 7
+        - 8
+    - name: Rocky
+      versions:
+        - 8.6
+
+dependencies:
+  - role: geerlingguy.docker
+
+molecule:
+  driver:
+    name: docker
+  platforms:
+    - name: ubuntu-bionic
+      image: ubuntu:bionic
+    - name: ubuntu-focal
+      image: ubuntu:focal
+    - name: centos-7
+      image: centos:7
+    - name: centos-8
+      image: centos:8
+    - name: rocky-8.6
+      image: rockylinux/rockylinux:8.6
+
+lint:
+  name: ansible-lint
+  options:
+    lint-strictness: very
+
+role_requirements:
+  - src: geerlingguy.docker

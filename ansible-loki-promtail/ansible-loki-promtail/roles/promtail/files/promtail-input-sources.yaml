@@ -1,0 +1,27 @@
+- job_name: syslog
+  positions:
+    from: beginning
+  pipeline_stages:
+    - json:
+        expressions:
+          - line
+  static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: syslog
+        facility: '{{ facility }}'
+
+- job_name: systemd-journal
+  pipeline_stages:
+    - json:
+        expressions:
+          - MESSAGE
+    - labels:
+        severity: '{{ syslog_priority }}'
+        facility: '{{ syslog_facility }}'
+  static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: systemd-journal

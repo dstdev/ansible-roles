@@ -1,0 +1,32 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+#lint: |
+  #set -e
+  #yamllint .
+  #ansible-lint
+platforms:
+  #- name: instance7
+    #image: centos:7
+    #privileged: true
+    #volume_mounts:
+      #- "sys/fs/cgroup:/sys/fs/cgroup:ro"
+    #command: "/usr/sbin/init"
+  - name: instance8
+    image: rockylinux:8
+    privileged: true
+    volume_mounts:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    command: "/usr/sbin/init"
+  #- name: instance9
+    #image: rockylinux:9
+    #privileged: true
+    #volume_mounts:
+      #- "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    #command: "/usr/sbin/init"
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

@@ -77,7 +77,7 @@
 
 - name: Copy spack module configuration file
   ansible.builtin.template:
-    src: files/modules.yaml.j2
+    src: templates/modules.yaml.j2
     dest: "{{spack_root}}/etc/spack/modules.yaml"
     backup: yes
     force: no

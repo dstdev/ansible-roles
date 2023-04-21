@@ -27,12 +27,6 @@ config:
     - $spack/share/spack/templates
   
   
-  # Locations where different types of modules should be installed.
-  module_roots:
-    tcl:    "{{spack_module_root}}"
-    lmod:   "{{spack_module_root}}"
-  
-  
   # Temporary locations Spack can try to use for builds.
   #
   # Recommended options are given below.

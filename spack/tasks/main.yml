@@ -8,6 +8,8 @@
            .yaml"
       paths:
         - "{{ role_path }}/vars"
+  tags:
+    - spack
   when: spack_root_host | bool
 
 - name: Install required packages
@@ -16,6 +18,8 @@
     state: present
   when: spack_root_host | bool
   loop: "{{spack_required_packages}}"
+  tags:
+    - spack
 
 - name: clone spack repository
   git:
@@ -23,16 +27,22 @@
     dest: "{{spack_root}}"
     version: "{{spack_version}}"
   when: spack_root_host | bool
+  tags:
+    - spack
 
 - name: Copy spack sh config
   template:  
     src: templates/zz-spack.sh
     dest: /etc/profile.d/zz-spack.sh
+  tags:
+    - spack
 
 - name: copy spack csh config
   template:  
     src: templates/zz-spack.csh
     dest: /etc/profile.d/zz-spack.csh
+  tags:
+    - spack
 
 - name: enable lmod bash
   lineinfile:
@@ -40,6 +50,8 @@
     regexp: ENABLE_LMOD
     line: "export ENABLE_LMOD=1"
   when: spack_bright
+  tags:
+    - spack
 
 - name: enable lmod csh
   lineinfile:
@@ -47,6 +59,8 @@
     regexp: ENABLE_LMOD
     line: 'setenv ENABLE_LMOD "1"'
   when: spack_bright
+  tags:
+    - spack
 
 - name: Copy spack configuration file
   template:
@@ -55,6 +69,8 @@
     backup: yes
     force: no
   when: spack_root_host | bool
+  tags:
+    - spack
 
 - name: Copy spack module configuration file
   copy:
@@ -63,6 +79,8 @@
     backup: yes
     force: no
   when: spack_root_host | bool
+  tags:
+    - spack
 
 - name: Copy spack package configuration file
   copy:
@@ -70,3 +88,5 @@
     dest: "{{spack_root}}/etc/spack/packages.yaml"
     force: no
   when: spack_root_host | bool
+  tags:
+    - spack

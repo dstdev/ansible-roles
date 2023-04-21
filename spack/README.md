@@ -57,4 +57,4 @@ Including an example of how to use your role (for instance, with variables passe
 A headnode where a single install can be defined using the spack_headnode variable in an inventory file
 
     [headnode]
-    edge-hpc-mgt-101 spack_headnode=true
+    edge-hpc-mgt-101 spack_root_host=true

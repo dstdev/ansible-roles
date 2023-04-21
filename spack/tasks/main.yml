@@ -28,7 +28,7 @@
     version: "{{spack_version}}"
     depth: 1
     single_branch: yes
-    version: main
+    version: develop
   when: spack_root_host | bool
   tags:
     - spack

@@ -24,6 +24,7 @@
   ansible.builtin.file:
     state: directory
     path: "{{mount.path}}"
+    mode: "0755"
   tags:
     - mounts
 

@@ -1,0 +1,20 @@
+---
+# defaults file for loki
+
+# The version of Loki to install
+loki_version: 2.7.4
+
+# The base URL for downloading the Loki binary
+loki_base_url: https://github.com/grafana/loki/releases/download
+
+# The architecture of the system
+loki_arch: "amd64"
+
+# The operating system of the system
+loki_os: "linux"
+
+# The location to install the Loki binary
+loki_install_dir: /usr/local/bin
+
+# The name of the Loki binary
+loki_binary_name: "loki-{{ loki_version }}.{{ loki_os }}-{{ loki_arch }}.tar.gz"

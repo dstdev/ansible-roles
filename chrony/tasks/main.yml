@@ -22,7 +22,7 @@
 
 - name: deploy chrony.conf template
   ansible.builtin.template:
-   src: /templates/chrony.conf.j2
+   src: templates/chrony.conf.j2
    dest: /etc/chrony.conf
    owner: root
    group: root

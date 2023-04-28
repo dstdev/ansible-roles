@@ -1,12 +1,7 @@
 - name: Install Loki
   vars:
-    loki_version: 2.7.4
-    loki_os: linux
-    loki_arch: amd64
-    loki_binary_name: "loki-{{ loki_version }}.{{ loki_os }}-{{ loki_arch }}.tar.gz"
-    loki_binary_url: "{{ loki_base_url }}/{{ loki_version }}/{{ loki_binary_name }}"
-    loki_extracted_dir_name: "loki-{{ loki_version }}.{{ loki_os }}-{{ loki_arch }}"
-  get_url:
+    src: "../defaults/main.yml"
+  ansible.builtin.get_url:
     url: "{{ loki_binary_url }}"
     dest: "/tmp/{{ loki_binary_name }}"
     mode: '0644'
@@ -15,7 +10,7 @@
 
 - name: Extract Loki
   vars:
-    loki_install_dir: /usr/local/bin
+    loki_install_dir: "../defaults/main.yml"
   unarchive:
     src: "/tmp/{{ loki_binary_name }}"
     dest: "{{ loki_install_dir }}"
@@ -41,6 +36,22 @@
     dest: "{{ loki_systemd_path }}"
   become: true
   tags: [loki]
+
+- name: Create Loki directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ loki_config_dir }}"
+    - "{{ loki_data_dir }}"
+
+- name: Set Loki directory permissions
+  file:
+    path: "{{ item }}"
+    mode: "0755"
+  loop:
+    - "{{ loki_config_dir }}"
+    - "{{ loki_data_dir }}"
 
 - name: Enable and Start Loki Systemd Service
   systemd:

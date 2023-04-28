@@ -1,9 +1,3 @@
-loki_base_url: "https://github.com/grafana/loki/releases/download"
-loki_version: 2.7.4
-loki_os: linux
-loki_arch: amd64
-loki_install_dir: /usr/local/bin
-loki_binary_name: "loki-{{ loki_version }}.{{ loki_os }}-{{ loki_arch }}.tar.gz"
 
 loki_config:
   auth_enabled: false

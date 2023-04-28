@@ -4,15 +4,15 @@ galaxy_info:
   author: Juliet Meza
   description: A role to install and configure Loki log aggregator.
   license: MIT
-  min_ansible_version: 2.9
+  min_ansible_version: "2.9"
   platforms:
     - name: Ubuntu
       versions:
         - all
-    - name: CentOS
+    - name: Debian
       versions:
         - all
-    - name: Rocky
+    - name: Fedora
       versions:
         - all
   galaxy_tags:

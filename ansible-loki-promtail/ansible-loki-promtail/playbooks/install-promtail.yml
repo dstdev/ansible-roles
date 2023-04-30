@@ -1,7 +1,0 @@
-----
-- name: Install and configure Promtail
-  hosts: all
-  become: true
-
-  roles:
-    - role: promtail

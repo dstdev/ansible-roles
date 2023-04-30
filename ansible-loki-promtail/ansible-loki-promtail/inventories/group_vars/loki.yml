@@ -1,9 +1,0 @@
-loki_version: "2.7.4"
-loki_http_listen_port: "3100"
-loki_http_listen_address: "localhost"
-loki_storage_backend: "boltdb"
-loki_storage_config:
-  boltdb:
-    directory: "/tmp/loki/index"
-loki_config:
-  auth_enabled: false

@@ -1,0 +1,8 @@
+# The base URL for downloading the Loki binary
+loki_base_url: https://github.com/grafana/loki/releases/download
+
+# The name of the Loki binary
+loki_binary_name: "loki-{{ loki_version }}.{{ loki_os }}-{{ loki_arch }}.tar.gz"
+
+loki_binary_url: "{{ loki_base_url }}/{{ loki_version }}/{{ loki_binary_name }}"
+loki_extracted_dir_name: "loki-{{ loki_version }}.{{ loki_os }}-{{ loki_arch }}"

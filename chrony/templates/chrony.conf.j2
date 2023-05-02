@@ -1,6 +1,12 @@
 {% for server in chrony_ntp_servers %}
 server {{server}} iburst
 {% endfor %}
+{% for allow in chrony_allow_list %}
+allow {{allow}}
+{% endfor %}
+{% if chrony_local_stratum %}
+local stratum {{chrony_local_stratum}}
+{% endif %}
 stratumweight 0
 driftfile /var/lib/chrony/drift
 rtcsync

@@ -10,7 +10,7 @@
 [Main]
 
 # Default group source
-default: {{ GROUP_SOURCE }}
+default: {{ clustershell_default_group_source }}
 
 # Group source config directory list (space separated, use quotes if needed).
 # Examples are provided. Copy them from *.conf.example to *.conf to enable.
@@ -43,3 +43,9 @@ autodir: /etc/clustershell/groups.d $CFGDIR/groups.d
 map: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; sed -n 's/^$GROUP:\(.*\)/\1/p' $f
 all: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; sed -n 's/^all:\(.*\)/\1/p' $f
 list: [ -f $CFGDIR/groups ] && f=$CFGDIR/groups || f=$CFGDIR/groups.d/local.cfg; sed -n 's/^\([0-9A-Za-z_-]*\):.*/\1/p' $f
+
+[slurm]
+map: sinfo -h -o "%N" -p $GROUP
+all: sinfo -h -o "%N"
+list: sinfo -h -o "%P"
+reverse: sinfo -h -N -o "%P" -n $NODE

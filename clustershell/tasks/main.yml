@@ -1,20 +1,24 @@
 ---  
-- name: Install/update epel repository if needed
-  ansible.builtin.package:
-    name: epel-release
-    state: present
-  when: ansible_facts['os_family'] == 'RedHat' and ansible_facts ['distribution_major_version'] == '7'
-  tags:
-    - clustershell      
-    
-# tasks file for clustershell
-# because this is a cluster utility tool, we will install to /etc with yum
-- name: Install clustershell
-  ansible.builtin.package:
-    name: clustershell
-    state: present
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
   tags:
     - clustershell
+
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{clustershell_required_packages}}"
+  tags:
+    - clustershell
+
 
 #Copy out template file that uses SLURM for groups
 - name: Copy template file

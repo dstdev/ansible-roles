@@ -7,6 +7,9 @@ global:
 {% if alertmanager_slack_api_url | string | length %}
   slack_api_url: {{ alertmanager_slack_api_url | quote }}
 {% endif %}
+{% if alertmanager_opsgenie_api_key %}
+  opsgenie_api_key: "{{ alertmanager_opsgenie_api_key }}"
+{% endif %}
 
 route:
   receiver: 'default-receiver'
@@ -39,7 +42,7 @@ receivers:
     - responders:
         - name: "{{alertmanager_opsgenie_team}}"
           type: 'team'
-    - priority: {%raw %}'{{ .GroupLabels.severity }}' {% endraw %}
+    - priority: '{%raw %}{{ .GroupLabels.severity }}{% endraw %}'
 {% endif %}
 {% if alertmanager_opsgenie_heartbeat_name %}
 - name: heartbeat

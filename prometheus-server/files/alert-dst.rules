@@ -9,6 +9,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P2
       - alert: infiniband_query_failed_error
         annotations:
           description: "{{ $labels.instance }} has infiniband_query_failed_error."
@@ -17,6 +18,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P2
       - alert: infiniband_mad_rpc_failed_error
         annotations:
           description: "{{ $labels.instance }} has infiniband_mad_rpc_failed_error."
@@ -25,6 +27,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_query_cap_mask_error
         annotations:
           description: "{{ $labels.instance }} has infiniband_query_cap_mask_error."
@@ -33,6 +36,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_print_error
         annotations:
           description: "{{ $labels.instance }} has infiniband_print_error ."
@@ -41,6 +45,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_symbolerrorcounter_total
         annotations:
           description: '{{ $labels.instance }} infiniband_symbolerrorcounter_total increase {{ printf "%.0f" $value }} in 5m.'
@@ -49,6 +54,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portmalformedpkterrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portmalformedpkterrors_total  increase {{ printf "%.0f" $value }} in 5m.'
@@ -57,6 +63,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portxmitdiscards_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portxmitdiscards_total increase {{ printf "%.0f" $value }} in 5m.'
@@ -65,6 +72,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portswhoqlifetimelimitdiscards_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portswhoqlifetimelimitdiscards_total increase {{ printf "%.0f" $value }} in 5m.'
@@ -73,6 +81,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portrcverrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portrcverrors_total increase {{ printf "%.0f" $value }} in 5m.'
@@ -81,6 +90,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portbufferoverrunerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portbufferoverrunerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -89,6 +99,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portlocalphysicalerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portlocalphysicalerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -97,6 +108,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portrcvremotephysicalerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portrcvremotephysicalerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -105,6 +117,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portinactivediscards_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portinactivediscards_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -113,6 +126,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portdlidmappingerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portdlidmappingerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -121,6 +135,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_linkerrorrecoverycounter_total
         annotations:
           description: '{{ $labels.instance }} infiniband_linkerrorrecoverycounter_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -129,6 +144,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_locallinkintegrityerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_locallinkintegrityerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -137,6 +153,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_vl15dropped_total
         annotations:
           description: '{{ $labels.instance }} infiniband_vl15dropped_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -145,6 +162,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portneighbormtudiscards_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portneighbormtudiscards_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -153,6 +171,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_portrcvconstrainterrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_portrcvconstrainterrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -161,6 +180,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
       - alert: infiniband_excessivebufferoverrunerrors_total
         annotations:
           description: '{{ $labels.instance }} infiniband_excessivebufferoverrunerrors_total increase {{ printf "%.0f" $value }} in 60m.'
@@ -169,6 +189,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P3
 
   - name: lustre_rules
     rules:
@@ -180,6 +201,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P2
       - alert: lustre_free_kilobytes is less than 10%
         annotations:
           description: "Number of kilobytes readily available in the pool"
@@ -188,6 +210,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P2
       - alert: lustre_free_page_low
         annotations:
           description: "{{ $labels.instance }} lustre_free_page_low"
@@ -196,6 +219,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P3
       - alert: lustre_degraded
         annotations:
           description: "{{ $labels.instance }} lustre_degraded"
@@ -204,6 +228,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P2
       - alert: lustre_exports_dirty_total
         annotations:
           description: '{{ $labels.instance }} lustre_exports_dirty_total increase {{ printf "%.0f" $value }} in 1h.'
@@ -212,6 +237,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P3
       - alert: lustre_grows_failure_total increase
         annotations:
           description: '{{ $labels.instance }} lustre_grows_failure_total increase {{ printf "%.0f" $value }} in 1h.'
@@ -220,6 +246,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P3
       - alert: lustre_health_check
         annotations:
           description: "{{ $labels.instance }} unhealthy"
@@ -228,6 +255,7 @@ groups:
         for: 60m
         labels:
           severity: critical
+          priority: P2
       - alert: lustre_inodes_free is less than 10%
         annotations:
           description: "The number of inodes (objects) available"
@@ -236,6 +264,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P2
       - alert: lustre_lock_contended
         annotations:
           description: "{{ $labels.instance }} lustre_lock_contended is higher than 1000"
@@ -244,6 +273,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P3
       - alert: lustre_lock_contention_seconds
         annotations:
           description: "{{ $labels.instance }} lustre_lock_contention_seconds is higher than 60s"
@@ -252,6 +282,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P3
       - alert: lustre_lock_count
         annotations:
           description: "{{ $labels.instance }} lustre_lock_count is higher than 5000"
@@ -260,6 +291,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P3
       - alert: lustre_lock_timeout
         annotations:
           description: '{{ $labels.instance }} lustre_lock_timeout increase {{ printf "%.0f" $value }} in 1h.'
@@ -268,6 +300,7 @@ groups:
         for: 1h
         labels:
           severity: critical
+          priority: P3
 
   - name: smartmon_rules
     rules:
@@ -279,6 +312,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P2
 
       - alert: NodeDiskFailed
         annotations:
@@ -288,23 +322,7 @@ groups:
         for: 5m
         labels:
           severity: critical
-      - alert: MemoryCorrectableErrors
-        expr: increase(node_edac_correctable_errors_total[1h]) >0
-        for: 1h
-        labels:
-          severity: critical
-        annotations:
-          summary: "node_edac_correctable_errors_total increase (instance {{ $labels.instance }})"
-          description: "node_edac_correctable_errors_total increase in 60 minutes: VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
-
-      - alert: MemoryUncorrectableErrors
-        expr: increase(node_edac_uncorrectable_errors_total[1h]) >0
-        for: 1h
-        labels:
-          severity: critical
-        annotations:
-          summary: "node_edac_uncorrectable_errors_total increase (instance {{ $labels.instance }})"
-          description: "node_edac_uncorrectable_errors_total increase in 60 minutes: VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+          priority: P2
 
   - name: Exporter Alerts
     rules:
@@ -313,6 +331,7 @@ groups:
         for: 3m
         labels:
           severity: critical
+          priority: P2
         annotations:
           title: Node {{ $labels.instance }} is down
           description: Failed to scrape {{ $labels.job }} on {{ $labels.instance }} for more than 3 minutes. Node could be down.
@@ -322,6 +341,7 @@ groups:
         for: 30m
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: "Server under high load"
           description: "Host is under high load, the avg load 1m is at {{ $value}}. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
@@ -331,6 +351,7 @@ groups:
         for: 30s
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: "Server memory is almost full"
           description: "Host memory usage is {{ humanize $value}}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
@@ -340,6 +361,7 @@ groups:
         for: 30s
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: "Server storage is almost full"
           description: "Host storage usage is {{ humanize $value}}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
@@ -349,6 +371,7 @@ groups:
         for: 5m
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: "Prometheus target scraping slow (instance {{ $labels.instance }})"
           description: "Prometheus is scraping exporters slowly\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -358,6 +381,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          priority: P1
         annotations:
           summary: "Prometheus not connected to alertmanager (instance {{ $labels.instance }})"
           description: "Prometheus cannot connect the alertmanager\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -369,6 +393,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P2
         annotations:
           summary: Host out of memory (instance {{ $labels.instance }})
           description: "Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -378,6 +403,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: Host memory under memory pressure (instance {{ $labels.instance }})
           description: "The node is under heavy memory pressure. High rate of major page faults\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -387,6 +413,7 @@ groups:
         for: 5m
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: Host unusual disk read rate (instance {{ $labels.instance }})
           description: "Disk is probably reading too much data (> 50 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -396,6 +423,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: Host unusual disk write rate (instance {{ $labels.instance }})
           description: "Disk is probably writing too much data (> 50 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -408,6 +436,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P2
         annotations:
           summary: Host out of disk space (instance {{ $labels.instance }})
           description: "Disk is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -420,6 +449,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P3
         annotations:
           summary: Host disk will fill in 24 hours (instance {{ $labels.instance }})
           description: "Filesystem is predicted to run out of space within the next 24 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -429,6 +459,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P2
         annotations:
           summary: Host out of inodes (instance {{ $labels.instance }})
           description: "Disk is almost running out of available inodes (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -438,6 +469,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P3
         annotations:
           summary: Host inodes will fill in 24 hours (instance {{ $labels.instance }})
           description: "Filesystem is predicted to run out of inodes within the next 24 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -447,6 +479,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: Host unusual disk read latency (instance {{ $labels.instance }})
           description: "Disk latency is growing (read operations > 100ms)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -456,6 +489,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: Host unusual disk write latency (instance {{ $labels.instance }})
           description: "Disk latency is growing (write operations > 100ms)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -465,6 +499,7 @@ groups:
         for: 0m
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: Host high CPU load (instance {{ $labels.instance }})
           description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -474,6 +509,7 @@ groups:
         for: 0m
         labels:
           severity: warning
+          priority: P5
         annotations:
           summary: Host CPU steal noisy neighbor (instance {{ $labels.instance }})
           description: "CPU steal is > 10%. A noisy neighbor is killing VM performances or a spot instance may be out of credit.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -486,6 +522,7 @@ groups:
         for: 0m
         labels:
           severity: warning
+          priority: P5
         annotations:
           summary: Host context switching (instance {{ $labels.instance }})
           description: "Context switching is growing on node (> 1000 / s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -495,6 +532,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: Host swap is filling up (instance {{ $labels.instance }})
           description: "Swap is filling up (>80%)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -504,6 +542,7 @@ groups:
         for: 0m
         labels:
           severity: warning
+          priority: P3
         annotations:
           summary: Host systemd service crashed (instance {{ $labels.instance }})
           description: "systemd service crashed\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -513,6 +552,7 @@ groups:
         for: 5m
         labels:
           severity: warning
+          priority: P3
         annotations:
           summary: Host physical component too hot (instance {{ $labels.instance }})
           description: "Physical hardware component too hot\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -522,6 +562,7 @@ groups:
         for: 0m
         labels:
           severity: critical
+          priority: P2
         annotations:
           summary: Host node overtemperature alarm (instance {{ $labels.instance }})
           description: "Physical node temperature alarm triggered\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -531,6 +572,7 @@ groups:
         for: 0m
         labels:
           severity: critical
+          priority: P3
         annotations:
           summary: Host RAID array got inactive (instance {{ $labels.instance }})
           description: "RAID array {{ $labels.device }} is in degraded state due to one or more disks failures. Number of spare drives is insufficient to fix issue automatically.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -540,6 +582,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P2
         annotations:
           summary: Host RAID disk failure (instance {{ $labels.instance }})
           description: "At least one device in RAID array on {{ $labels.instance }} failed. Array {{ $labels.md_device }} needs attention and possibly a disk swap\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -549,6 +592,7 @@ groups:
         for: 6h
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: Host kernel version deviations (instance {{ $labels.instance }})
           description: "Different kernel versions are running\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -558,6 +602,7 @@ groups:
         for: 0m
         labels:
           severity: warning
+          priority: P2
         annotations:
           summary: Host OOM kill detected (instance {{ $labels.instance }})
           description: "OOM kill detected\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -567,6 +612,7 @@ groups:
         for: 0m
         labels:
           severity: info
+          priority: P3
         annotations:
           summary: Host EDAC Correctable Errors detected (instance {{ $labels.instance }})
           description: "Host {{ $labels.instance }} has had {{ printf \"%.0f\" $value }} correctable memory errors reported by EDAC in the last 5 minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -576,6 +622,7 @@ groups:
         for: 0m
         labels:
           severity: warning
+          priority: P2
         annotations:
           summary: Host EDAC Uncorrectable Errors detected (instance {{ $labels.instance }})
           description: "Host {{ $labels.instance }} has had {{ printf \"%.0f\" $value }} uncorrectable memory errors reported by EDAC in the last 5 minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -585,6 +632,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P3
         annotations:
           summary: Host Network Receive Errors (instance {{ $labels.instance }})
           description: "Host {{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf \"%.0f\" $value }} receive errors in the last five minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -594,6 +642,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P3
         annotations:
           summary: Host Network Transmit Errors (instance {{ $labels.instance }})
           description: "Host {{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf \"%.0f\" $value }} transmit errors in the last five minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -603,6 +652,7 @@ groups:
         for: 1m
         labels:
           severity: warning
+          priority: P5
         annotations:
           summary: Host Network Interface Saturated (instance {{ $labels.instance }})
           description: "The network interface \"{{ $labels.interface }}\" on \"{{ $labels.instance }}\" is getting overloaded.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -612,6 +662,7 @@ groups:
         for: 5m
         labels:
           severity: warning
+          priority: P5
         annotations:
           summary: Host conntrack limit (instance {{ $labels.instance }})
           description: "The number of conntrack is approching limit\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -621,6 +672,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P4
         annotations:
           summary: Host clock skew (instance {{ $labels.instance }})
           description: "Clock skew detected. Clock is out of sync.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -630,71 +682,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          priority: P3
         annotations:
           summary: Host clock not synchronising (instance {{ $labels.instance }})
           description: "Clock not synchronising.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-
-  - name: Custom Rules
-    rules:
-      - alert: ServicesNotRunning
-        expr: node_running_services{alert="1"}
-        for: 6m
-        labels:
-          severity: critical
-        annotations:
-          summary: Number of running services less than expected (instance {{ $labels.instance }})
-          description: "See /var/log/servcies-test on host for details\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-
-      - alert: EnvironmentModulesNotLoading
-        expr: node_modules_working != 1
-        for: 6m
-        labels:
-          severity: critical
-        annotations:
-          summary: Test of module load bac-monitoring failed (instance {{ $labels.instance }})
-          description: "Module failed to load\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-
-      - alert: SlurmPartitionUp
-        expr: node_slurm_partup == 0
-        for: 6m
-        labels:
-          severity: critical
-        annotations:
-          summary: Slurm partition defq not in up state (instance {{ $labels.instance }})
-          description: "Slurm defq partition down\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-
-      - alert: SlurmNodesDown
-        expr: slurm_nodes_down > 10
-        for: 6m
-        labels:
-          severity: critical
-        annotations:
-          summary: More than 10 slurm nodes in down state (instance {{ $labels.instance }})
-          description: "Too many nodes down in slurm\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-
-      - alert: SlurmScontrolUp
-        expr: node_slurm_sctlup != 2
-        for: 6m
-        labels:
-          severity: critical
-        annotations:
-          summary: Scontrol ping to confirm both slurmctl daemons in up state (instance {{ $labels.instance }})
-          description: "Primary and secondary slurmctld daemons not in up state\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-
-      - alert: SlurmPend2days
-        expr: edge_pending_2days == 1
-        for: 6m
-        labels:
-          severity: warning
-        annotations:
-          summary: Slurm job {{ $labels.jobid }} pending more than 2 days
-          description: "Slurm job pending 2days\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
- 
-      - alert: Services moving to failed state
-        expr: increase(node_systemd_units{state="failed"}[1h]) > 0
-        for: 1h
-        labels:
-          severity: critical
-        annotations:
-          summary: Services moving to failed state on (instance {{ $labels.instance }}) in the last 60m.
-          description: "Number of services moving to failed state in the last 60m \n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"

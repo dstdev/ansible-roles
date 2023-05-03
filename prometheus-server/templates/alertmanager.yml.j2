@@ -39,7 +39,7 @@ receivers:
     - responders:
         - name: "{{alertmanager_opsgenie_team}}"
           type: 'team'
-     - priority: {%raw %}'{{ .GroupLabels.severity }}' {% endraw %}
+    - priority: {%raw %}'{{ .GroupLabels.severity }}' {% endraw %}
 {% endif %}
 {% if alertmanager_opsgenie_heartbeat_name %}
 - name: heartbeat

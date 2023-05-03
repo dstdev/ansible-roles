@@ -686,3 +686,18 @@ groups:
         annotations:
           summary: Host clock not synchronising (instance {{ $labels.instance }})
           description: "Clock not synchronising.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+
+  - name: prometheus_rules
+    rules:
+      - alert: Watchdog
+        annotations:
+          description: |
+            This is an alert meant to ensure that the entire alerting pipeline is functional.
+            If this alert is firing, then the alertmanager is not able to reach opsgenie.
+          summary: An alert that should always be firing to certify that Alertmanager is working properly.
+        expr: vector(1)
+        for: 2m
+        labels:
+          severity: critical
+          priority: P1

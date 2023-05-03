@@ -1,32 +1,53 @@
 ---
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - infiniband_exporter
+
 - name: Create nodeusr account to run dcgm_exporter
   user:
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter
     uid: "{{ prometheus_exporter_uid }}"
+  tags:
+    - infiniband_exporter
 
-- name: Install dcgm
-  copy:
-    src: dcgm_exporter
-    dest: "{{ dcgm_exporter_executable_path }}"
-    owner: nodeusr
-    group: nodeusr
-    mode: 0755
+- name: Install python dependencies
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{infiniband_required_packages}}"
+  tags:
+    - infiniband_exporter
 
-- name: Create systemd service file
-  template:
-    src: dcgm_exporter.service.j2
-    dest: /etc/systemd/system/dcgm_exporter.service
+- name: Create python virtual environment
+  ansible.builtin.pip:
+    name: "{{ infiniband_python_packages }}"
+    virtualenv: "{{ infiniband_exporter_dir }}"
+  tags:
+    - infiniband_exporter
 
-- name: Enable the systemd service file manually
-  file:
-    state: link
-    src: /etc/systemd/system/dcgm_exporter.service
-    dest: /etc/systemd/system/multi-user.target.wants/dcgm_exporter.service
+#- name: Create systemd service file
+  #template:
+    #src: infiniband_exporter.service.j2
+    #dest: /etc/systemd/system/infiniband_exporter.service
 
-- name: Start the systemd service file if this is not a chroot
-  service:
-    name: dcgm_exporter
-    state: started
-  when: not ansible_is_chroot
+#- name: Enable the systemd service file manually
+  #file:
+    #state: link
+    #src: /etc/systemd/system/infiniband_exporter.service
+    #dest: /etc/systemd/system/multi-user.target.wants/infiniband_exporter.service
+
+#- name: Start the systemd service file if this is not a chroot
+  #service:
+    #name: infiniband_exporter
+    #state: started
+  #when: not ansible_is_chroot

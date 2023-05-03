@@ -23,8 +23,13 @@
 #Copy out template file that uses SLURM for groups
 - name: Copy template file
   ansible.builtin.template:
-  src:  templates/groups.conf.j2 
-  dest: /etc/clustershell/groups.conf
-  owner: root
-  group: root
-  mode: 644
+    src:  templates/groups.conf.j2 
+    dest: /etc/clustershell/groups.conf
+    owner: root
+    group: root
+    mode: 644
+  tags:
+    - clustershell
+
+- name: Create cluster yaml file
+  ansible.buil

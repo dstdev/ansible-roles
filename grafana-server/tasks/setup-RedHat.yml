@@ -70,14 +70,11 @@
     name: dst_prometheus
     ds_type: prometheus
     ds_url: "{{ datasource_url }}"
-    url: "{{ grafana_url }}"
     is_default: yes
-    access: proxy
     tls_skip_verify: true
-    additional_json_data:
-      httpHeaderName1: "Authorization"
-    additional_secure_json_data:
-      httpHeaderValue1: "Bearer ihavenogroot"
+    grafana_user: "admin"
+    grafana_password: "{{ grafana_admin_password}}"
+    grafana_url: "localhost:3000"
   tags:
     - configuration
     - grafana-server

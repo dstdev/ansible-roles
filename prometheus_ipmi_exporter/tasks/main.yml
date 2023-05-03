@@ -1,0 +1,51 @@
+---
+# tasks file for prometheus_ipmi_exporter
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - ipmi_exporter
+
+- name: Install os specific packages
+  ansible.builtin.package:
+    state: present
+    name: "{{ item}}"
+  loop: "{{ ipmi_exporter_required_packages }}"
+  tags:
+    - ipmi_exporter
+
+- name: Create nodeusr account to run 
+  ansible.builtin.user:
+    name: nodeusr
+    shell: /sbin/nologin
+    home: /var/lib/node_exporter
+    uid: "{{ prometheus_exporter_uid }}"
+  tags:
+    - ipmi_exporter
+
+ipmi_exporter_version
+- name: Extract go downloaded tarball
+  ansible.builtin.unarchive:
+    src: "https://github.com/prometheus-community/ipmi_exporter/releases/download/v{{ ipmi_exporter_version }}/ipmi_exporter-{{ ipmi_exporter_version}}.linux-amd64.tar.gz"
+    dest: /tmp
+    owner: nodeusr
+    group: nodeusr
+    mode: 0755
+    validate_certs: no
+    remote_src: yes
+  tags:
+    - ipmi_exporter
+
+- name: Copy impi_exporter
+  ansible.builtin.copy:
+    remote_src: true
+    src: /tmp/impi_exporter
+    dst: "{{ ipmi_exporter_path }}"
+  tags:
+    - ipmi_exporter

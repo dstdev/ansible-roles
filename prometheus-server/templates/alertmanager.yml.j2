@@ -35,11 +35,11 @@ receivers:
 - name: 'default-receiver'
 {% if alertmanager_opsgenie_api_key %}
 - name: opsgenie
-    opsgenie_configs:
-      - responders:
-          - name: "{{alertmanager_opsgenie_team}}"
-            type: 'team'
-            - priority: {%raw %}'{{ .GroupLabels.severity }}' {% endraw %}
+  opsgenie_configs:
+    - responders:
+        - name: "{{alertmanager_opsgenie_team}}"
+          type: 'team'
+          - priority: {%raw %}'{{ .GroupLabels.severity }}' {% endraw %}
 {% endif %}
 {% if alertmanager_opsgenie_heartbeat_name %}
 - name: heartbeat

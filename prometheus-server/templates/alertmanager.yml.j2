@@ -27,7 +27,6 @@ route:
         alertname: Watchdog
       repeat_interval: 60s
       receiver: heartbeat
-      continue: true
 {% endif %}
     - matchers:
       receiver: opsgenie

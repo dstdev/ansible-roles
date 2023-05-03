@@ -11,12 +11,46 @@ global:
 route:
   receiver: 'default-receiver'
   routes:
+{% if alertmanager_slack_api_url %}
     - matchers:
         - severity="critical"
       receiver: 'slack-notifications'
+      continue: true
+
+{% endif %}
+{% if alertmanager_opsgenie_api_key %}
+{% if alertmanager_opsgenie_heartbeat_name %}
+    - match:
+        alertname: Watchdog
+      repeat_interval: 60s
+      receiver: heartbeat
+      continue: true
+{% endif %}
+    - matchers:
+      receiver: opsgenie
+      group_by: [...]
+{% endif %}
 
 receivers:
 - name: 'default-receiver'
+{% if alertmanager_opsgenie_api_key %}
+- name: opsgenie
+    opsgenie_configs:
+      - responders:
+          - name: "{{alertmanager_opsgenie_team}}"
+            type: 'team'
+            - priority: {%raw %}'{{ .GroupLabels.severity }}' {% endraw %}
+{% endif %}
+{% if alertmanager_opsgenie_heartbeat_name %}
+- name: heartbeat
+  webhook_configs:
+    - send_resolved: true
+    url: https://api.opsgenie.com/v2/heartbeats/{{alertmanager_opsgenie_heartbeat_name}}/ping
+      http_config:
+        basic_auth:
+            password: {{alertmanager_opsgenie_api_key}}
+{% endif %}
+{% if alertmanager_slack_api_url %}
 - name: 'slack-notifications'
   slack_configs:
   - channel: {{ alertmanager_slack_channel }}
@@ -65,7 +99,7 @@ receivers:
       text: '{{ template "slack.monzo.link_button_text" . }}'
       url: '{{ .CommonAnnotations.link_url }}'
 {% endraw %}
-
+{% endif %}
 
 templates:
   - "{{ prometheus_config_path }}/*.tmpl"

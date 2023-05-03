@@ -9,6 +9,9 @@ prometheus_components:
 
 alertmanager_slack_api_url: ''
 alertmanager_slack_channel: ''
+alertmanager_opsgenie_api_key: ''
+alertmanager_opsgenie_team: ''
+alertmanager_opsgenie_heartbeat_name: ''
 
 alertmanager_resolve_timeout: 1m
 # user-configurable defaults
@@ -184,6 +187,7 @@ prometheus_alert_rules:
     for: 5m
     labels:
       severity: critical
+      priority: P2
     annotations:
       description: '{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes.{% endraw %}'
       summary: '{% raw %}Instance {{ $labels.instance }} down{% endraw %}'
@@ -191,6 +195,7 @@ prometheus_alert_rules:
     expr: 'node_reboot_required > 0'
     labels:
       severity: warning
+      priority: P3
     annotations:
       description: '{% raw %}{{ $labels.instance }} requires a reboot.{% endraw %}'
       summary: '{% raw %}Instance {{ $labels.instance }} - reboot required{% endraw %}'
@@ -202,6 +207,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P3
   - alert: NodeFilesystemSpaceFillingUp
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left and is filling up fast.{% endraw %}'
@@ -210,6 +216,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: critical
+      priority: P2
   - alert: NodeFilesystemAlmostOutOfSpace
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.{% endraw %}'
@@ -218,6 +225,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P2
   - alert: NodeFilesystemAlmostOutOfSpace
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.{% endraw %}'
@@ -226,6 +234,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: critical
+      priority: P2
   - alert: NodeFilesystemFilesFillingUp
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left and is filling up.{% endraw %}'
@@ -234,6 +243,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P2
   - alert: NodeFilesystemFilesFillingUp
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left and is filling up fast.{% endraw %}'
@@ -242,6 +252,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: critical
+      priority: P2
   - alert: NodeFilesystemAlmostOutOfFiles
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left.{% endraw %}'
@@ -250,6 +261,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P2
   - alert: NodeFilesystemAlmostOutOfFiles
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left.{% endraw %}'
@@ -258,6 +270,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: critical
+      priority: P2
   - alert: NodeNetworkReceiveErrs
     annotations:
       description: '{% raw %}{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} receive errors in the last two minutes.{% endraw %}'
@@ -266,6 +279,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P3
   - alert: NodeNetworkTransmitErrs
     annotations:
       description: '{% raw %}{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} transmit errors in the last two minutes.{% endraw %}'
@@ -274,6 +288,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P4
   - alert: NodeHighNumberConntrackEntriesUsed
     annotations:
       description: '{% raw %}{{ $value | humanizePercentage }} of conntrack entries are used{% endraw %}'
@@ -281,6 +296,7 @@ prometheus_alert_rules:
     expr: "(node_nf_conntrack_entries / node_nf_conntrack_entries_limit) > 0.75\n"
     labels:
       severity: warning
+      priority: P5
   - alert: NodeClockSkewDetected
     annotations:
       message: '{% raw %}Clock on {{ $labels.instance }} is out of sync by more than 300s. Ensure NTP is configured correctly on this host.{% endraw %}'
@@ -289,6 +305,7 @@ prometheus_alert_rules:
     for: 10m
     labels:
       severity: warning
+      priority: P4
   - alert: NodeClockNotSynchronising
     annotations:
       message: '{% raw %}Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host.{% endraw %}'
@@ -297,4 +314,5 @@ prometheus_alert_rules:
     for: 10m
     labels:
       severity: warning
+      priority: P3
 

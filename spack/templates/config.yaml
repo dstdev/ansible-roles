@@ -19,7 +19,7 @@ config:
   install_tree:
     root: "{{spack_app_root}}"
     projections:
-      all: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
+      all: "{architecture}/{compiler.name}-{compiler.version}/{name}-{version}-{hash}"
   
   
   # Locations where templates should be found

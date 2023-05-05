@@ -40,3 +40,13 @@
     mode: 644
   tags:
     - clustershell
+
+- name: Copy cluster config file
+  ansible.builtin.template:
+    src: templates/cluster.yaml.j2
+    dest: /etc/clustershell/groups.d/cluster.yaml
+    owner: root
+    group: root
+    mode: 644
+  tags:
+    - clustershell

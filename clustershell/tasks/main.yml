@@ -27,7 +27,7 @@
     dest: /etc/clustershell/groups.conf
     owner: root
     group: root
-    mode: 644
+    mode: "0644"
   tags:
     - clustershell
 
@@ -37,7 +37,7 @@
     dest: /etc/clustershell/clush.conf.d/sudo.conf
     owner: root
     group: root
-    mode: 644
+    mode: "0644"
   tags:
     - clustershell
 
@@ -47,6 +47,6 @@
     dest: /etc/clustershell/groups.d/cluster.yaml
     owner: root
     group: root
-    mode: 644
+    mode: "0644"
   tags:
     - clustershell

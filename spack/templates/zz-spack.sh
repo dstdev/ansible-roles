@@ -11,4 +11,4 @@ if [-f $SPACK_ROOT/share/spack/setup-env.sh ]; then
     {% for default_module in spack_default_module_paths %}
     module use {{default_module}}
     {% endfor %}
-if
+fi

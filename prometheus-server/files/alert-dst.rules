@@ -687,6 +687,17 @@ groups:
           summary: Host clock not synchronising (instance {{ $labels.instance }})
           description: "Clock not synchronising.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
+      - alert: ZombieProcesses
+        expr: node_processes_state{state="Z"} >1
+        for: 5m
+        labels:
+          severity: warning
+          priority: P3
+        annotations:
+          summary: "(instance {{ $labels.instance }}) has Zombie processes"
+          description: "(instance {{ $labels.instance }}) has Zombie processes"
+
+
 
   - name: prometheus_rules
     rules:

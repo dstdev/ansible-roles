@@ -59,8 +59,5 @@
       MB_DB_USER: "{{metabase_pg_user}}"
       MB_DB_PASS: "{{metabase_pg_password}}"
       MB_DB_HOST: "{{metabase_pg_host}}"
-    log_options:
-      max-size: "10m"
-      max-files: "3"
   tags:
     - metabase

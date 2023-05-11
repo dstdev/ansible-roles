@@ -30,14 +30,14 @@
       - path: "nocodb_docker_labels['traefik.http.routers.nocodb.tls.certresolver']"
         value: "{{nocodb_traefik_cert_resolver}}"
   when: nocodb_traefik_enable and nocodb_traefik_cert_resolver
-  register: nocodb_docker_labels
+  register: nocodb_docker_labels_updated
   tags:
     - nocodb
 
 - name: Fix update facts
   ansible.builtin.set_fact:
-    nocodb_docker_labels: "{{nocodb_docker_labels.nocodb_docker_labels}}"
-  when: nocodb_traefik_enable and nocodb_traefik_cert_resolver
+    nocodb_docker_labels: "{{nocodb_docker_labels_updated.nocodb_docker_labels}}"
+  when: nocodb_docker_labels_updated.changed
   tags:
     - nocodb
 
@@ -60,8 +60,5 @@
       - "{{nocodb_data_dir}}:/usr/app/data"
     labels: "{{nocodb_docker_labels}}"
     networks: "{{nocodb_docker_networks}}"
-    log_options:
-      max-size: "10m"
-      max-files: "3"
   tags:
     - nocodb

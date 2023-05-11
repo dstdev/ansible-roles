@@ -9,6 +9,9 @@ prometheus_components:
 
 alertmanager_slack_api_url: ''
 alertmanager_slack_channel: ''
+alertmanager_opsgenie_api_key: ''
+alertmanager_opsgenie_team: ''
+alertmanager_opsgenie_heartbeat_name: ''
 
 alertmanager_resolve_timeout: 1m
 # user-configurable defaults
@@ -33,6 +36,7 @@ prometheus_alertmanager_db_path: /var/lib/alertmanager
 prometheus_read_only_dirs: []
 
 prometheus_slurm_exporter_host: localhost
+prometheus_blackbox_exporter_host: localhost:9115
 
 prometheus_web_listen_address: "0.0.0.0:9090"
 prometheus_web_external_url: ''
@@ -95,19 +99,69 @@ prometheus_scrape_configs:
     static_configs:
       - targets:
           - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
+
   - job_name: "node"
     file_sd_configs:
       - files:
           - "{{ prometheus_file_sd_config_path }}/node.yml"
+
   - job_name: "gpfs"
     file_sd_configs:
       - files:
           - "{{ prometheus_file_sd_config_path }}/gpfs.yml"
+
   - job_name: "slurm"
     metrics_path: "{{ prometheus_metrics_path }}"
     static_configs:
       - targets:
           - "{{ prometheus_slurm_exporter_host | default('localhost') }}:9200"
+
+  - job_name: "blackbox_icmp"
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_file_sd_config_path }}/blackbox_icmp.yml"
+    params:
+      module: [icmp]
+    metrics_path: "/probe"
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: "{{prometheus_blackbox_exporter_host}}"
+
+  - job_name: "blackbox_ssh"
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_file_sd_config_path }}/blackbox_ssh.yml"
+    params:
+      module: [ssh_banner]
+    metrics_path: "/probe"
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*?)(:.*)?
+        replacement: ${1}:22
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: "{{prometheus_blackbox_exporter_host}}"
+
+  - job_name: "blackbox_dns"
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_file_sd_config_path }}/blackbox_dns.yml"
+    params:
+      module: [dns_test]
+    metrics_path: "/probe"
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: "{{prometheus_blackbox_exporter_host}}"
 
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'
@@ -133,6 +187,7 @@ prometheus_alert_rules:
     for: 5m
     labels:
       severity: critical
+      priority: P2
     annotations:
       description: '{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes.{% endraw %}'
       summary: '{% raw %}Instance {{ $labels.instance }} down{% endraw %}'
@@ -140,6 +195,7 @@ prometheus_alert_rules:
     expr: 'node_reboot_required > 0'
     labels:
       severity: warning
+      priority: P3
     annotations:
       description: '{% raw %}{{ $labels.instance }} requires a reboot.{% endraw %}'
       summary: '{% raw %}Instance {{ $labels.instance }} - reboot required{% endraw %}'
@@ -151,6 +207,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P3
   - alert: NodeFilesystemSpaceFillingUp
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left and is filling up fast.{% endraw %}'
@@ -159,6 +216,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: critical
+      priority: P2
   - alert: NodeFilesystemAlmostOutOfSpace
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.{% endraw %}'
@@ -167,6 +225,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P2
   - alert: NodeFilesystemAlmostOutOfSpace
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.{% endraw %}'
@@ -175,6 +234,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: critical
+      priority: P2
   - alert: NodeFilesystemFilesFillingUp
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left and is filling up.{% endraw %}'
@@ -183,6 +243,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P2
   - alert: NodeFilesystemFilesFillingUp
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left and is filling up fast.{% endraw %}'
@@ -191,6 +252,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: critical
+      priority: P2
   - alert: NodeFilesystemAlmostOutOfFiles
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left.{% endraw %}'
@@ -199,6 +261,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P2
   - alert: NodeFilesystemAlmostOutOfFiles
     annotations:
       description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left.{% endraw %}'
@@ -207,6 +270,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: critical
+      priority: P2
   - alert: NodeNetworkReceiveErrs
     annotations:
       description: '{% raw %}{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} receive errors in the last two minutes.{% endraw %}'
@@ -215,6 +279,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P3
   - alert: NodeNetworkTransmitErrs
     annotations:
       description: '{% raw %}{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} transmit errors in the last two minutes.{% endraw %}'
@@ -223,6 +288,7 @@ prometheus_alert_rules:
     for: 1h
     labels:
       severity: warning
+      priority: P4
   - alert: NodeHighNumberConntrackEntriesUsed
     annotations:
       description: '{% raw %}{{ $value | humanizePercentage }} of conntrack entries are used{% endraw %}'
@@ -230,20 +296,4 @@ prometheus_alert_rules:
     expr: "(node_nf_conntrack_entries / node_nf_conntrack_entries_limit) > 0.75\n"
     labels:
       severity: warning
-  - alert: NodeClockSkewDetected
-    annotations:
-      message: '{% raw %}Clock on {{ $labels.instance }} is out of sync by more than 300s. Ensure NTP is configured correctly on this host.{% endraw %}'
-      summary: 'Clock skew detected.'
-    expr: "(\n  node_timex_offset_seconds > 0.05\nand\n  deriv(node_timex_offset_seconds[5m]) >= 0\n)\nor\n(\n  node_timex_offset_seconds < -0.05\nand\n  deriv(node_timex_offset_seconds[5m]) <= 0\n)\n"
-    for: 10m
-    labels:
-      severity: warning
-  - alert: NodeClockNotSynchronising
-    annotations:
-      message: '{% raw %}Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host.{% endraw %}'
-      summary: 'Clock not synchronising.'
-    expr: "min_over_time(node_timex_sync_status[5m]) == 0\n"
-    for: 10m
-    labels:
-      severity: warning
-
+      priority: P5

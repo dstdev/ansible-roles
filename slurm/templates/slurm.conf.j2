@@ -16,11 +16,15 @@ SlurmUser={{slurm_user}}
 StateSaveLocation={{slurm_state_save_location}}
 SwitchType=switch/none
 TaskPlugin={{','.join(slurm_conf_task_plugin)}}
+{% if slurm_conf_cli_filter_plugins %}
+CliFilterPlugins={{','.join(slurm_conf_cli_filter_plugins)}}
+{% endif %}
 MPIDefault=none
 InactiveLimit=0
 KillWait=30
 MinJobAge=300
 MaxArraySize={{slurm_conf_max_array_size}}
+MaxJobCount={{slurm_conf_max_job_count}}
 SlurmctldTimeout=120
 SlurmdTimeout=300
 Waittime=0
@@ -65,7 +69,7 @@ PriorityDecayHalfLife={{slurm_priority_decay_half_life}}
 
 
 ClusterName={{slurm_cluster_name}} # add as variable
-JobAcctGatherFrequency=30
+JobAcctGatherFrequency={{slurm_conf_job_acct_gather_frequency}}
 JobAcctGatherType={{slurm_conf_job_acct_gather_type}}
 {% if slurm_conf_job_submit_plugins %}
 JobSubmitPlugins={{slurm_conf_job_submit_plugins}}

@@ -1,4 +1,0 @@
----
-# defaults file for blackowl
-docker_compose_definitions: []
-docker_compose_networks: []

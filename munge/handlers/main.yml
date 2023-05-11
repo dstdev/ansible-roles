@@ -4,4 +4,13 @@
   service:
     name: munge
     state: restarted
-  
+  when: not ansible_is_chroot
+  tags:
+    - slurm
+
+- name: Reload munge
+  ansible.builtin.systemd:
+    daemon_reload: true
+  when: not ansible_is_chroot
+  tags:
+    - slurm

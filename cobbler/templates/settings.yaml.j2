@@ -308,7 +308,7 @@ puppet_parameterized_classes: true
 # set to true to enable Cobbler's DHCP management features.
 # the choice of DHCP management engine is in /etc/cobbler/modules.conf
 # See the docs (https://cobbler.readthedocs.io/en/latest/user-guide.html#dhcp-management) for more info
-manage_dhcp: {{cobbler_manage_dhcp}}
+manage_dhcp: {{cobbler_manage_dhcp_v4}}
 
 # set to true to enable DHCP IPv6 address configuration generation.
 # This currently only works with manager.isc DHCP module (isc dhcpd6 daemon)
@@ -319,7 +319,7 @@ manage_dhcp_v6: false
 # set to true to enable DHCP IPv4 address configuration generation.
 # This currently only works with manager.isc DHCP module
 # Other dhcp modules ignore this and above settings
-manage_dhcp_v4: {{cobbler_manage_dhcp}}
+manage_dhcp_v4: {{cobbler_manage_dhcp_v4}}
 
 # if using Cobbler with manage_dhcp, put the IP address
 # of the Cobbler server here so that PXE booting guests can find it

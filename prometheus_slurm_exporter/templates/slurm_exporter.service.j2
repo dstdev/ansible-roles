@@ -2,7 +2,9 @@
 Description=Prometheus Slurm Exporter
 After=network.target
 [Service]
+{% if slurm_conf_loc %}
 Environment="SLURM_CONF={{ slurm_conf_loc  }}"
+{% endif %}
 Environment="PATH=$PATH:{{ slurm_bin_loc  }}"
 User=nodeusr
 Group=nodeusr

@@ -1,4 +1,25 @@
 ---
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version}}.yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - mounts
+
+- name: Install Relevant packages packages
+  vars:
+  ansible.builtin.package: 
+    name: "{{item}}"
+    state: present
+  loop:
+    - "{{ mounts_required_packages }}"
+  tags:
+    - mounts
+
 - name: create mount directory
   ansible.builtin.file:
     state: directory
@@ -14,7 +35,6 @@
   when: mount.mkfs
   tags:
     - mounts
-
 
 - name: Mount
   ansible.posix.mount:

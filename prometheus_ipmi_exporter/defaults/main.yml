@@ -1,0 +1,5 @@
+---
+# defaults file for prometheus_ipmi_exporter
+prometheus_exporter_uid: 440
+ipmi_exporter_version: "1.6.1"
+ipmi_exporter_path: "/var/lib/node_exporter"

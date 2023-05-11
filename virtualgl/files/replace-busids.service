@@ -1,9 +1,0 @@
-[Unit]
-Description=Replace the BusIDs
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/python3 /usr/bin/replace-busids.py
-
-[Install]
-WantedBy=multi-user.target

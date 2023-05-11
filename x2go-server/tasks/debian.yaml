@@ -1,7 +1,0 @@
-- name: Link startkde
-  file:
-    src: /usr/bin/startplasma-x11
-    dest: /usr/bin/startkde
-    owner: root
-    group: root
-    state: link

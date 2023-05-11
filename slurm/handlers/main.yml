@@ -17,3 +17,7 @@
     name: slurmd
     state: restarted
   when: not ansible_is_chroot and not slurm_disable_restart
+
+- name: Reload firewalld
+  ansible.builtin.command: firewall-cmd --reload
+  become: yes

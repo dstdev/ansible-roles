@@ -1,0 +1,25 @@
+---
+# handlers file for bgfs-client
+#     - rebuild beegfs client
+#     - name: Client configuration file
+#       copy:
+#           src: templates/beegfs-client.conf.j2
+#               dest: /etc/beegfs/beegfs-client.conf
+#                 notify:
+#                     - restart beegfs client
+#
+- name: rebuild beegfs client
+  shell: /etc/init.d/beegfs-client rebuild
+  when: not ansible_is_chroot
+
+- name: restart beegfs client
+  ansible.builtin.service:
+    name: beegfs-client
+    state: restarted
+  when: not ansible_is_chroot
+
+- name: restart beegfs helperd 
+  ansible.builtin.service:
+    name: beegfs-helperd
+    state: restarted
+  when: not ansible_is_chroot

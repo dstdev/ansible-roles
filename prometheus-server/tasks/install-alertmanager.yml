@@ -5,15 +5,19 @@
 - name: set internal variables for convenience, part 1
   set_fact:
     prometheus_alertmanager_signature: "alertmanager-{{ prometheus_alertmanager_version }}.{{ prometheus_platform_suffix }}"
-  tags: alert_templates
+  tags:
+    - prometheus-server
+    - alert_templates
 
 - name: set internal variables for convenience, part 2
   set_fact:
     prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
     prometheus_alertmanager_daemon_dir: "{{ prometheus_install_path }}/{{ prometheus_alertmanager_signature }}"
     prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/v{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
-  tags: alert_templates
-  
+  tags:
+    - prometheus-server
+    - alert_templates
+
 - name: download and extract alertmanager tarball
   unarchive:
     src: "{{ prometheus_alertmanager_tarball_url }}"
@@ -22,6 +26,8 @@
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
     mode: "go-w"
+  tags:
+    - prometheus-server
 
 - name: mkdir for alertmanager data
   file:
@@ -32,6 +38,8 @@
     mode: "u=rwx,g=rx,o="
   with_items:
     - "{{ prometheus_alertmanager_db_path }}"
+  tags:
+    - prometheus-server
 
 - name: copy systemd config to server
   template:
@@ -39,6 +47,8 @@
     dest: "/etc/systemd/system/alertmanager.service"
   notify:
     - restart alertmanager
+  tags:
+    - prometheus-server
 
 - name: copy alert templates
   copy:
@@ -48,7 +58,9 @@
     - monzo-slack-templates.tmpl
   notify:
     - restart prometheus
-  tags: alert_templates
+  tags:
+    - prometheus-server
+    - alert_templates
 
 - name: copy alertmanager config
   template:
@@ -61,4 +73,6 @@
     validate: "{{ prometheus_alertmanager_daemon_dir }}/amtool check-config %s"
   notify:
     - restart alertmanager
-  tags: alert_templates
+  tags:
+    - prometheus-server
+    - alert_templates

@@ -6,14 +6,17 @@
     permanent: yes
     state: enabled
   tags:
-  - firewall
-  - never
+    - grafana-server
+    - firewall
+    - never
 
 - name: install grafana rpm key
   rpm_key:
     key: https://packages.grafana.com/gpg.key
     state: present
     validate_certs: no
+  tags:
+    - grafana-server
 
 - name: install grafana  rpm repository
   yum_repository:
@@ -22,31 +25,39 @@
     baseurl: https://packages.grafana.com/oss/rpm
     gpgcheck: true
     gpgkey: https://packages.grafana.com/gpg.key
+  tags:
+    - grafana-server
 
 - name: install grafana
   yum:
     name: grafana
     state: present
+  tags:
+    - grafana-server
 
 - name: Set grafan admin password
   ansible.builtin.lineinfile:
     path: /etc/grafana/grafana.ini
     regexp: "^;admin_password"
     line: "admin_password = {{ grafana_admin_password }} "
+  tags:
+    - grafana-server
 
 - name: grafana is installed
-  yum:
-    name=grafana
+  yum: name=grafana
     state=installed
   retries: 5
   delay: 2
   notify: restart grafana
+  tags:
+    - grafana-server
 
 - name: grafana is running and enabled
-  service:
-    name=grafana-server
+  service: name=grafana-server
     state=started
     enabled=yes
+  tags:
+    - grafana-server
 
 # - name: Disabling SELinux state
 #   selinux:
@@ -59,17 +70,13 @@
     name: dst_prometheus
     ds_type: prometheus
     ds_url: "{{ datasource_url }}"
-    url: "{{ grafana_url }}"
     is_default: yes
-    access: proxy
     tls_skip_verify: true
-    additional_json_data:
-      httpHeaderName1: "Authorization"
-    additional_secure_json_data:
-      httpHeaderValue1: "Bearer ihavenogroot"
+    grafana_password: "{{ grafana_admin_password}}"
+    grafana_url: "{{ grafana_url }}"
   tags:
-  - configuration
-
+    - configuration
+    - grafana-server
 
 # - name: Import Grafana dashboard Node Exporter
 #   community.grafana.grafana_dashboard:
@@ -95,81 +102,96 @@
     - network_traffic.json
     - infiniband_rev1.json
   tags:
-  - configuration
+    - configuration
+    - grafana-server
 
 - name: Import Grafana dashboard infiniband_rev1.json
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
     overwrite: yes
     path: /tmp/infiniband_rev1.json
   tags:
-  - configuration
+    - configuration
+    - grafana-server
 
 - name: Import Grafana dashboard slurm_dashboard.json
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
     overwrite: yes
     path: /tmp/slurm_dashboard.json
   tags:
-  - configuration
+    - grafana-server
+    - configuration
 
 - name: Import Grafana dashboard node-exporter-full_rev26.json
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
     overwrite: yes
     path: /tmp/node-exporter-full_rev26.json
   tags:
-  - configuration
+    - grafana-server
+    - configuration
 
 - name: Import Grafana dashboard nvidia_dcgm.json
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
     overwrite: yes
     path: /tmp/nvidia_dcgm.json
   tags:
-  - configuration
+    - grafana-server
+    - configuration
 
 - name: Import SMART disk monitoring for Prometheus Dashboard
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
     overwrite: yes
     path: /tmp/s-m-a-r-t-disk-monitoring-for-prometheus-dashboard_rev1.json
   tags:
-  - configuration
+    - grafana-server
+    - configuration
 
 - name: Import SMART disk data Dashboard
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
     overwrite: yes
     path: /tmp/smart-disk-data_rev2.json
   tags:
-  - configuration
+    - grafana-server
+    - configuration
 
 - name: Import Network Traffic Dashboard
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
     overwrite: yes
     path: /tmp/network_traffic.json
   tags:
-  - configuration
+    - grafana-server
+    - configuration

@@ -1,0 +1,8 @@
+mkdocs_required_packages:
+  - cronie
+  - git
+  - rsync
+  - python3
+  - python3-virtualenv
+  - python3-setuptools
+  - python3-pip

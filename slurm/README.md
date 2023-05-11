@@ -38,7 +38,9 @@ Role Variables
 | slurm_conf_task_plugin            | ['task/cgroup']       | Task plugins to use                                                               |
 | slurm_conf_job_acct_gather_type   | jobacct_gather/cgroup | Job accouting collection type                                                     |
 | slurm_conf_job_submit_plugins     | False                 | Plugins to enable (lua)                                                           |
+| slurm_conf_cli_filter_plugins     | []                    | List of filter/modification plugins                                               |
 | slurm_conf_gres_types             | []                    | GRES Types used                                                                   |
+| slurm_gres_conf_entries           | []                    | List of entires in gres.conf                                                      |
 | slurm_conf_accouting_storage_tres | []                    | AccoutingStorageTres Parameter                                                    |
 | slurm_conf_prolog_flags           | ["X11"]               | PrologFlags                                                                       |
 | slurm_conf_max_array_size         | 1001                  | Maximum array size allowed                                                        |
@@ -78,6 +80,8 @@ Role Variables
 | slurm_job_epilog_append           | ""                    | Append to job epilog script                                                       |
 | slurm_task_prolog_append          | ""                    | Append to task prolog script                                                      |
 | slurm_task_epilog_append          | ""                    | Append to tas epilog script                                                       |
+| slurm_firewalld_enabled           | false                 | Enable firewalld rules for a defined subnet                                       |
+| slurm_firewalld_subnet            | 10.141.0.0/16         | Firewalld opened subnet                                                           |
 
 
 
@@ -124,3 +128,11 @@ Including an example of how to use your role (for instance, with variables passe
     - hosts: device_roles_login-node
       roles:
         - slurm
+
+Updating Slurm
+--------------
+
+Updates should not be taken lightly.  Before doing a version update of slurm,
+set the `slurm_disable_restart` to prevent the role from restarting any
+important services like slurmdbd and slurmctld.  These should be started
+following the instructions provided by [Schedmd](https://slurm.schedmd.com/quickstart_admin.html#upgrade).

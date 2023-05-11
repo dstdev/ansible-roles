@@ -5,6 +5,8 @@
     shell: /sbin/nologin
     home: /var/lib/node_exporter
     uid: "{{ prometheus_exporter_uid }}"
+  tags:
+    - lustre_exporter
 
 - name: Extract go downloaded tarball
   unarchive:
@@ -15,6 +17,8 @@
     mode: 0755
     validate_certs: no
     remote_src: yes
+  tags:
+    - lustre_exporter
 
 - name: Clone a github repository
   git:
@@ -24,6 +28,8 @@
     update: yes
   environment:
     - GIT_SSL_NO_VERIFY: "true"
+  tags:
+    - lustre_exporter
 
 - name: Compile and install lustre_exporter
   become: yes
@@ -32,30 +38,40 @@
     PATH: "/tmp/go/bin:{{ ansible_env.PATH }}"
   args:
     chdir: /tmp/lustre_exporter
+  tags:
+    - lustre_exporter
 
 - name: Create systemd service file
   template:
     src: lustre_exporter.service.j2
     dest: /etc/systemd/system/lustre_exporter.service
+  tags:
+    - lustre_exporter
 
 - name: Enable the systemd service file manually
   file:
     state: link
     src: /etc/systemd/system/lustre_exporter.service
     dest: /etc/systemd/system/multi-user.target.wants/lustre_exporter.service
+  tags:
+    - lustre_exporter
 
 - name: Start the systemd service file if this is not a chroot
   service:
     name: lustre_exporter
     state: started
   when: ansible_is_chroot == False
+  tags:
+    - lustre_exporter
 
 - name: cleanup tmp files
   become: yes
   shell: "rm -rf /tmp/lustre_exporter && rm -rf /tmp/go"
   args:
     chdir: /tmp
-  tags: cleanup
+  tags:
+    - lustre_exporter
+    - cleanup
 
 - name: add nodeuser to soduer file
   become: yes
@@ -63,3 +79,5 @@
     path: "/etc/sudoers"
     line: "nodeuser        ALL=(ALL)       NOPASSWD: ALL"
   tags: soduer_file
+    - soduer_file
+    - lustre_exporter

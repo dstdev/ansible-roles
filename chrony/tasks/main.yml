@@ -1,0 +1,39 @@
+---
+# tasks file for chrony
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - chrony
+
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{chrony_required_packages}}"
+  tags:
+    - chrony
+
+- name: deploy chrony.conf template
+  ansible.builtin.template:
+   src: templates/chrony.conf.j2
+   dest: /etc/chrony.conf
+   owner: root
+   group: root
+   mode: 0644
+   backup: yes
+  tags:
+    - chrony
+
+- name: Restart chronyd
+  ansible.builtin.service:
+    name: chronyd
+    state: restarted
+  tags:
+    - chrony

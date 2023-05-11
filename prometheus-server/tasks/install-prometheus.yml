@@ -5,14 +5,17 @@
   set_fact:
     prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz"
     prometheus_daemon_dir: "{{ prometheus_install_path }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}"
-  tags: alert_rules
+  tags:
+    - prometheus-server
+    - alert_rules
 
 - name: download and extract prometheus tarball
   unarchive:
     src: "{{ prometheus_tarball_url }}"
     dest: "{{ prometheus_install_path }}"
     copy: no
-
+  tags:
+    - prometheus-server
 
 - name: set permissions, owner and group
   file:
@@ -22,6 +25,8 @@
     group: "{{ prometheus_group }}"
     mode: "go-w"
     recurse: yes
+  tags:
+    - prometheus-server
 
 - name: mkdir for config and data
   file:
@@ -34,6 +39,8 @@
     - "{{ prometheus_rule_path }}"
     - "{{ prometheus_file_sd_config_path }}"
     - "{{ prometheus_db_path }}"
+  tags:
+    - prometheus-server
 
 - name: create systemd service unit
   template:
@@ -44,6 +51,8 @@
     mode: 0644
   notify:
     - restart prometheus
+  tags:
+    - prometheus-server
 
 # - name: copy alert rule files
 #   copy:
@@ -63,7 +72,9 @@
     - alert-dst.rules
   notify:
     - restart prometheus
-  tags: alert_rules
+  tags:
+    - prometheus-server
+    - alert_rules
 
 - name: alerting rules file
   template:
@@ -77,6 +88,8 @@
     - prometheus_alert_rules != []
   notify:
     - restart prometheus
+  tags:
+    - prometheus-server
 
 - name: configure prometheus
   template:
@@ -89,7 +102,9 @@
     validate: "{{ prometheus_daemon_dir }}/promtool check config %s"
   notify:
     - restart prometheus
-  tags: alert_rules
+  tags:
+    - prometheus-server
+    - alert_rules
 
 - name: configure Prometheus web
   copy:
@@ -99,6 +114,8 @@
     owner: root
     group: prometheus
     mode: 0640
+  tags:
+    - prometheus-server
 
 - name: configure prometheus static targets
   copy:
@@ -112,8 +129,8 @@
     mode: 0640
   with_dict: "{{ prometheus_targets }}"
   when: prometheus_targets != {}
-
-
+  tags:
+    - prometheus-server
 # - name: copy prometheus custom static targets
 #   copy:
 #     src: "{{ item }}"

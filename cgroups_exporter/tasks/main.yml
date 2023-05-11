@@ -5,6 +5,8 @@
     shell: /sbin/nologin
     home: /var/lib/node_exporter
     uid: "{{ prometheus_exporter_uid }}"
+  tags:
+    - cgroups_exporter
 
 - name: Extract go downloaded tarball
   unarchive:
@@ -14,6 +16,8 @@
     group: nodeusr
     mode: 0755
     remote_src: yes
+  tags:
+    - cgroups_exporter
 
 - name: Clone a github repository
   git:
@@ -21,33 +25,45 @@
     dest: /tmp/cgroups_exporter
     clone: yes
     update: yes
+  tags:
+    - cgroups_exporter
 
 - name: Compile and install cgroup_exporter
   become: yes
   shell: "/tmp/go/bin/go build && chown nodeusr:nodeusr cgroups_exporter && cp /tmp/cgroups_exporter/cgroups_exporter {{ cgroup_exporter_executable_path }}"
   args:
     chdir: /tmp/cgroups_exporter
+  tags:
+    - cgroups_exporter
 
 - name: Create systemd service file
   template:
     src: cgroup_exporter.service.j2
     dest: /etc/systemd/system/cgroup_exporter.service
+  tags:
+    - cgroups_exporter
 
 - name: Enable the systemd service file manually
   file:
     state: link
     src: /etc/systemd/system/cgroup_exporter.service
     dest: /etc/systemd/system/multi-user.target.wants/cgroup_exporter.service
+  tags:
+    - cgroups_exporter
 
 - name: Start the systemd service file if this is not a chroot
   service:
     name: cgroup_exporter
     state: started
   when: ansible_is_chroot == False
+  tags:
+    - cgroups_exporter
 
 - name: cleanup tmp files
   become: yes
   shell: "rm -rf /tmp/cgroups_exporter && rm -rf /tmp/go"
   args:
     chdir: /tmp
-  tags: cleanup
+  tags:
+    - cleanup
+    - cgroups_exporter

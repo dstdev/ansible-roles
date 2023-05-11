@@ -15,4 +15,5 @@ cobbler_dhcp_dynamic_bootp_end: 192.168.1.254
 
 # optional variables to change
 cobbler_webroot: "/opt/cobbler"
-cobbler_manage_dhcp: "true"
+cobbler_manage_dhcp_v4: "true"
+cobbler_manage_dhcp_v6: "false"

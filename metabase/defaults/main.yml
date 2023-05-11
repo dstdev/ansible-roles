@@ -1,0 +1,15 @@
+---
+# defaults file for metabase
+metabase_data_dir: /data/apps/metabase
+metabase_site_root: metabase.datainscience.com
+metabase_traefik_enable: no
+metabase_traefik_network: traefik_proxy
+metabase_docker_labels: {}
+metabase_docker_networks: []
+metabase_image_version: latest
+metabase_traefik_cert_resolver: letsencrypt
+
+metabase_pg_password: "{{undef(hint='You must specify the postgres_password')}}"
+metabase_pg_dbname: "metabase"
+metabase_pg_user: "metabase"
+metabase_pg_host: "localhost"

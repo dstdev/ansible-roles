@@ -64,8 +64,5 @@
       - "{{bitwarden_data_dir}}:/data"
     labels: "{{bitwarden_docker_labels}}"
     networks: "{{bitwarden_docker_networks}}"
-    log_options:
-      max-size: "10m"
-      max-files: "3"
   tags:
     - bitwarden

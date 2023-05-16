@@ -28,8 +28,7 @@ route:
       repeat_interval: 60s
       receiver: heartbeat
 {% endif %}
-    - matchers:
-      receiver: opsgenie
+    - receiver: opsgenie
       group_by: [...]
 {% endif %}
 
@@ -41,7 +40,7 @@ receivers:
     - responders:
         - name: "{{alertmanager_opsgenie_team}}"
           type: 'team'
-    - priority: '{%raw %}{{ .GroupLabels.priority }}{% endraw %}'
+      priority: '{{ if .CommonAnnotations.priority }}{{ .CommonAnnotations.priority}}{{ else }}P3{{ end }}'
 {% endif %}
 {% if alertmanager_opsgenie_heartbeat_name %}
 - name: heartbeat

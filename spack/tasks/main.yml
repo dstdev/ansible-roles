@@ -21,6 +21,9 @@
   tags:
     - spack
 
+- name: Set git config for manyFiles
+  ansible.builtin.
+
 - name: clone spack repository
   git:
     repo: "{{spack_repo}}"

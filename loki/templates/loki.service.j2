@@ -1,0 +1,16 @@
+[Unit]
+Description=Loki Service
+Wants=network-online.target 
+After=network-online.target
+
+[Sevice]
+ExecStart=/usr/bin/loki --config.file=loki-config.yaml.j2
+User=loki
+Group=loki
+Restart=always
+Enviroment="LOKI_HOME=/opt/loki"
+StandardOutput=file;/var/log/loki/loki.log
+StandardError=file:/var/log/loki/loki.err 
+
+[Install]
+WantedBy=multi-user.target/

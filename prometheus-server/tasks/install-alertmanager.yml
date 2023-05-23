@@ -50,6 +50,13 @@
   tags:
     - prometheus-server
 
+- name: Enable alertmanager service
+  ansible.builtin.systemd:
+    name: alertmanager
+    enabled: true
+  tags:
+    - prometheus-server
+
 - name: copy alert templates
   copy:
     src: "../files/{{item}}"

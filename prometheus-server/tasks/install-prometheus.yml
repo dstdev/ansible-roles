@@ -54,6 +54,13 @@
   tags:
     - prometheus-server
 
+- name: Enable prometheus service
+  ansible.builtin.systemd:
+    name: prometheus
+    enabled: true
+  tags:
+    - prometheus-server
+
 # - name: copy alert rule files
 #   copy:
 #     src: "../files/alert-dst.rules"

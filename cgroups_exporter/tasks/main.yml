@@ -8,6 +8,13 @@
   tags:
     - cgroups_exporter
 
+- name: Install git
+  ansible.builtin.package:
+    name: git
+    state: present
+  tags:
+    - cgroups_exporter
+
 - name: Extract go downloaded tarball
   unarchive:
     src: https://golang.org/dl/go1.17.2.linux-amd64.tar.gz

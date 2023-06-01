@@ -9,4 +9,3 @@
     state: present
   tags:
     - aws_cloud_config
-

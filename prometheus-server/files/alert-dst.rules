@@ -688,7 +688,7 @@ groups:
           priority: P3
 
       - alert: ZombieProcesses
-        expr: node_processes_state{state="Z"} >1
+        expr: node_processes_state{state="Z"} > 5
         for: 5m
         labels:
           severity: warning
@@ -697,7 +697,31 @@ groups:
           description: "(instance {{ $labels.instance }}) has Zombie processes"
           priority: P3
 
+  - name: Slurm Alerts
+    rules:
+      - alert: SlurmcontrollerDown
+        expr: node_systemd_unit_state{name="slurmctld", state="failed"} > 0
+        for: 5m
+        annotations:
+          summary: "Slurm controller has entered a failed state on (instance $labels.instance}})"
+          description: "The slurm controller systemd service has entered a failed state"
+          priority: P2
 
+      - alert: SlurmdbdDown
+        expr: node_systemd_unit_state{name="slurmdbd", state="failed"} > 0
+        for: 5m
+        annotations:
+          summary: "Slurm Database Daemon has entered a failed state on (instance $labels.instance}})"
+          description: "The slurmdbd systemd service has entered a failed state"
+          priority: P2
+
+      - alert: SlurmdDown
+        expr: node_systemd_unit_state{name="slurmd", state="failed"} > 0
+        for: 5m
+        annotations:
+          summary: "Slurm Daemon has entered a failed state on (instance $labels.instance}})"
+          description: "The slurmdbd systemd service has entered a failed state"
+          priority: P3
 
   - name: prometheus_rules
     rules:

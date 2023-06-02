@@ -1,0 +1,34 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance7
+    image: centos:7
+    privileged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    command: "/usr/sbin/init"
+    pre_build_image: true
+    cgroupns_mode: host
+  - name: instance8
+    image: rockylinux:8
+    privileged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    command: "/usr/sbin/init"
+    pre_build_image: true
+    cgroupns_mode: host
+  - name: instance9
+    image: eniocarboni/docker-rockylinux-systemd:9
+    privileged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    command: "/usr/sbin/init"
+    pre_build_image: true
+    cgroupns_mode: host
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

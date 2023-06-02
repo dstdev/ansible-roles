@@ -1,20 +1,39 @@
 ---
 # tasks file for bgfs-client
+#
+
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+        - "{{ ansible_os_family }}.yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - beegfs-client
+
 - name: Add BeeGFS
   yum_repository:
     name: beegfs
     description: BeeGFS 
-    baseurl: https://www.beegfs.io/release/beegfs_7.2.3/dists/rhel7
+    baseurl: "https://www.beegfs.io/release/beegfs_{{ beegfs_version }}/dists/rhel{{ ansible_distribution_major_version}}"
     gpgcheck: yes
-    gpgkey: https://www.beegfs.io/release/beegfs_7.2.3/gpg/RPM-GPG-KEY-beegfs
+    gpgkey: "https://www.beegfs.io/release/beegfs_{{ beegfs_version }}/gpg/{{ beegfs_gpg_key_name }}"
+  tags:
+    - beegfs-client
 
 - name: Install BeeGFS YUM packages
   vars:
-    ansible_python_interpreter: /usr/bin/python2
+    ansible_python_interpreter: "{{ beegfs_yum_python_interpreter }}"
   package: 
     name: "{{item}}"
     state: present
   loop:
+    - kmod
+    - kernel
+    - kernel-devel
     - beegfs-client-compat
     - beegfs-helperd
     - beegfs-debuginfo
@@ -23,7 +42,8 @@
     - beegfs-client-devel
     - beegfs-client
     - beegfs-utils
-    - kernel-devel
+  tags:
+    - beegfs-client
 
 - name: Autobuild configuration file
   copy: 
@@ -31,6 +51,8 @@
     dest: /etc/beegfs/beegfs-client-autobuild.conf
   notify: 
     - rebuild beegfs client
+  tags:
+    - beegfs-client
 
 - name: Client configuration file
   template:
@@ -38,6 +60,8 @@
     dest: /etc/beegfs/beegfs-client.conf
   notify:
     - restart beegfs client
+  tags:
+    - beegfs-client
 
 - name: Client helperd file
   copy:
@@ -45,11 +69,15 @@
     dest: /etc/beegfs/beegfs-helperd.conf
   notify:
     - restart beegfs helperd
+  tags:
+    - beegfs-client
 
 - name: create mount point
   file:
     path: "{{beegfs_mount_point}}"
     state: directory
+  tags:
+    - beegfs-client
 
 - name: Copy mount configuration file
   template:
@@ -57,16 +85,29 @@
     dest: /etc/beegfs/beegfs-mounts.conf
   notify:
     - restart beegfs client
+  tags:
+    - beegfs-client
+
+- name: Copy autobuild configuration file
+  template:
+    src: templates/beegfs-client-autobuild.conf.j2
+    dest: /etc/beegfs/beegfs-client-autobuild.conf
+  notify:
+    - restart beegfs client
+  tags:
+    - beegfs-client
 
 - name: Enable services
   service: 
     name: "{{item}}"
     state: started
-    enable: yes
+    enabled: yes
   when: not ansible_is_chroot
   loop:
     - beegfs-client
     - beegfs-helperd
+  tags:
+    - beegfs-client
 
 - name: Enable services
   shell: "systemctl enable  {{item}}"
@@ -74,3 +115,5 @@
   loop:
     - beegfs-client
     - beegfs-helperd
+  tags:
+    - beegfs-client

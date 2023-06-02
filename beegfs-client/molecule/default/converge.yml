@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    beegfs_disable_rdma: true
+    ansible_is_chroot: true
+  tasks:
+    - name: "Include beegfs client"
+      ansible.builtin.include_role:
+        name: "beegfs-client"

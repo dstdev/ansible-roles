@@ -41,12 +41,6 @@
   tags:
     - prometheus-server
 
-- name: install node-exporter
-  import_tasks: install-node-exporter.yml
-  when: '"node_exporter" in prometheus_components'
-  tags:
-    - prometheus-server
-
 - name: install alertmanager
   import_tasks: install-alertmanager.yml
   when: '"alertmanager" in prometheus_components'

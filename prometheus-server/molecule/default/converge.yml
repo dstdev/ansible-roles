@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include prometheus server"
+      ansible.builtin.include_role:
+        name: "prometheus-server"

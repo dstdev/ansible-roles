@@ -26,6 +26,7 @@
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
     mode: "go-w"
+  check_mode: false
   tags:
     - prometheus-server
 

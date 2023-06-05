@@ -6,4 +6,4 @@
     state: restarted
 
 - name: Run cobbler sync
-  ansible.builtin.shell: "cobbler sync"
+  ansible.builtin.shell: "sleep 2; cobbler sync"

@@ -12,11 +12,11 @@ None
 Role Variables
 --------------
 
-| Name                  | Default                                                                   | Description                                    |
-| --------------------- | ------------------------                                                  | ---------------------------------------------- |
-| node_exporter_version | "1.3.1"                                                                   | Version to download                            |
-| executable_path       | "/var/lib/node_exporter"                                                  | Location to install executable                 |
-| uid                   | "440"                                                                     | UID to use for consistancy                     |
+| Name                  | Default                  | Description                                    |
+| --------------------- | ------------------------ | ---------------------------------------------- |
+| node_exporter_version | "1.3.1"                  | Version to download                            |
+| executable_path       | "/var/lib/node_exporter" | Location to install executable                 |
+| uid                   | "440"                    | UID to use for consistancy                     |
 
 Tags
 --------------

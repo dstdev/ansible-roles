@@ -15,6 +15,9 @@
 # -------------------------------------------------------------------------
 modules:
   default: 
+    roots:
+      tcl:    "{{spack_module_root}}"
+      lmod:   "{{spack_module_root}}"
     enable:
       - lmod
     prefix_inspections:

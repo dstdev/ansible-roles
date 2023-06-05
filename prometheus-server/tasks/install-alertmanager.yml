@@ -26,6 +26,7 @@
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
     mode: "go-w"
+  check_mode: false
   tags:
     - prometheus-server
 
@@ -47,6 +48,13 @@
     dest: "/etc/systemd/system/alertmanager.service"
   notify:
     - restart alertmanager
+  tags:
+    - prometheus-server
+
+- name: Enable alertmanager service
+  ansible.builtin.systemd:
+    name: alertmanager
+    enabled: true
   tags:
     - prometheus-server
 

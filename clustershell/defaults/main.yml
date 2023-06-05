@@ -1,6 +1,7 @@
 ---
 # defaults file for clustershell
 # Mandary options
-GROUP_SOURCE: slurm
+clustershell_default_group_source: slurm
+clustershell_yaml: ""
 
 # Optional

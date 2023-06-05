@@ -12,10 +12,10 @@ NVIDIA GPUs
 Role Variables
 --------------
 
-| Name                  | Default                                                                         | Description                                    |
-| --------------------- | ------------------------                                                  | ---------------------------------------------- |
-| executable_path       | "/var/lib/node_exporter"                                                  | Location to install executable                 |
-| uid                   | "440"                                                                     | UID to use for consistancy                     |
+| Name                  | Default                  | Description                                    |
+| --------------------- | ------------------------ | ---------------------------------------------- |
+| executable_path       | "/var/lib/node_exporter" | Location to install executable                 |
+| uid                   | "440"                    | UID to use for consistancy                     |
 
 Tags
 --------------

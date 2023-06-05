@@ -98,9 +98,6 @@
       DB_POSTGRESDB_PASSWORD: "{{n8n_postgres_password}}"
       DB_POSTGRESDB_USER: "n8n"
       NODE_TLS_REJECT_UNAUTHORIZED: "0"
-    log_options:
-      max-size: "10m"
-      max-files: "3"
   tags:
     - n8n
     - n8n_docker

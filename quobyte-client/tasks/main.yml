@@ -1,0 +1,34 @@
+---
+# tasks file for quobyte-client
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version}}.yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - quobyte
+
+- name: Add quobyte repository
+  yum_repository:
+    name: quobyte
+    description: "Quobyte 3.x Releases ({{ quobyte_repo_base}})"
+    baseurl: "https://packages.quobyte.com/repo/current/rpm/{{ quobyte_repo_base}}/"
+    gpgcheck: yes
+    gpgkey: "https://packages.quobyte.com/repo/current/rpm/{{ quobyte_repo_base }}/repodata/repomd.xml.key"
+  tags:
+    - quobyte
+
+- name: Install quobyte YUM packages
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
+  ansible.builtin.package: 
+    name: "{{item}}"
+    state: present
+  loop:
+    - quobyte-client
+    - quobyte-thirdparty-libraries
+  tags:
+    - quobyte

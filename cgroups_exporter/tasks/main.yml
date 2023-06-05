@@ -8,6 +8,13 @@
   tags:
     - cgroups_exporter
 
+- name: Install git
+  ansible.builtin.package:
+    name: git
+    state: present
+  tags:
+    - cgroups_exporter
+
 - name: Extract go downloaded tarball
   unarchive:
     src: https://golang.org/dl/go1.17.2.linux-amd64.tar.gz
@@ -33,6 +40,8 @@
   shell: "/tmp/go/bin/go build && chown nodeusr:nodeusr cgroups_exporter && cp /tmp/cgroups_exporter/cgroups_exporter {{ cgroup_exporter_executable_path }}"
   args:
     chdir: /tmp/cgroups_exporter
+  env:
+    GOROOT: "/tmp/go"
   tags:
     - cgroups_exporter
 

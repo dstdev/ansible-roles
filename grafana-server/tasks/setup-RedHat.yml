@@ -70,14 +70,10 @@
     name: dst_prometheus
     ds_type: prometheus
     ds_url: "{{ datasource_url }}"
-    url: "{{ grafana_url }}"
     is_default: yes
-    access: proxy
     tls_skip_verify: true
-    additional_json_data:
-      httpHeaderName1: "Authorization"
-    additional_secure_json_data:
-      httpHeaderValue1: "Bearer ihavenogroot"
+    grafana_password: "{{ grafana_admin_password}}"
+    grafana_url: "{{ grafana_url }}"
   tags:
     - configuration
     - grafana-server
@@ -112,6 +108,7 @@
 - name: Import Grafana dashboard infiniband_rev1.json
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
@@ -124,6 +121,7 @@
 - name: Import Grafana dashboard slurm_dashboard.json
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
@@ -136,6 +134,7 @@
 - name: Import Grafana dashboard node-exporter-full_rev26.json
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
@@ -148,6 +147,7 @@
 - name: Import Grafana dashboard nvidia_dcgm.json
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
@@ -160,6 +160,7 @@
 - name: Import SMART disk monitoring for Prometheus Dashboard
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
@@ -172,6 +173,7 @@
 - name: Import SMART disk data Dashboard
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible
@@ -184,6 +186,7 @@
 - name: Import Network Traffic Dashboard
   community.grafana.grafana_dashboard:
     grafana_url: "{{ grafana_url }}"
+    grafana_password: "{{ grafana_admin_password}}"
     # grafana_api_key: "{{ grafana_api_key }}"
     state: present
     commit_message: Updated by ansible

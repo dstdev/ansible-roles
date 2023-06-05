@@ -1,0 +1,5 @@
+---
+# defaults file for chrony
+chrony_ntp_servers: [192.168.0.1]
+chrony_allow_list: []
+chrony_local_stratum: false

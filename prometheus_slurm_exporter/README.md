@@ -14,11 +14,11 @@ slurm_bin_loc: "/cm/shared/apps/slurm/current/bin/"
 slurm_conf_loc: "/cm/shared/apps/slurm/var/etc/slurm/slurm.conf" 
 
 
-| Name                  | Default                                                                   | Description                                    |
-| --------------------- | ------------------------------------------------------------------------- | ---------------------------------------------- |
-| slurm_bin_loc         | "/cm/shared/apps/slurm/current/bin"                                       | path for SLURM env variable                    |
-| slurm_conf_lob        | "/cm/shared/apps/slurm/var/etc/slurm/slurm.conf"                          | $SLURM_CONF                                    |
-| uid                   | "440"                                                                     | UID to use for consistancy                     |
+| Name            | Default                                             | Description                 |
+| --------------- | --------------------------------------------------- | --------------              |
+| slurm_bin_loc   | "/cm/shared/apps/slurm/current/bin"                 | path for SLURM env variable |
+| slurm_conf_lob  | "/cm/shared/apps/slurm/var/etc/slurm/slurm.conf"    | $SLURM_CONF                 |
+| uid             | "440"                                               | UID to use for consistancy  |
 
 Tags
 --------------

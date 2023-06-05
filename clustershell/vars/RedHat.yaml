@@ -1,0 +1,3 @@
+clustershell_required_packages:
+  - epel-release
+  - clustershell

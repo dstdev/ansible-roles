@@ -19,18 +19,12 @@ config:
   install_tree:
     root: "{{spack_app_root}}"
     projections:
-      all: "${ARCHITECTURE}/${COMPILERNAME}-${COMPILERVER}/${PACKAGE}-${VERSION}-${HASH}"
+      all: "{architecture}/{compiler.name}-{compiler.version}/{name}-{version}-{hash}"
   
   
   # Locations where templates should be found
   template_dirs:
     - $spack/share/spack/templates
-  
-  
-  # Locations where different types of modules should be installed.
-  module_roots:
-    tcl:    "{{spack_module_root}}"
-    lmod:   "{{spack_module_root}}"
   
   
   # Temporary locations Spack can try to use for builds.

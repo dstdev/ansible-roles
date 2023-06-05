@@ -3,6 +3,11 @@
 # The version of Promtail to install
 promtail_version: 2.7.4
 
+#Port Information
+promtail_http_listen_port: 9080
+promtail_grpc_listen_port: 0
+loki_http_listen_port: 3100
+
 # The architecture of the system
 promtail_arch: "amd64"
 
@@ -20,3 +25,5 @@ promtail_user: promtail
 
 # The group under which Promtail will be run
 promtail_group: promtail
+
+promtail_positions_file: /tmp/positions.yaml

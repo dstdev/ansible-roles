@@ -30,6 +30,14 @@
     - GIT_SSL_NO_VERIFY: "true"
   tags:
     - lustre_exporter
+    
+- name: Stop the systemd service file if this is not a chroot
+  service:
+    name: lustre_exporter
+    state: stopped
+  when: ansible_is_chroot == False
+  tags:
+    - lustre_exporte
 
 - name: Compile and install lustre_exporter
   become: yes
@@ -60,6 +68,7 @@
   service:
     name: lustre_exporter
     state: started
+    enabled: yes
   when: ansible_is_chroot == False
   tags:
     - lustre_exporter

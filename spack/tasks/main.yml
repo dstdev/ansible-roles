@@ -21,6 +21,15 @@
   tags:
     - spack
 
+- name: Set git config for manyFiles
+  git_config:
+    name: feature.manyFiles
+    scope: global
+    value: "true"
+  when: spack_root_host | bool
+  tags:
+    - spack
+
 - name: clone spack repository
   git:
     repo: "{{spack_repo}}"

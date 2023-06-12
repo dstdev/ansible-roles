@@ -2,3 +2,5 @@
 # vars file for bgfs-client
 beegfs_management_host: "beegfs"
 beegfs_mount_point: "/mnt/beegfs"
+beegfs_version: "7.3.3"
+beegfs_disable_rdma: false

@@ -11,15 +11,21 @@
 - name: rebuild beegfs client
   shell: /etc/init.d/beegfs-client rebuild
   when: not ansible_is_chroot
+  tags:
+    - beegfs-client
 
 - name: restart beegfs client
   ansible.builtin.service:
     name: beegfs-client
     state: restarted
   when: not ansible_is_chroot
+  tags:
+    - beegfs-client
 
 - name: restart beegfs helperd 
   ansible.builtin.service:
     name: beegfs-helperd
     state: restarted
   when: not ansible_is_chroot
+  tags:
+    - beegfs-client

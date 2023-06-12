@@ -1,0 +1,2 @@
+beegfs_yum_python_interpreter: /usr/bin/python2
+beegfs_gpg_key_name: RPM-GPG-KEY-beegfs

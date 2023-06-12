@@ -14,6 +14,7 @@
     src: "{{ prometheus_tarball_url }}"
     dest: "{{ prometheus_install_path }}"
     copy: no
+    creates: "{{ prometheus_daemon_dir }}"
   tags:
     - prometheus-server
 
@@ -54,14 +55,13 @@
   tags:
     - prometheus-server
 
-# - name: copy alert rule files
-#   copy:
-#     src: "../files/alert-dst.rules"
-#     dest: "{{ prometheus_rule_path }}/alert-dst.rules"
-#     validate: "{{ prometheus_daemon_dir }}/promtool check rules %s"
-#   notify:
-#     - restart prometheus
-#   tags: alert_rules
+- name: Enable prometheus service
+  ansible.builtin.systemd:
+    name: prometheus
+    enabled: true
+  tags:
+    - prometheus-server
+
 
 - name: copy alert rule files
   copy:

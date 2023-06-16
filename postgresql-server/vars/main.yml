@@ -1,0 +1,7 @@
+---
+# vars file for postgresql-server
+postgres_data_dir:  "{{postgres_root_dir}}/data"
+postgres_archive_dir: "{{postgres_root_dir}}/archive"
+postgres_pg_hba_file: "{{postgres_data_dir}}/pg_hba.conf"
+postgres_postgresql_file: "{{postgres_data_dir}}/postgresql.conf"
+postgres_pitr_cron_command: 'docker exec -it $(docker ps -f "name={{postgres_container_name}}" -q) pg_basebackup -U {{postgres_user}} -D /archive'

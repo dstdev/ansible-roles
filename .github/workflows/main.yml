@@ -3,33 +3,39 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - prometheus_node_exporter
-      - prometheus_gpfs_exporter
-      - prometheus_dcgm_exporter
+      - cobbler
+      - easybuild
+      - moosefs-client
+      - nhc
       - prometheus_blackbox_exporter
-      - prometheus_ibm_exporter
+      - prometheus_dcgm_exporter
+      - prometheus_gpfs_exporter
+      - prometheus_infiniband_exporter
+      - prometheus_node_exporter
       - prometheus_slurm_exporter
-      - prometheus_cgroup_exporter
-      - virtualgl
-      - turbovnc
+      - prometheus-server
       - slurm
       - spack
+      - tmux
 jobs:
   build:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
         folder:
-          - prometheus_node_exporter
-          - prometheus_gpfs_exporter
-          - prometheus_dcgm_exporter
+          - cobbler
+          - easybuild
+          - moosefs-client
+          - nhc
           - prometheus_blackbox_exporter
-          - prometheus_ibm_exporter
+          - prometheus_dcgm_exporter
+          - prometheus_gpfs_exporter
+          - prometheus_infiniband_exporter
+          - prometheus_node_exporter
           - prometheus_slurm_exporter
-          - prometheus_cgroup_exporter
-          - virtualgl
-          - turbovnc
+          - prometheus-server
           - spack
+          - tmux
     steps:
       - name: checkout
         uses: actions/checkout@v2

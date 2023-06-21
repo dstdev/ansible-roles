@@ -24,6 +24,9 @@ Role Variables
 | spack_unuse_module_paths     | []                                   | Module paths to unuse, such as defaults from lmod install                                               |
 | spack_default_modules        | ""                                   | Default modules to load                                                                                 |
 | spack_prefix_lines           | []                                   | Line to add to top of profile scripts                                                                   |
+| spack_config_config_yaml     | See defaults/main.yml                | Contents of $SPACK_ROOT/etc/spack/config.yaml                                                           |
+| spack_config_packages_yaml   | See defaults/main.yml                | Contents of $SPACK_ROOT/etc/spack/packages.yaml                                                         |
+| spack_config_modules_yaml    | See defaults/main.yml                | Contents of $SPACK_ROOT/etc/spack/modules.yaml                                                          |
 
 Dependencies
 ------------
@@ -58,3 +61,9 @@ A headnode where a single install can be defined using the spack_headnode variab
 
     [headnode]
     edge-hpc-mgt-101 spack_root_host=true
+    
+    
+For site specific configuration, see the default values in `defaults/main.yml`.
+These can be configured to set certain core compilers and other application
+specific configurations.  You will want to consult the spack documentation on
+what can go here, or see other site configurations for other clients.

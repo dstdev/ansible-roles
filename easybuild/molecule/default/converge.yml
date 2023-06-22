@@ -4,6 +4,8 @@
   vars:
     common_create_dst_user: true
     common_dst_user_password: testing
+    # selinux is not installed with docker
+    common_disable_selinux: false
     lmod_install: yes
     lmod_module_root_path: '{{ lmod_prefix }}/modulefiles'
     lmod_module_paths:

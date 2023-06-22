@@ -34,6 +34,7 @@ jobs:
           - prometheus_node_exporter
           - prometheus_slurm_exporter
           - prometheus-server
+          - slurm
           - spack
           - tmux
     steps:

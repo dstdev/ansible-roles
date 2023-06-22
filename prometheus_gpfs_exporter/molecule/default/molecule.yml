@@ -4,12 +4,15 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: instance
-    image: rockylinux
-    volume_mounts:
+  - name: instance-el8
+    image: rockylinux:8
+    privileged: true
+    volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
-    command: "/usr/sbin/init"
     pre_build_image: true
+    command: "/usr/sbin/init"
+    cgroupns_mode: host
+
 provisioner:
   name: ansible
 verifier:

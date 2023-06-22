@@ -4,7 +4,7 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: instance8
+  - name: instance-el8
     image: rockylinux:8
     privileged: true
     volume_mounts:

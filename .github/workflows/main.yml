@@ -3,20 +3,20 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - cobbler
-      - easybuild
-      - moosefs-client
-      - nhc
-      - prometheus_blackbox_exporter
-      - prometheus_dcgm_exporter
-      - prometheus_gpfs_exporter
-      - prometheus_infiniband_exporter
-      - prometheus_node_exporter
-      - prometheus_slurm_exporter
-      - prometheus-server
-      - slurm
-      - spack
-      - tmux
+      - 'cobbler/**'
+      - 'easybuild/**'
+      - 'moosefs-client/**'
+      - 'nhc/**'
+      - 'prometheus_blackbox_exporter/**'
+      - 'prometheus_dcgm_exporter/**'
+      - 'prometheus_gpfs_exporter/**'
+      - 'prometheus_infiniband_exporter/**'
+      - 'prometheus_node_exporter/**'
+      - 'prometheus_slurm_exporter/**'
+      - 'prometheus-server/**'
+      - 'slurm/**'
+      - 'spack/**'
+      - 'tmux/**'
 jobs:
   build:
     runs-on: ubuntu-22.04

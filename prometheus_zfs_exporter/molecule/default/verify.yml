@@ -1,0 +1,16 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: Get prometheus service
+      ansible.builtin.service:
+        name: zfs_exporter
+      register: prometheus_status
+
+    - name: verify status of prometheus
+      ansible.builtin.assert:
+        that: prometheus_status.status.Result == "success"

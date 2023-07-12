@@ -40,7 +40,7 @@
   shell: "/tmp/go/bin/go build && chown nodeusr:nodeusr cgroups_exporter && cp /tmp/cgroups_exporter/cgroups_exporter {{ cgroup_exporter_executable_path }}"
   args:
     chdir: /tmp/cgroups_exporter
-  env:
+  environment:
     GOROOT: "/tmp/go"
   tags:
     - cgroups_exporter

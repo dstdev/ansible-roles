@@ -712,7 +712,7 @@ groups:
         expr: node_systemd_unit_state{name="slurmctld", state="failed"} > 0
         for: 5m
         annotations:
-          summary: "Slurm controller has entered a failed state on (instance $labels.instance}})"
+          summary: "Slurm controller has entered a failed state on (instance {{$labels.instance}})"
           description: "The slurm controller systemd service has entered a failed state"
           priority: P2
 
@@ -720,7 +720,7 @@ groups:
         expr: node_systemd_unit_state{name="slurmdbd", state="failed"} > 0
         for: 5m
         annotations:
-          summary: "Slurm Database Daemon has entered a failed state on (instance $labels.instance}})"
+          summary: "Slurm Database Daemon has entered a failed state on (instance {{$labels.instance}})"
           description: "The slurmdbd systemd service has entered a failed state"
           priority: P2
 
@@ -728,7 +728,7 @@ groups:
         expr: node_systemd_unit_state{name="slurmd", state="failed"} > 0
         for: 5m
         annotations:
-          summary: "Slurm Daemon has entered a failed state on (instance $labels.instance}})"
+          summary: "Slurm Daemon has entered a failed state on (instance {{$labels.instance}})"
           description: "The slurmdbd systemd service has entered a failed state"
           priority: P3
 
@@ -745,3 +745,15 @@ groups:
         for: 2m
         labels:
           severity: critical
+
+   - name: zfs_rules
+    rules:
+      - alert: ZPool Health
+        annotations:
+          description: |
+            This is an alert meant to check the status of ZFS Pools.  If it returns a value
+            greater than 0 the zpool is unhealthy.
+          summary: "ZFS Zpool is unhealthy on (instance {{$labels.instance}})"
+          priority: P2
+        expr: zfs_pool_health > 0
+        for: 2m

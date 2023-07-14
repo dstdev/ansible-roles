@@ -190,12 +190,13 @@ groups:
         for: 60m
         labels:
           severity: critical
-      - alert: node_infiniband_link_downed_total
+
+      - alert: node_infiniband_interfaces_down
         annotations:
-          description: '{{ $labels.instance }} node_infiniband_link_downed_total {{ printf "%.0f" $value }}.'
+          description: 'All IB interfaces show as inactive on {{ $labels.instance }}'
           summary: The number of IB interfaces went down.
           priority: P3
-        expr: (node_infiniband_link_downed_total) > 0
+        expr: min(node_infiniband_state_id) > 1
         for: 5m
         labels:
           severity: critical
@@ -746,7 +747,7 @@ groups:
         labels:
           severity: critical
 
-   - name: zfs_rules
+  - name: zfs_rules
     rules:
       - alert: ZPool Health
         annotations:

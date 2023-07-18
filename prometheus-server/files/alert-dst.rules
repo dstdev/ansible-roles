@@ -733,6 +733,14 @@ groups:
           description: "The slurmdbd systemd service has entered a failed state"
           priority: P3
 
+      - alert: SlurmNodeDrainState
+        expr: slurm_node_state{state="DRAIN"} > 0
+        for: 5m
+        annotations:
+          summary: "Node {{ $labels.nodename }} has entered a DRAIN state"
+          description: "The Node {{$labels.nodename }} has entered a DRAIN or DRAINING state and may be an indication of an issue with the node."
+          priority: P2
+
   - name: prometheus_rules
     rules:
       - alert: Watchdog

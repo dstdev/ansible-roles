@@ -8,8 +8,12 @@ driver:
   #yamllint .
   #ansible-lint
 platforms:
-  - name: instance
+  - name: instance-el8
     image: rockylinux:8
+    privileged: true
+    pre_build_image: true
+  - name: instance-el9
+    image: rockylinux:9
     privileged: true
     pre_build_image: true
 provisioner:

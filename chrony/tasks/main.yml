@@ -35,5 +35,6 @@
   ansible.builtin.service:
     name: chronyd
     state: restarted
+    enabled: true
   tags:
     - chrony

@@ -4,6 +4,10 @@
   ansible.builtin.systemd:
     name: cobblerd
     state: restarted
+  tags:
+    - cobbler
 
 - name: Run cobbler sync
   ansible.builtin.shell: "sleep 2; cobbler sync"
+  tags:
+    - cobbler

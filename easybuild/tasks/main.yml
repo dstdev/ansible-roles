@@ -16,7 +16,7 @@
   ansible.builtin.dnf:
     name: "{{item}}"
     state: present
-    enablerepo: powertools
+    enablerepo: powertools,crb
   loop: "{{easybuild_required_packages}}"
   tags:
     - easybuild

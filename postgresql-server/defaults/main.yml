@@ -1,0 +1,14 @@
+---
+# defaults file for postgresql-server
+postgres_root_dir: /data/apps/postgres
+postgres_user_id: '999'
+postgres_group_id: '999'
+postgres_version: 14
+postgres_user: postgres
+postgres_password: '{{ undef(hint("You must define your password for the postgresql database"))}}'
+postgres_database: postgres
+postgres_databases: []
+postgres_enable_pitr: true
+postgres_container_name: postgres
+postgres_network_mode: host
+postgres_networks: []

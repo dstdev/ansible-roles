@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    #- name: "Include node exporter"
+      #ansible.builtin.include_role:
+        #name: "prometheus_node_exporter"
+    - name: "Include zfs_exporter"
+      ansible.builtin.include_role:
+        name: "prometheus_zfs_exporter"

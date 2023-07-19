@@ -1,0 +1,135 @@
+---
+# tasks file for postgresql-server
+## tasks file for datalake
+- name: Create data directory
+  file:
+    path: "{{postgres_data_dir}}"
+    state: directory
+    owner: "{{postgres_user_id}}"
+    group: "{{postgres_group_id}}"
+  tags:
+    - postgresql
+
+- name: Install packages to manage postgresql with ansible
+  package:
+    name: "{{item}}"
+    state: present
+  tags:
+    - postgresql
+  loop:
+    - python3-psycopg2
+    - libpq-dev
+    - postgresql-client
+
+- name: Create archive directory
+  file:
+    path: "{{postgres_archive_dir}}"
+    state: directory
+    owner: "{{postgres_user_id}}"
+    group: "{{postgres_group_id}}"
+  tags:
+    - postgresql
+
+# net network mode and network
+
+- name: Create postgresql docker container
+  community.docker.docker_container:
+    name: "{{postgres_container_name}}"
+    image: "postgres:{{postgres_version}}"
+    restart_policy: always
+    network_mode: "{{postgres_network_mode}}"
+    networks: "{{postgres_networks}}"
+    hostname: "{{postgres_container_name}}"
+    container_default_behavior: 'no_defaults'
+    env:
+      POSTGRES_PASSWORD: "{{postgres_password}}" 
+      POSTGRES_DB: "{{postgres_database}}" 
+      POSTGRES_USER: "{{postgres_user}}" 
+    volumes:
+      - "{{postgres_data_dir}}:/var/lib/postgresql/data"
+      - "{{postgres_archive_dir}}:/archive"
+  tags:
+    - postgresql
+
+
+- name: Create database user
+  community.postgresql.postgresql_user:
+    login_password: "{{postgres_password}}"
+    login_host: localhost
+    login_user: "{{postgres_user}}" 
+    name: "{{item.user}}"
+    state: present
+    password: "{{item.password | password_hash('md5')}}"
+  loop: "{{postgres_databases}}"
+  tags:
+    - postgresql
+
+- name: Create database 
+  community.postgresql.postgresql_db:
+    login_password: "{{postgres_password}}"
+    login_host: localhost
+    login_user: "{{postgres_user}}" 
+    name: "{{item.name}}"
+  loop: "{{postgres_databases}}"
+  tags:
+    - postgresql
+
+- name: set database privileges for owner
+  community.postgresql.postgresql_privs:
+    login_password: "{{postgres_password}}"
+    login_host: localhost
+    login_user: "{{postgres_user}}" 
+    db: "{{item.name}}"
+    privs: ALL
+    type: database
+    role: "{{item.user}}"
+  loop: "{{postgres_databases}}"
+  tags:
+    - postgresql
+
+- name: set archive one
+  lineinfile:
+    path: "{{postgres_postgresql_file}}"
+    regexp: "^archive_mode"
+    insertafter: "^#archive_mode"
+    line: "archive_mode = on"
+  when: postgres_enable_pitr
+  tags:
+    - postgresql
+
+- name: set wal level
+  lineinfile:
+    path: "{{postgres_postgresql_file}}"
+    regexp: "^wal_level"
+    insertafter: "^#wal_level"
+    line: "wal_level = replica"
+  when: postgres_enable_pitr
+  tags:
+    - postgresql
+
+- name: set archive command
+  lineinfile:
+    path: "{{postgres_postgresql_file}}"
+    regexp: "^archive_command"
+    insertbefore: "^#archive_command"
+    line: "archive_command = 'test ! -f /archive/%f && cp %p /archive/%f'"
+  when: postgres_enable_pitr
+  tags:
+    - postgresql
+
+- name: Create cron job for backup rotation
+  include_role:
+    name: cronjob
+  vars:
+    cronjob_cron_name: "Postgresql backup for {{ansible_hostname}} at {{postgres_data_dir}}"
+    cronjob_description: "Weekly cronjob for Postgresql backup for {{ansible_hostname}}"
+    cronjob_job: "{{postgres_pitr_cron_command}}" 
+    cronjob_minute: '0'
+    cronjob_hour: '0'
+    cronjob_weekday: '1'
+    cronjob_tags:
+      - postgresql
+      - backup
+  when: postgres_enable_pitr
+  tags:
+    - postgresql

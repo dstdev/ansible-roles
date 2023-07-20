@@ -1,0 +1,16 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: Get loki service
+      ansible.builtin.service:
+        name: loki
+      register: loki_status
+
+    - name: verify status of loki
+      ansible.builtin.assert:
+        that: loki_status.status.Result == "success"

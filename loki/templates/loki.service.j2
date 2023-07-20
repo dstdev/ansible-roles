@@ -1,16 +1,17 @@
 [Unit]
 Description=Loki Service
 Wants=network-online.target 
-After=network-online.target
+After=syslog.target
 
-[Sevice]
-ExecStart=/usr/bin/loki --config.file=loki-config.yaml.j2
+[Service]
+Type=simple
 User=loki
 Group=loki
-Restart=always
-Enviroment="LOKI_HOME=/opt/loki"
-StandardOutput=file;/var/log/loki/loki.log
-StandardError=file:/var/log/loki/loki.err 
+ExecStart={{ loki_install_dir }}/{{loki_binary_name}} -config.file={{ loki_config_path }}
+ExecReload=/bin/kill -HUP $MAINPID
+Timeout=30
+Restart=on-failure
+RestartSec=2
 
 [Install]
-WantedBy=multi-user.target/
+WantedBy=multi-user.target

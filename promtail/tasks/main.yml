@@ -1,38 +1,79 @@
 ---
-- name: Install Promtail
-  become: true
-  apt:
-    name: promtail
-    update_cache: yes
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+  loop:
+    - unzip
+  tags: [promtail]
+
+- name: Create promtail group
+  ansible.builtin.group:
+    name: "{{ promtail_group }}"
     state: present
   tags: [promtail]
 
-- name: Ensure Promtail service is enabled and started
-  become: true
-  service:
-    name: promtail
-    enabled: yes
-    state: started
+- name: Create promtail user
+  ansible.builtin.user:
+    name: "{{ promtail_user }}"
+    state: present
+    group: "{{ promtail_group }}"
+    home: /var/lib/promtail
+    shell: /sbin/nologin
+  tags: [promtail]
+
+- name: Create promtail etc directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ promtail_config_path }}"
+    owner: "{{ promtail_user }}"
+    group: "{{ promtail_group }}"
+  tags: [promtail]
+
+- name: Extract promtail
+  ansible.builtin.unarchive:
+    src: "{{ promtail_binary_url }}"
+    dest: "{{ promtail_install_dir }}"
+    remote_src: yes
+  tags: [promtail]
+
+- name: Configure promtail
+  ansible.builtin.template:
+    src: promtail-config.yaml.j2
+    dest: "{{ promtail_config_path }}/config.yaml"
+    owner: "{{ promtail_user }}"
+    group: "{{ promtail_group }}"
+  notify: Restart Promtail
   tags: [promtail]
 
 - name: Set Promtail input sources
   copy:
     src: promtail-input-sources.yaml
-    dest: /etc/promtail/input-sources.yaml
+    dest: "{{ promtail_config_path }}/input-sources.yaml"
     mode: '0644'
+    owner: "{{ promtail_user }}"
+    group: "{{ promtail_group }}"
+  notify: Restart Promtail
   tags: [promtail]
 
 - name: Set Promtail parsing rules
   copy:
     src: promtail-parsing-rules.yaml
-    dest: /etc/promtail/parsing-rules.yaml
+    dest: "{{ promtail_config_path }}/parsing-rules.yaml"
     mode: '0644'
+    owner: "{{ promtail_user }}"
+    group: "{{ promtail_group }}"
+  notify: Restart Promtail
   tags: [promtail]
 
-- name: Set Loki endpoint in Promtail configuration
-  replace:
-    path: /etc/promtail/config.yaml
-    regexp: 'http://localhost:3100'
-    replace: '{{ loki_endpoint }}'
+- name: Create promtail Systemd Service
+  ansible.builtin.template:
+    src: promtail.service.j2
+    dest: "{{ promtail_systemd_path }}"
   tags: [promtail]
 
+- name: Ensure Promtail service is enabled and started
+  service:
+    name: promtail
+    enabled: yes
+    state: started
+  tags: [promtail]

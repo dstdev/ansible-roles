@@ -1,12 +1,14 @@
 # defaults file for promtail
 
 # The version of Promtail to install
-promtail_version: 2.7.4
+promtail_version: 2.8.2
 
 #Port Information
 promtail_http_listen_port: 9080
 promtail_grpc_listen_port: 0
-loki_http_listen_port: 3100
+
+promtail_loki_hostname: localhost
+promtail_loki_http_listen_port: 3100
 
 # The architecture of the system
 promtail_arch: "amd64"
@@ -17,13 +19,16 @@ promtail_os: "linux"
 # The location to install the Promtail binary
 promtail_install_dir: /usr/local/bin
 
-# The location of the Promtail configuration file
-promtail_config_file: /etc/promtail/config.yaml
-
 # The user under which Promtail will be run
 promtail_user: promtail
 
 # The group under which Promtail will be run
 promtail_group: promtail
 
-promtail_positions_file: /tmp/positions.yaml
+promtail_positions_file: /var/lib/promtail/positions.yaml
+
+promtail_config_path: "/etc/promtail"
+
+promtail_custom_scrape_configs: []
+
+promtail_systemd_path: /etc/systemd/system/promtail.service

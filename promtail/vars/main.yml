@@ -2,5 +2,6 @@
 promtail_base_url: https://github.com/grafana/loki/releases/download
 
 # The name of the Promtail binary
-promtail_binary_name: "promtail-{{ promtail_version }}.{{ promtail_os }}-{{ promtail_arch }}.zip"
+promtail_binary_name: "promtail-{{ promtail_os }}-{{ promtail_arch }}"
+promtail_binary_url: "{{ promtail_base_url }}/v{{ promtail_version }}/{{ promtail_binary_name }}.zip"
 

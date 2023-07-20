@@ -1,18 +1,21 @@
 server:
   http_listen_port: {{ promtail_http_listen_port }}
   grpc_listen_port: {{ promtail_grpc_listen_port }}
+
 positions:
   filename: {{ promtail_positions_file }}
+
 clients:
-  - url: {{ loki_base_url }}:{{ loki_http_listen_port }}/loki/api/v1/push
-    labels:
-      job: "{{ promtail_job_name }}"
-      __path__: "{{ promtail_log_path }}"
+  - url: http://{{ promtail_loki_hostname }}:{{ promtail_loki_http_listen_port }}/loki/api/v1/push
+
 scrape_configs:
-  - job_name: "{{ promtail_job_name }}"
+  - job_name: "system"
     static_configs:
       - targets:
-          - "{{ promtail_target }}"
+          - "localhost"
         labels:
-          job: "{{ promtail_job_name }}"
-          __path__: "{{ promtail_log_path }}"
+          job: "varlogs"
+          __path__: "/var/log/*log"
+  {% if promtail_custom_scrape_configs | length %}
+  {{ promtail_custom_scrape_configs | to_nice_yaml(indent=2) | indent(2, False) }} 
+  {% endif %}

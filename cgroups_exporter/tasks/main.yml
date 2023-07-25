@@ -1,6 +1,6 @@
 ---
 - name: Create nodeusr account to run cgroup_exporter
-  user:
+  ansible.builtin.user:
     name: nodeusr
     shell: /sbin/nologin
     home: /var/lib/node_exporter
@@ -16,7 +16,7 @@
     - cgroups_exporter
 
 - name: Extract go downloaded tarball
-  unarchive:
+  ansible.builtin.unarchive:
     src: https://golang.org/dl/go1.17.2.linux-amd64.tar.gz
     dest: /tmp
     owner: nodeusr
@@ -27,7 +27,7 @@
     - cgroups_exporter
 
 - name: Clone a github repository
-  git:
+  ansible.builtin.git:
     repo: https://github.com/phpHavok/cgroups_exporter
     dest: /tmp/cgroups_exporter
     clone: yes
@@ -37,7 +37,7 @@
 
 - name: Compile and install cgroup_exporter
   become: yes
-  shell: "/tmp/go/bin/go build && chown nodeusr:nodeusr cgroups_exporter && cp -f /tmp/cgroups_exporter/cgroups_exporter {{ cgroup_exporter_executable_path }}"
+  ansible.builtin.shell: "/tmp/go/bin/go build && chown nodeusr:nodeusr cgroups_exporter && cp -f /tmp/cgroups_exporter/cgroups_exporter {{ cgroup_exporter_executable_path }}"
   args:
     chdir: /tmp/cgroups_exporter
   environment:
@@ -46,14 +46,14 @@
     - cgroups_exporter
 
 - name: Create systemd service file
-  template:
+  ansible.builtin.template:
     src: cgroup_exporter.service.j2
     dest: /etc/systemd/system/cgroup_exporter.service
   tags:
     - cgroups_exporter
 
 - name: Enable the systemd service file manually
-  file:
+  ansible.builtin.file:
     state: link
     src: /etc/systemd/system/cgroup_exporter.service
     dest: /etc/systemd/system/multi-user.target.wants/cgroup_exporter.service
@@ -61,7 +61,7 @@
     - cgroups_exporter
 
 - name: Start the systemd service file if this is not a chroot
-  service:
+  ansible.builtin.service:
     name: cgroup_exporter
     state: started
   when: ansible_is_chroot == False

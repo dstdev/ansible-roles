@@ -28,7 +28,7 @@
     - prometheus_node_exporter
 
 - name: Create systemd service file
-  template:
+  ansible.builtin.template:
     src: node_exporter.service.j2
     dest: /etc/systemd/system/node_exporter.service
   notify:
@@ -37,7 +37,7 @@
     - prometheus_node_exporter
 
 - name: Enable the systemd service file manually
-  file:
+  ansible.builtin.file:
     state: link
     src: /etc/systemd/system/node_exporter.service
     dest: /etc/systemd/system/multi-user.target.wants/node_exporter.service
@@ -45,7 +45,7 @@
     - prometheus_node_exporter
 
 - name: Create textfile_collector directory
-  file:
+  ansible.builtin.file:
     path: /var/lib/node_exporter/textfile_collector
     state: directory
     mode: 0755
@@ -53,7 +53,7 @@
     - prometheus_node_exporter
       
 - name: Start the systemd service file if this is not a chroot
-  service:
+  ansible.builtin.service:
     name: node_exporter
     state: started
   when: not ansible_is_chroot
@@ -69,7 +69,7 @@
     - never
 
 - name: Fetch smartmon shell script file
-  copy:
+  ansible.builtin.copy:
     src: "smartmon.sh"
     dest: "/var/lib/node_exporter/smartmon.sh"
     mode: 0755

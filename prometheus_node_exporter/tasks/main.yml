@@ -66,16 +66,18 @@
     state: latest
   tags:
     - smartmontools
-    - never
 
-- name: Fetch smartmon shell script file
+- name: Copy shell scripts
   ansible.builtin.copy:
-    src: "smartmon.sh"
-    dest: "/var/lib/node_exporter/smartmon.sh"
+    src: "{{ item }}"
+    dest: "/var/lib/node_exporter/{{ item }}"
     mode: 0755
+  loop:
+    - smartmon.sh
+    - fstab.sh
   tags:
     - smartmontools
-    - never
+    - fstab
 
 - name: Verify cron is installed
   package:
@@ -84,7 +86,6 @@
   when: ansible_os_family == 'RedHat'
   tags:
     - smartmontools
-    - never
 
 - name: Verify cron is installed
   apt:
@@ -93,7 +94,6 @@
   when: ansible_os_family == 'Debian'
   tags:
     - smartmontools
-    - never
 
 - name: Crontab the smartmon shell script file
   cron:
@@ -102,4 +102,11 @@
     job: "/var/lib/node_exporter/smartmon.sh > /var/lib/node_exporter/textfile_collector/smart_status.prom 2>&1"
   tags:
     - smartmontools
-    - never
+
+- name: Crontab the fstab shell script file
+  cron:
+    name: "run fstab.sh to node_exporter collector"
+    special_time: hourly
+    job: "/var/lib/node_exporter/fstab.sh > /var/lib/node_exporter/textfile_collector/fstab_status.prom 2>&1"
+  tags:
+    - fstab

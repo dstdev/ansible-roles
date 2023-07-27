@@ -106,7 +106,6 @@
 - name: Crontab the fstab shell script file
   cron:
     name: "run fstab.sh to node_exporter collector"
-    special_time: hourly
     job: "/var/lib/node_exporter/fstab.sh > /var/lib/node_exporter/textfile_collector/fstab_status.prom 2>&1"
   tags:
     - fstab

@@ -1,0 +1,57 @@
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+  loop:
+    - unzip
+  tags: [loki]
+
+- name: Create loki group
+  ansible.builtin.group:
+    name: loki
+    state: present
+  tags: [loki]
+
+- name: Create loki user
+  ansible.builtin.user:
+    name: loki
+    state: present
+    group: loki
+    home: /var/lib/loki
+    shell: /sbin/nologin
+  tags: [loki]
+
+- name: Create loki etc directory
+  ansible.builtin.file:
+    state: directory
+    path: /etc/loki
+    owner: loki
+    group: loki
+  tags: [loki]
+
+- name: Extract Loki
+  ansible.builtin.unarchive:
+    src: "{{ loki_binary_url }}"
+    dest: "{{ loki_install_dir }}"
+    remote_src: yes
+  tags: [loki]
+
+- name: Configure Loki
+  ansible.builtin.template:
+    src: loki-config.yaml.j2
+    dest: "{{ loki_config_path }}"
+    owner: loki
+    group: loki
+  tags: [loki]
+
+- name: Create Loki Systemd Service
+  ansible.builtin.template:
+    src: loki.service.j2
+    dest: "{{ loki_systemd_path }}"
+  tags: [loki]
+
+- name: Enable and Start Loki Systemd Service
+  ansible.builtin.systemd:
+    name: loki
+    enabled: true
+    state: started
+  tags: [loki]

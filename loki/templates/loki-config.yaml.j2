@@ -1,0 +1,43 @@
+auth_enabled: {{ loki_auth_enabled }}
+
+server:
+  http_listen_port: {{ loki_http_listen_port }}
+  grpc_listen_port: {{ loki_grpc_listen_port }}
+
+common:
+  path_prefix: {{ loki_storage_directory }}
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: {{ loki_active_index_dir }}
+    cache_location: {{ loki_cache_location }}
+    cache_ttl: {{ loki_cache_ttl }}
+    shared_store: {{ loki_shared_store }}
+  filesystem:
+    directory: {{ loki_data_dir }}
+
+ingester:
+  lifecycler:
+    address: 127.0.0.1
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+    final_sleep: 0s
+  chunk_idle_period: 5m
+  max_chunk_age: 1h
+  chunk_retain_period: 30m
+  max_transfer_retries: 0
+
+schema_config:
+  configs:
+    - from: 2022-01-01
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+
+ruler:
+  alertmanager_url: http://localhost:9093

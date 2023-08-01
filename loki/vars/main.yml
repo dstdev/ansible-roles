@@ -1,0 +1,14 @@
+# The base URL for downloading the Loki binary
+loki_base_url: https://github.com/grafana/loki/releases/download
+
+# The name of the Loki binary
+loki_binary_name: "loki-{{ loki_os }}-{{ loki_arch }}"
+
+loki_binary_url: "{{ loki_base_url }}/v{{ loki_version }}/{{ loki_binary_name }}.zip"
+loki_config_path: "/etc/loki/loki.yaml"
+loki_systemd_path: "/etc/systemd/system/loki.service"
+
+
+loki_active_index_dir: "{{ loki_storage_directory }}/index"
+loki_cache_location: "{{ loki_storage_directory }}/cache"
+loki_data_dir: "{{ loki_storage_directory }}/chunks"

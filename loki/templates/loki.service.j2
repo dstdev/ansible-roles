@@ -1,0 +1,17 @@
+[Unit]
+Description=Loki Service
+Wants=network-online.target 
+After=syslog.target
+
+[Service]
+Type=simple
+User=loki
+Group=loki
+ExecStart={{ loki_install_dir }}/{{loki_binary_name}} -config.file={{ loki_config_path }}
+ExecReload=/bin/kill -HUP $MAINPID
+Timeout=30
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

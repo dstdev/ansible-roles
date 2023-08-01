@@ -1,0 +1,16 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: Get promtail service
+      ansible.builtin.service:
+        name: promtail
+      register: promtail_status
+
+    - name: verify status of promtail
+      ansible.builtin.assert:
+        that: promtail_status.status.Result == "success"

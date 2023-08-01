@@ -41,7 +41,7 @@
   tags:
     - easybuild
 
-- name: create admin group
+- name: create local admin group
   ansible.builtin.group:
     name: "{{common_dst_admin_group_name}}"
     state: present
@@ -65,14 +65,16 @@
     - common
 
 # Needs to be configured after setting the password for the user
-- name: Allow admin group to have password sudo
+- name: Allow admin groups to have password sudo
   lineinfile:
-    dest: "/etc/sudoers.d/{{ common_dst_admin_group_name }}"
+    dest: "/etc/sudoers.d/{{ item }}"
     create: yes
     state: present
-    regexp: '^%{{ common_dst_admin_group_name }}'
-    line: '%{{ common_dst_admin_group_name }} ALL=(ALL) PASSWD: ALL'
+    regexp: '^%{{ item }}'
+    line: '%{{ item }} ALL=(ALL) PASSWD: ALL'
     validate: visudo -cf %s
+  loop: "{{ [common_dst_admin_group_name] + common_sudo_groups}}"
+
   tags:
     - common
 

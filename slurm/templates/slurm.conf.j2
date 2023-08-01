@@ -47,9 +47,29 @@ Epilog=/etc/slurm/job-epilog.sh
 TaskProlog=/etc/slurm/task-prolog.sh
 TaskEpilog=/etc/slurm/task-epilog.sh
 
+# Suspend Resume Configuration
+{% if slurm_conf_suspend_time %}
+SuspendTime={{ slurm_conf_suspend_time }}
+{% endif %}
+{% if slurm_conf_suspend_timeout %}
+SuspendTimeout={{ slurm_conf_suspend_timeout }}
+{% endif %}
+{% if slurm_conf_suspend_program %}
+SuspendProgram={{ slurm_conf_suspend_program_path }}
+{% endif %}
+{% if slurm_conf_resume_program %}
+ResumeProgram={{ slurm_conf_resume_program_path }}
+{% endif %}
+{% if slurm_conf_resume_timeout %}
+ResumeTimeout={{ slurm_conf_resume_timeout }}
+{% endif %}
+
 
 AccountingStorageType=accounting_storage/slurmdbd
 AccountingStorageHost={{slurm_controller_hostname}}
+{% if slurm_conf_accounting_storage_external_host %}
+AccountingStorageExternalHost={{ slurm_conf_accounting_storage_external_host }}
+{% endif %}
 {% if slurm_conf_accounting_storage_tres %}
 AccountingStorageTRES={{','.join(slurm_conf_accounting_storage_tres)}}
 {% endif %}

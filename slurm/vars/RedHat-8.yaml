@@ -17,6 +17,7 @@ slurm_required_packages:
   - mailx
   - lua
   - lua-devel
+  - pam-devel
 
 slurm_dbd_required_packages:
   - mariadb-server

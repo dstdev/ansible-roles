@@ -110,3 +110,11 @@ slurm_firewalld_python_interpreter: "/usr/bin/python"
 # Gres information
 slurm_conf_gres_types: []
 slurm_gres_conf_entries: []
+
+slurm_conf_suspend_time: ""
+slurm_conf_suspend_timeout: ""
+slurm_conf_suspend_program: ""
+slurm_conf_resume_program: ""
+slurm_conf_resume_timeout: ""
+slurm_conf_accounting_storage_external_host: ""
+

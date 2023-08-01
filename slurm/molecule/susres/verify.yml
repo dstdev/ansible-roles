@@ -1,0 +1,48 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Example assertion
+    ansible.builtin.assert:
+      that: true
+
+  - name: Get slurmctld service
+    ansible.builtin.service:
+      name: slurmctld
+    register: slurmctld_status
+  - name: verify status of slurmctld
+    ansible.builtin.assert:
+      that: slurmctld_status.status.Result == "success"
+
+  - name: Get slurmdbd service
+    ansible.builtin.service:
+      name: slurmdbd
+    register: slurmdbd_status
+  - name: verify status of slurmdbd
+    ansible.builtin.assert:
+      that: slurmdbd_status.status.Result == "success"
+
+  - name: Get slurmd service
+    ansible.builtin.service:
+      name: slurmd
+    register: slurmd_status
+  - name: verify status of slurmd
+    ansible.builtin.assert:
+      that: slurmd_status.status.Result == "success"
+
+  - name: Get slurmrestd service
+    ansible.builtin.service:
+      name: slurmrestd
+    register: slurmrestd_status
+  - name: verify status of slurmrestd
+    ansible.builtin.assert:
+      that: slurmrestd_status.status.Result == "success"
+
+
+
+  #- name: Verify status of slurmctld
+
+

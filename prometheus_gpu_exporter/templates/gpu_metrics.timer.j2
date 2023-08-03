@@ -1,0 +1,9 @@
+[Unit] 
+Description=Run GPU Metrics every 30 seconds
+
+[Timer]
+OnBootSec=10
+OnUnitActiveSec={{ gpu_metrics_interval }}
+
+[Install]
+WantedBy=timers.target

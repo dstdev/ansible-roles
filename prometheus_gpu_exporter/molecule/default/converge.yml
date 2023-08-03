@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include prometheus gpu exporter"
+      ansible.builtin.include_role:
+        name: "prometheus_gpu_exporter"

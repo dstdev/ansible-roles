@@ -1,0 +1,60 @@
+---
+# tasks file for prometheus_gpu_exporter
+- name: Gather os specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_os_family }}.yaml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}\
+           .yaml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    gpu_metrics
+
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ gpu_metrics_required_packages }}"
+  tags:
+    gpu_metrics
+
+- name: Copy GPU Metrics Script
+  ansible.builtin.copy:
+    src: files/gpu_metrics.py
+    dest: "{{ gpu_metrics_bin_dir }}/gpu_metrics.py"
+    mode: "0755"
+    owner: root
+    group: root
+  tags:
+    gpu_metrics
+
+- name: Copy systemd files
+  ansible.builtin.template:
+    src: "templates/{{ item }}.j2"
+    dest: "/etc/systemd/system/{{item}}"
+    mode: "0644"
+    owner: root
+    group: root
+  loop:
+    - gpu_metrics.service
+    - gpu_metrics.timer
+  tags:
+    gpu_metrics
+
+- name: Enable systemd services if not chroot
+  ansible.builtin.systemd:
+    name: gpu_metrics.timer
+    state: started
+    enabled: true
+    daemon_reload: true
+  when: not ansible_is_chroot
+  tags:
+    gpu_metrics
+
+- name: Enable systemd services if chroot
+  ansible.builtin.shell: systemctl enable gpu_metrics.timer
+  when: ansible_is_chroot
+  tags:
+    gpu_metrics

@@ -1,0 +1,15 @@
+galaxy_info:
+  author: Andrew Kail
+  description: Install and configure custom GPU metric collection
+  company: Data in Science Technologies
+  role_name: prometheus_gpu_exporter
+  namespace: dstdev
+
+  license: MIT
+
+  min_ansible_version: 2.1
+
+
+  galaxy_tags: []
+
+dependencies: []

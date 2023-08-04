@@ -4,8 +4,6 @@ After=network.target
 
 [Service]
 Type=simple
-User=promtail
-Group=promtail
 ExecStart={{promtail_install_dir}}/{{ promtail_binary_name }} -config.file {{promtail_config_path}}/config.yaml
 
 [Install]

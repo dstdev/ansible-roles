@@ -1,6 +1,15 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    promtail_custom_scrape_configs:
+      - job_name: "quobyte"
+        static_configs:
+          - targets:
+              - "localhost"
+            labels:
+              job: "quobyte"
+              __path__: "/var/log/quobyte/*log"
   tasks:
     - name: "Include promtail server"
       ansible.builtin.include_role:

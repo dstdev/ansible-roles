@@ -1,6 +1,7 @@
 auth_enabled: {{ loki_auth_enabled }}
 
 server:
+  http_listen_address: {{ loki_http_listen_address }}
   http_listen_port: {{ loki_http_listen_port }}
   grpc_listen_port: {{ loki_grpc_listen_port }}
 

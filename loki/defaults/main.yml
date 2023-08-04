@@ -17,6 +17,7 @@ loki_auth_enabled: false
 
 loki_http_listen_port: "3100"
 loki_grpc_listen_port: "9095"
+loki_http_listen_address: "0.0.0.0"
 
 loki_storage_directory: /var/lib/loki
 loki_cache_ttl: 24h

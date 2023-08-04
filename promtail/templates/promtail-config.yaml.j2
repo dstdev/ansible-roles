@@ -17,5 +17,5 @@ scrape_configs:
           job: "varlogs"
           __path__: "/var/log/*log"
   {% if promtail_custom_scrape_configs | length %}
-  {{ promtail_custom_scrape_configs | to_nice_yaml(indent=2) | indent(2, False) }} 
+{{ promtail_custom_scrape_configs | to_nice_yaml(indent=2) | indent(2, False) }} 
   {% endif %}

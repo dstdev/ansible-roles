@@ -87,7 +87,7 @@
     tls_skip_verify: true
     grafana_password: "{{ grafana_admin_password}}"
     grafana_url: "{{ grafana_url }}"
-  when: not loki_datasource_url
+  when: loki_datasource_url
   tags:
     - configuration
     - grafana-server

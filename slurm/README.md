@@ -88,6 +88,7 @@ Role Variables
 | slurm_conf_resume_program                   | ""                    | Resume program to use when suspending a node in the cloud. Multiline string.      |
 | slurm_conf_resume_timeout                   | ""                    | Resumewhen calling ResumeProgram                                                  |
 | slurm_conf_accounting_storage_external_host | ""                    | External Accounting DB host ip and port                                           |
+| slurm_enable_pam_adopt | false | Enable pam adopt on host | 
 
 
 To create the jwt key, use the following command:

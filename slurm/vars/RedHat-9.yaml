@@ -1,5 +1,5 @@
 ---
-slurm_el_repos: powertools
+slurm_el_repos: crb
 
 slurm_required_packages:
   - zlib-devel
@@ -7,9 +7,9 @@ slurm_required_packages:
   - bzip2
   - bzip2-devel
   - openssl
+  - openssh-server
   - git
   - openssl-devel
-  - openssh-server
   - pkgconfig
   - wget
   - python3
@@ -17,7 +17,7 @@ slurm_required_packages:
   - "@Development tools"
   - dbus-devel
   - kernel-headers
-  - mailx
+  - s-nail
   - lua
   - lua-devel
   - pam-devel
@@ -25,7 +25,6 @@ slurm_required_packages:
 slurm_dbd_required_packages:
   - mariadb-server
   - mariadb-devel
-  - python2-PyMySQL
   - python3-PyMySQL
 
 slurm_jwt_required_packages:

@@ -1,0 +1,15 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Get munge service
+      ansible.builtin.service:
+        name: munge
+      register: munge_status
+
+    - name: Verify status of munge
+      ansible.builtin.assert:
+        that: munge_status.status.Result == "success"

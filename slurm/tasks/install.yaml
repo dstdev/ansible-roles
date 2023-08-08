@@ -1,13 +1,13 @@
 ---
 # tasks file for slurm-controller
-- name: Install required packages EL 8
+- name: Install required packages EL 8+
   ansible.builtin.dnf:
     name: "{{item}}"
     state: present
-    enablerepo: powertools
+    enablerepo: "{{ slurm_el_repos }}"
 
   loop: "{{slurm_required_packages}}"
-  when: ansible_distribution_major_version | int == 8
+  when: ansible_distribution_major_version | int >= 8
   tags:
     - slurm
     - slurm_install_controller
@@ -24,6 +24,16 @@
     - slurm_install_controller
     - slurm_install_slurmd
 
+- name: Install slurmdbd requirements el8+
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    enablerepo: "{{ slurm_el_repos }}"
+  loop: "{{slurm_dbd_required_packages}}"
+  when: slurm_controller and slurm_enable_restd and ansible_distribution_major_version | int >= 8
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
 
 - name: Install slurmdbd requirements
   ansible.builtin.package:
@@ -38,9 +48,9 @@
 - name: Install slurm rest api requirements EL8+
   ansible.builtin.dnf:
     name: "{{item}}"
-    enablerepo: powertools
+    enablerepo: "{{ slurm_el_repos }}"
   loop: "{{slurm_restapi_required_packages}}"
-  when: slurm_enable_restd and ansible_facts['distribution_major_version'] | int >= 8
+  when: slurm_enable_restd and ansible_distribution_major_version | int >= 8
   tags:
     - slurm
     - slurm_install_restapi
@@ -179,6 +189,15 @@
     - slurm_install_controller
     - slurm_install_slurmd
 
+- name: Install slurm pam adopt
+  shell: "make && make install"
+  args:
+    chdir: "{{slurm_tmpdir}}/slurm-slurm-{{slurm_download_version}}/contribs/pam_slurm_adopt/"
+  when: slurm_configure is changed and slurm_enable_pam_adopt
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
 
 ## Symlink configuration
 - name: Check if symlink exists

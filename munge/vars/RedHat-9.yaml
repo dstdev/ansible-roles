@@ -1,4 +1,4 @@
-munge_el_repo: powertools
+munge_el_repo: crb
 
 munge_packages:
   - epel-release

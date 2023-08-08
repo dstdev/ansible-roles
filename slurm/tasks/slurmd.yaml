@@ -62,6 +62,16 @@
     - slurm
     - slurm_configure
 
+- name: Add slurm pam adopt to pam.d/sshd
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/sshd
+    state: present
+    line: "-account    sufficient   pam_slurm_adopt.so"
+    insertafter: "EOF"
+  tags:
+    - slurm
+    - slurm_configure
+
 - name: Create unkillable step script
   ansible.builtin.template:
     src: templates/kill_step.sh.j2

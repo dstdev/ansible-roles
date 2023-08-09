@@ -12,7 +12,7 @@ Role Variables
 --------------
 
 | Name                                        | Default Value         | Description                                                                       |
-| ----                                        | -----                 | -----------                                                                       |
+|---------------------------------------------|-----------------------|-----------------------------------------------------------------------------------|
 | mounts                                      | []                    | List of dictionaries defining the mount                                           |
 | slurm_database_password                     | "default"             | Mysql password for slurm database user                                            |
 | slurm_version                               | "21.08.5"             | Versino of slurm to download and install                                          |
@@ -88,7 +88,7 @@ Role Variables
 | slurm_conf_resume_program                   | ""                    | Resume program to use when suspending a node in the cloud. Multiline string.      |
 | slurm_conf_resume_timeout                   | ""                    | Resumewhen calling ResumeProgram                                                  |
 | slurm_conf_accounting_storage_external_host | ""                    | External Accounting DB host ip and port                                           |
-| slurm_enable_pam_adopt | false | Enable pam adopt on host | 
+| slurm_enable_pam_adopt                      | false                 | Enable pam adopt on host                                                          |
 
 
 To create the jwt key, use the following command:
@@ -101,7 +101,7 @@ Tags
 List of tags you can use to control the execution of the role.
 
 | Name                     | Description                                  |
-| ----                     | -----------                                  |
+|--------------------------|----------------------------------------------|
 | slurm                    | Run all slurm role tasks                     |
 | slurm_install_controller | Install and configure slurmctld and slurmdbd |
 | slurm_install_slurmd     | Install and configure slurmd                 |

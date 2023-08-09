@@ -173,6 +173,22 @@ prometheus_scrape_configs:
       - files:
           - "{{ prometheus_file_sd_config_path }}/zfs.yml"
 
+  # Usually port 8000
+  - job_name: "vast"
+    scrape_interval: 1m
+    scrape_timeout: 50s
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_file_sd_config_path }}/vast.yml"
+    
+  - job_name: "ondemand"
+    metrics_path: "/metrics"
+    scrape_interval: 20s
+    scrape_timeout: 20s
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_file_sd_config_path }}/ondemand.yml"
+
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'
 

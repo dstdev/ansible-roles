@@ -1,0 +1,10 @@
+---
+# handlers file for rolename
+- name: restart snmp exporter
+  service:
+    name: snmp_exporter
+    state: restarted
+    daemon_reload: true   
+  when: not ansible_is_chroot
+  tags:
+    - snmp_exporter

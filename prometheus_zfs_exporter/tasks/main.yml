@@ -43,5 +43,15 @@
     state: link
     src: /etc/systemd/system/zfs_exporter.service
     dest: /etc/systemd/system/multi-user.target.wants/zfs_exporter.service
+  when: ansible_is_chroot
+  tags:
+    - zfs_exporter
+
+- name: Start the systemd service file if this is not a chroot
+  service:
+    name: zfs_exporter
+    state: started
+    enabled: true
+  when: not ansible_is_chroot
   tags:
     - zfs_exporter

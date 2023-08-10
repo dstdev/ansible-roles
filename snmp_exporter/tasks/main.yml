@@ -1,0 +1,51 @@
+---
+# tasks file for snmp_exporter
+- name: Install snmp exporter
+  tags:
+    snmp_exporter
+  block:
+    - name: Create nodeusr account to run snmp_exporter
+      ansible.builtin.user:
+        name: nodeusr
+        shell: /sbin/nologin
+        home: "{{ snmp_exporter_executable_path }}"
+        uid: "{{ prometheus_exporter_uid }}"
+
+    - name: Extract snmp_exporter downloaded tarball
+      ansible.builtin.unarchive:
+        src: "{{ snmp_exporter_download }}"
+        dest: "{{ snmp_exporter_executable_path }}"
+        owner: nodeusr
+        group: nodeusr
+        remote_src: true
+        extra_opts: [--strip-components=1]
+
+    - name: Create systemd service file
+      ansible.builtin.template:
+        src: snmp_exporter.service.j2
+        dest: /etc/systemd/system/snmp_exporter.service
+        mode: "0755"
+
+    - name: Enable the systemd service file manually
+      ansible.builtin.file:
+        state: link
+        src: /etc/systemd/system/snmp_exporter.service
+        dest: /etc/systemd/system/multi-user.target.wants/snmp_exporter.service
+      when: not ansible_is_chroot
+
+    - name: Start the systemd service file if this is not a chroot
+      ansible.builtin.service:
+        name: snmp_exporter
+        state: started
+        enabled: true
+      when: not ansible_is_chroot
+
+    - name: Configure snmp exporter
+      ansible.builtin.template:
+        src: snmp.yml.j2
+        dest: /etc/snmp.yml
+        owner: nodeusr
+        group: nodeusr
+        mode: "0644"
+      notify:
+        - restart snmp exporter

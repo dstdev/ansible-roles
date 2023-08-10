@@ -1,0 +1,13 @@
+[Unit]
+Description=SNMP Exporter
+After=network-online.target
+
+# This assumes you are running snmp_exporter under the user "prometheus"
+
+[Service]
+User=nodeusr
+Restart=on-failure
+ExecStart={{ snmp_exporter_executable_path }}/snmp_exporter --config.file=/etc/snmp.yml
+
+[Install]
+WantedBy=multi-user.target

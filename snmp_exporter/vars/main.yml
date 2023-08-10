@@ -1,0 +1,4 @@
+---
+# vars file for rolename
+
+snmp_exporter_download: "https://github.com/prometheus/snmp_exporter/releases/download/v{{ snmp_exporter_version }}/snmp_exporter-{{ snmp_exporter_version }}.linux-amd64.tar.gz"

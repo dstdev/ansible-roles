@@ -1,0 +1,6 @@
+---
+# defaults file for rolename
+snmp_exporter_executable_path: /var/lib/node_exporter
+snmp_exporter_version: 0.22.0
+prometheus_exporter_uid: 440
+snmp_exporter_config: false

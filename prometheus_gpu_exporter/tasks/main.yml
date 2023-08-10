@@ -54,7 +54,10 @@
     gpu_metrics
 
 - name: Enable systemd services if chroot
-  ansible.builtin.shell: systemctl enable gpu_metrics.timer
+  ansible.builtin.file:
+    state: link
+    src: /etc/systemd/system/gpu_metrics.timer
+    dest: /etc/systemd/system/multi-user.target.wants/gpu_metrics.timer
   when: ansible_is_chroot
   tags:
     gpu_metrics

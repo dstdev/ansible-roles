@@ -193,10 +193,9 @@
   shell: "make && make install"
   args:
     chdir: "{{slurm_tmpdir}}/slurm-slurm-{{slurm_download_version}}/contribs/pam_slurm_adopt/"
-  when: slurm_configure is changed and slurm_enable_pam_adopt
+  when: slurm_configure is changed 
   tags:
     - slurm
-    - slurm_install_controller
     - slurm_install_slurmd
 
 ## Symlink configuration

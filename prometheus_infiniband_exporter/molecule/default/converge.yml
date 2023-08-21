@@ -2,6 +2,15 @@
 - name: Converge
   hosts: all
   tasks:
+    - name: Create fake ibqueryerrors file
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          exit 0
+        dest: /usr/sbin/ibqueryerrors
+        mode: "0755"
+        owner: root
+        group: root
     - name: Include infiniband exporter
       ansible.builtin.include_role:
         name: "prometheus_infiniband_exporter"

@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    munge_key: "aslkdjfalskjdfnalskjdnfpsdfunbf97\
+                0gbnsnbsdkfjgnasdlkjfas;lkdfjasdklfj"
+  tasks:
+    - name: "Include munge"
+      ansible.builtin.include_role:
+        name: "munge"

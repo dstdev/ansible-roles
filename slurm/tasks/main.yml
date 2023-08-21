@@ -23,10 +23,18 @@
     - slurm_install_controller
     - slurm_install_slurmd
 
+- name: Get slurm download version length
+  ansible.builtin.set_fact:
+    slurm_download_version_length: "{{ slurm_download_version.split('-') | length }}"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
 - name: Update slurm download version
   ansible.builtin.set_fact:
     slurm_download_version: "{{ slurm_download_version }}-1"
-  when: "{{ slurm_download_version.split('-') | length }} < 4"
+  when: "slurm_download_version_length | int < 4"
   tags:
     - slurm
     - slurm_install_controller

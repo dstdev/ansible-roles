@@ -38,6 +38,28 @@
     - slurm
     - slurm_configure
 
+- name: Create node resume file
+  ansible.builtin.copy:
+    content: "{{ slurm_conf_resume_program}}"
+    dest: "{{ slurm_conf_resume_program_path }}"
+  when: slurm_conf_resume_program
+  notify:
+    - Restart slurmctld
+  tags:
+    - slurm
+    - slurm_configure
+
+- name: Create node suspend file
+  ansible.builtin.copy:
+    content: "{{ slurm_conf_suspend_program}}"
+    dest: "{{ slurm_conf_suspend_program_path }}"
+  when: slurm_conf_suspend_program
+  notify:
+    - Restart slurmctld
+  tags:
+    - slurm
+    - slurm_configure
+
 - name: Create slurmctld service file
   ansible.builtin.template:
     src: templates/slurmctld.service.j2

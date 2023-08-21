@@ -6,6 +6,9 @@
 # information on cgroup configuration parameters
 #--
 
+{% if slurm_cgroup_ignore_systemd %}
+IgnoreSystemd=yes
+{% endif %}
 CgroupAutomount={{slurm_cgroup_automount}}
 ConstrainCores={{slurm_cgroup_constrain_cores}}
 ConstrainRAMSpace={{slurm_cgroup_constrain_ram_space}}

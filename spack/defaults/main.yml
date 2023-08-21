@@ -13,3 +13,76 @@ spack_bright: true
 spack_unuse_module_paths: []
 spack_default_modules: ""
 spack_prefix_lines: []
+
+spack_config_config_yaml:
+  install_tree:
+    root: "{{spack_app_root}}"
+    projections:
+      all: "{architecture}/{compiler.name}-{compiler.version}/{name}-{version}-{hash}"
+  
+spack_config_packages_yaml:
+  all:
+    target: [x86_64]
+spack_config_modules_yaml:
+  default: 
+    roots:
+      tcl:    "{{spack_module_root}}"
+      lmod:   "{{spack_module_root}}"
+    enable:
+      - lmod
+    prefix_inspections:
+      bin:
+      - PATH
+      man:
+      - MANPATH
+      share/man:
+      - MANPATH
+      share/aclocal:
+      - ACLOCAL_PATH
+      lib:
+      - LIBRARY_PATH
+      lib64:
+      - LIBRARY_PATH
+      include:
+      - C_INCLUDE_PATH
+      - CPLUS_INCLUDE_PATH
+      # The INCLUDE env variable specifies paths to look for
+      # .mod file for Intel Fortran compilers
+      - INCLUDE
+      lib/pkgconfig:
+      - PKG_CONFIG_PATH
+      lib64/pkgconfig:
+      - PKG_CONFIG_PATH
+      share/pkgconfig:
+      - PKG_CONFIG_PATH
+      '':
+      - CMAKE_PREFIX_PATH
+    
+    lmod:
+      hash_length: 0
+      naming_scheme: '{name}/{version}-{compiler.name}-{compiler.version}'
+      blacklist_implicits: true
+      whitelist:
+        - gcc
+      #blacklist:
+        #- '%gcc@8.3.1'
+      all:
+        environment:
+          set:
+            '{name}_ROOT': '{prefix}'
+      #core_compilers:
+        #- 'gcc@10.2.0'
+      #hierarchy:
+      #  - mpi
+      projections:
+        all: '{name}/{version}-{compiler.name}-{compiler.version}'
+        gcc: '{name}/{version}'
+      #openmpi:
+        #environment:
+          #set:
+            #SLURM_MPI_TYPE: pmi2
+            #OMPI_MCA_btl_openib_warn_default_gid_prefix: '0'
+            #OMPI_MCA_btl_openib_allow_ib: '1'
+      ^python:
+        autoload: direct
+ 

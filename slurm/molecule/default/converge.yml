@@ -15,15 +15,17 @@
       - PartitionName=defq Default=YES Nodes=localhost
     slurm_proctrack_type: "linuxproc"
     slurm_conf_prolog_flags: []
-    slurm_conf_task_plugin: 
+    slurm_conf_task_plugin:
       - task/none
     slurm_conf_job_acct_gather_type: jobacct_gather/none
     slurm_priority_type: multifactor
     slurm_kill_step_enabled: true
+    slurm_enable_pam_adopt: true
+    slurm_cgroup_ignore_systemd: true
   tasks:
-    - name: create restd user
+    - name: Create restd user
       ansible.builtin.user:
-        name: "{{slurm_restd_user}}"
+        name: "{{ slurm_restd_user }}"
         state: present
     - name: Set slurm nodes
       ansible.builtin.set_fact:

@@ -3,3 +3,5 @@
 slurm_install_directory: "{{slurm_install_root}}/{{slurm_version}}"
 slurm_install_symlink: "{{slurm_install_root}}/current"
 slurm_tmpdir: "{{ansible_env['TMPDIR'] | default('/tmp')}}/slurm_source"
+slurm_conf_resume_program_path: "/etc/slurm/node-resume.sh"
+slurm_conf_suspend_program_path: "/etc/slurm/node-suspend.sh"

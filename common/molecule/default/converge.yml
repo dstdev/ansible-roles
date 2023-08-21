@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    common_dst_user_password: testing12345678
+    common_disable_selinux: false
+  tasks:
+    - name: "Include common"
+      include_role:
+        name: "common"

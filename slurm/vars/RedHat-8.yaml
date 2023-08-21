@@ -1,4 +1,6 @@
 ---
+slurm_el_repos: powertools
+
 slurm_required_packages:
   - zlib-devel
   - zlib
@@ -7,6 +9,7 @@ slurm_required_packages:
   - openssl
   - git
   - openssl-devel
+  - openssh-server
   - pkgconfig
   - wget
   - python3
@@ -17,6 +20,7 @@ slurm_required_packages:
   - mailx
   - lua
   - lua-devel
+  - pam-devel
 
 slurm_dbd_required_packages:
   - mariadb-server

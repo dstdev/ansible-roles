@@ -1,12 +1,23 @@
-- name: Install jwt required packages
+- name: Install jwt required packages EL7
   ansible.builtin.package:
     name: "{{item}}"
     state: present
+  when: ansible_distribution_major_version | int == 7
   loop: "{{slurm_jwt_required_packages}}"
   tags:
     - slurm
     - slurm_install_restd
 
+- name: Install jwt required packages EL8+
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+    enablerepo: "{{ slurm_el_repos }}"
+  loop: "{{slurm_jwt_required_packages}}"
+  when: ansible_distribution_major_version | int >= 8
+  tags:
+    - slurm
+    - slurm_install_restd
 # cd libjwt
 # autoreconf --force --install
 # ./configure --prefix=/usr/local

@@ -78,6 +78,22 @@
     - configuration
     - grafana-server
 
+- name: Create Loki datasource
+  community.grafana.grafana_datasource:
+    name: dst_loki
+    ds_type: loki
+    ds_url: "{{ loki_datasource_url }}"
+    is_default: false
+    tls_skip_verify: true
+    grafana_password: "{{ grafana_admin_password}}"
+    grafana_url: "{{ grafana_url }}"
+  when: loki_datasource_url
+  tags:
+    - configuration
+    - grafana-server
+
+
+
 # - name: Import Grafana dashboard Node Exporter
 #   community.grafana.grafana_dashboard:
 #     grafana_url: "{{ grafana_url }}"

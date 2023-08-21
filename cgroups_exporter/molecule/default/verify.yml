@@ -1,0 +1,16 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: Get cgroup_exporter service
+      ansible.builtin.service:
+        name: cgroup_exporter
+      register: cgroup_exporter_status
+
+    - name: verify status of cgroup_exporter
+      ansible.builtin.assert:
+        that: cgroup_exporter_status.status.Result == "success"

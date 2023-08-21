@@ -1,0 +1,4 @@
+---
+# defaults file for prometheus_gpu_exporter
+gpu_metrics_bin_dir: "/usr/local/bin"
+gpu_metrics_interval: 30

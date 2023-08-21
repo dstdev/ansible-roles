@@ -1,0 +1,11 @@
+[Unit]
+Description=GPU Metrics Service
+After=network.target
+
+[Service]
+ExecStart={{ gpu_metrics_bin_dir}}/gpu_metrics.py
+Type=simple
+Environment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target

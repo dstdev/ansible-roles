@@ -1,0 +1,10 @@
+[Unit]
+Description=ZFS Exporter
+After=network.target
+[Service]
+User=nodeusr
+Group=nodeusr
+Type=simple
+ExecStart=/var/lib/node_exporter/zfs_exporter-{{ zfs_exporter_version }}.linux-amd64/zfs_exporter
+[Install]
+WantedBy=multi-user.target

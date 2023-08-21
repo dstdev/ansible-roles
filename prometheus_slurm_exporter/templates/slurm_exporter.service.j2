@@ -5,7 +5,7 @@ After=network.target
 {% if slurm_conf_loc %}
 Environment="SLURM_CONF={{ slurm_conf_loc  }}"
 {% endif %}
-Environment="PATH=$PATH:{{ slurm_bin_loc  }}"
+Environment="PATH={{ slurm_bin_loc  }}:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
 User=nodeusr
 Group=nodeusr
 Type=simple

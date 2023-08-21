@@ -1,0 +1,16 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: Get prometheus service
+      ansible.builtin.service:
+        name: gpu_exporter.timer
+      register: timer_status
+
+    - name: verify status of prometheus
+      ansible.builtin.assert:
+        that: timer_status.status.Result == "success"

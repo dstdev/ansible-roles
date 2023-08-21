@@ -1,0 +1,15 @@
+galaxy_info:
+  role_name: loki
+  namespace: dstdev
+  author: Juliet Meza
+  description: A role to install and configure Loki log aggregator.
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: EL
+      versions:
+        - 8
+        - 9
+  galaxy_tags:
+    - loki
+    - logging

@@ -1,0 +1,7 @@
+munge_el_repo: crb
+
+munge_packages:
+  - epel-release
+  - munge
+  - munge-devel
+  #- munge-libs

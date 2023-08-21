@@ -15,6 +15,7 @@
     dest: "{{ prometheus_install_path }}"
     copy: no
     creates: "{{ prometheus_daemon_dir }}"
+    validate_certs: no
   tags:
     - prometheus-server
 

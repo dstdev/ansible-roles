@@ -1,0 +1,9 @@
+---
+- name: restart zfs exporter
+  service:
+    name: zfs_exporter
+    state: restarted
+    daemon_reload: true   
+  when: not ansible_is_chroot
+  tags:
+    - zfs_exporter

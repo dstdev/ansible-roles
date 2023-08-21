@@ -2,7 +2,7 @@
 # defaults file for slurm-controller
 slurm_database_password: "default"
 #slurm_version: "21.08.8-2"
-slurm_version: "22.05.2-1"
+slurm_version: "23.02.4"
 slurm_jwt_version: "v1.12.0"
 slurm_slurmd: false
 slurm_controller: false
@@ -63,6 +63,7 @@ slurm_select_type_parameters: "CR_Core_Memory"
 slurm_cgroup_automount: "yes"
 slurm_cgroup_constrain_cores: "yes"
 slurm_cgroup_constrain_ram_space: "yes"
+slurm_cgroup_ignore_systemd: false
 
 # slurmdbd settings
 slurm_dbd_storage_user: slurm
@@ -110,3 +111,12 @@ slurm_firewalld_python_interpreter: "/usr/bin/python"
 # Gres information
 slurm_conf_gres_types: []
 slurm_gres_conf_entries: []
+
+slurm_conf_suspend_time: ""
+slurm_conf_suspend_timeout: ""
+slurm_conf_suspend_program: ""
+slurm_conf_resume_program: ""
+slurm_conf_resume_timeout: ""
+slurm_conf_accounting_storage_external_host: ""
+
+slurm_enable_pam_adopt: false

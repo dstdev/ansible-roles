@@ -1,0 +1,3 @@
+gpu_metrics_required_packages:
+  - python3
+

@@ -16,3 +16,4 @@ common_host_extra_packages: []
 common_group_extra_packages: []
 common_create_dst_user: true
 common_dst_user_groups: []
+common_sudo_groups: []

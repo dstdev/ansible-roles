@@ -11,7 +11,7 @@
   ansible.builtin.yum:
     name: "{{nhc_download_link}}"
     disable_gpg_check: true
-  when: ansible_distribution_major_version | int == 8
+  when: ansible_distribution_major_version | int > 7
   tags:
     - nhc
 

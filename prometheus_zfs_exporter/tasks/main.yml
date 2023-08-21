@@ -1,0 +1,57 @@
+---
+# tasks file for prometheus_zfs_exporter
+- name: Create nodeusr account to run 
+  ansible.builtin.user:
+    name: nodeusr
+    shell: /sbin/nologin
+    home: /var/lib/node_exporter
+    uid: "{{ prometheus_exporter_uid }}"
+  tags:
+    - zfs_exporter
+
+- name: Extract go downloaded tarball
+  ansible.builtin.unarchive:
+    src: "https://github.com/pdf/zfs_exporter/releases/download/v{{ zfs_exporter_version }}/zfs_exporter-{{ zfs_exporter_version}}.linux-amd64.tar.gz"
+    dest: "/tmp/"
+    owner: nodeusr
+    group: nodeusr
+    mode: 0755
+    validate_certs: no
+    remote_src: yes
+  tags:
+    - zfs_exporter
+
+- name: Copy zfs
+  ansible.builtin.copy:
+    remote_src: true
+    src: "/tmp/zfs_exporter-{{ zfs_exporter_version }}.linux-amd64"
+    dest: "{{ zfs_exporter_path }}"
+  tags:
+    - zfs_exporter
+
+- name: Create systemd service file
+  template:
+    src: zfs_exporter.service.j2
+    dest: /etc/systemd/system/zfs_exporter.service
+  notify:
+    - restart zfs exporter           
+  tags:
+    - zfs_exporter
+
+- name: Enable the systemd service file manually
+  file:
+    state: link
+    src: /etc/systemd/system/zfs_exporter.service
+    dest: /etc/systemd/system/multi-user.target.wants/zfs_exporter.service
+  when: ansible_is_chroot
+  tags:
+    - zfs_exporter
+
+- name: Start the systemd service file if this is not a chroot
+  service:
+    name: zfs_exporter
+    state: started
+    enabled: true
+  when: not ansible_is_chroot
+  tags:
+    - zfs_exporter

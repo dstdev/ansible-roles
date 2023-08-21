@@ -3,45 +3,53 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - prometheus_node_exporter
-      - prometheus_gpfs_exporter
-      - prometheus_dcgm_exporter
-      - prometheus_blackbox_exporter
-      - prometheus_ibm_exporter
-      - prometheus_slurm_exporter
-      - prometheus_cgroup_exporter
-      - virtualgl
-      - turbovnc
-      - slurm
-      - spack
+      - 'cobbler/**'
+      - 'easybuild/**'
+      - 'moosefs-client/**'
+      - 'nhc/**'
+      - 'prometheus_blackbox_exporter/**'
+      - 'prometheus_dcgm_exporter/**'
+      - 'prometheus_gpfs_exporter/**'
+      - 'prometheus_infiniband_exporter/**'
+      - 'prometheus_node_exporter/**'
+      - 'prometheus_slurm_exporter/**'
+      - 'prometheus-server/**'
+      - 'slurm/**'
+      - 'spack/**'
+      - 'tmux/**'
 jobs:
   build:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
         folder:
-          - prometheus_node_exporter
-          - prometheus_gpfs_exporter
-          - prometheus_dcgm_exporter
+          - cobbler
+          - easybuild
+          - moosefs-client
+          - nhc
           - prometheus_blackbox_exporter
-          - prometheus_ibm_exporter
+          - prometheus_dcgm_exporter
+          - prometheus_gpfs_exporter
+          - prometheus_infiniband_exporter
+          - prometheus_node_exporter
           - prometheus_slurm_exporter
-          - prometheus_cgroup_exporter
-          - virtualgl
-          - turbovnc
+          - prometheus-server
+          - slurm
           - spack
+          - tmux
     steps:
       - name: checkout
         uses: actions/checkout@v2
         with:
           path: "${{ github.repository }}"
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
 
       - name: Install dependencies.
-        run: pip3 install yamllint ansible-lint ansible "molecule[lint,docker]"
+        run: pip3 install yamllint ansible molecule 'molecule-plugins[docker]' docker
 
       - name: Install Galaxy dependencies.
         run: ansible-galaxy collection install community.docker

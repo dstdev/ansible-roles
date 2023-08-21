@@ -5,6 +5,8 @@
   ansible.builtin.package:
     name: epel-release
     state: present
+  tags:
+    - cobbler
 
 - name: Install relevant packages
   ansible.builtin.package:
@@ -22,23 +24,31 @@
     - debmirror
     - pykickstart
     - python3-kickstart
+  tags:
+    - cobbler
 
 - name: "Enable cobbler module"
   command: "dnf module enable --enablerepo=epel-modular -y cobbler:3.3"
   register: result
   changed_when:
     - '"Enabling module streams" in result.stdout'
+  tags:
+    - cobbler
 
 - name: Install cobbler
   ansible.builtin.dnf:
     name: cobbler
     state: present
     enablerepo: epel-modular
+  tags:
+    - cobbler
 
 - name: Check for symlink to web root
   ansible.builtin.stat:
     path: "/var/www/cobbler"
   register: webroot_link
+  tags:
+    - cobbler
 
 - name: Move cobbler web root
   ansible.builtin.copy:
@@ -46,18 +56,24 @@
     dest: "{{cobbler_webroot}}"
     remote_src: yes
   when: webroot_link.stat.islnk is defined and webroot_link.stat.islnk == False
+  tags:
+    - cobbler
 
 - name: Remove cobbler webroot
   ansible.builtin.file:
     state: absent
     path: "/var/www/cobbler"
   when: webroot_link.stat.islnk is defined and webroot_link.stat.islnk == False
+  tags:
+    - cobbler
 
 - name: Create a cobbler symlink
   ansible.builtin.file:
     dest: "/var/www/cobbler"
     src: "{{cobbler_webroot}}"
     state: link
+  tags:
+    - cobbler
 
 #- name: Update configuration file
   #ansible.builtin.template:
@@ -88,6 +104,8 @@
     - key: server
       value: "{{cobbler_server}}"
   notify: Restart cobblerd
+  tags:
+    - cobbler
 
 - name: Update dhcp template file
   ansible.builtin.template:
@@ -95,14 +113,20 @@
     dest: /etc/cobbler/dhcp.template
   notify:
     - Run cobbler sync
+  tags:
+    - cobbler
 
 - name: Enable cobbler
   ansible.builtin.systemd:
     name: cobblerd
     state: started
     enabled: yes
+  tags:
+    - cobbler
 
 - name: Enable dhcpd
   ansible.builtin.systemd:
     name: dhcpd
     enabled: yes
+  tags:
+    - cobbler

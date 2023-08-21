@@ -190,12 +190,13 @@ groups:
         for: 60m
         labels:
           severity: critical
-      - alert: node_infiniband_link_downed_total
+
+      - alert: node_infiniband_interfaces_down
         annotations:
-          description: '{{ $labels.instance }} node_infiniband_link_downed_total {{ printf "%.0f" $value }}.'
+          description: 'All IB interfaces show as inactive on {{ $labels.instance }}'
           summary: The number of IB interfaces went down.
           priority: P3
-        expr: (node_infiniband_link_downed_total) > 0
+        expr: min(node_infiniband_state_id) > 1
         for: 5m
         labels:
           severity: critical
@@ -712,7 +713,7 @@ groups:
         expr: node_systemd_unit_state{name="slurmctld", state="failed"} > 0
         for: 5m
         annotations:
-          summary: "Slurm controller has entered a failed state on (instance $labels.instance}})"
+          summary: "Slurm controller has entered a failed state on (instance {{$labels.instance}})"
           description: "The slurm controller systemd service has entered a failed state"
           priority: P2
 
@@ -720,7 +721,7 @@ groups:
         expr: node_systemd_unit_state{name="slurmdbd", state="failed"} > 0
         for: 5m
         annotations:
-          summary: "Slurm Database Daemon has entered a failed state on (instance $labels.instance}})"
+          summary: "Slurm Database Daemon has entered a failed state on (instance {{$labels.instance}})"
           description: "The slurmdbd systemd service has entered a failed state"
           priority: P2
 
@@ -728,9 +729,17 @@ groups:
         expr: node_systemd_unit_state{name="slurmd", state="failed"} > 0
         for: 5m
         annotations:
-          summary: "Slurm Daemon has entered a failed state on (instance $labels.instance}})"
+          summary: "Slurm Daemon has entered a failed state on (instance {{$labels.instance}})"
           description: "The slurmdbd systemd service has entered a failed state"
           priority: P3
+
+      - alert: SlurmNodeDrainState
+        expr: slurm_node_state{state="DRAIN"} > 0
+        for: 5m
+        annotations:
+          summary: "Node {{ $labels.nodename }} has entered a DRAIN state"
+          description: "The Node {{$labels.nodename }} has entered a DRAIN or DRAINING state and may be an indication of an issue with the node."
+          priority: P2
 
   - name: prometheus_rules
     rules:
@@ -745,3 +754,15 @@ groups:
         for: 2m
         labels:
           severity: critical
+
+  - name: zfs_rules
+    rules:
+      - alert: ZPool Health
+        annotations:
+          description: |
+            This is an alert meant to check the status of ZFS Pools.  If it returns a value
+            greater than 0 the zpool is unhealthy.
+          summary: "ZFS Zpool is unhealthy on (instance {{$labels.instance}})"
+          priority: P2
+        expr: zfs_pool_health > 0
+        for: 2m

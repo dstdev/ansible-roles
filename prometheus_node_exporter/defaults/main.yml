@@ -1,3 +1,4 @@
 node_exporter_executable_path: /var/lib/node_exporter
 node_exporter_version: 1.5.0
 prometheus_exporter_uid: 440
+node_exporter_excluded_filesystems: "^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs|fuse\\.quobyte|nfs|beegfs)$"

@@ -1,0 +1,10 @@
+[Unit]
+Description=Promtail service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart={{promtail_install_dir}}/{{ promtail_binary_name }} -config.file {{promtail_config_path}}/config.yaml
+
+[Install]
+WantedBy=multi-user.target

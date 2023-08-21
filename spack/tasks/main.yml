@@ -72,30 +72,42 @@
     - spack
 
 - name: Copy spack configuration file
-  template:
-    src: templates/config.yaml
+  ansible.builtin.copy:
+    content: |
+      config:
+        {{ spack_config_config_yaml | to_nice_yaml(indent=2, sort_keys=False) | indent(2,false) }}
     dest: "{{spack_root}}/etc/spack/config.yaml"
     backup: yes
-    force: no
-  when: spack_root_host | bool
+    force: true
+  when:
+    - spack_root_host | bool
+    - spack_config_config_yaml
   tags:
     - spack
 
 - name: Copy spack module configuration file
-  ansible.builtin.template:
-    src: templates/modules.yaml.j2
+  ansible.builtin.copy:
+    content: |
+      modules:
+        {{ spack_config_modules_yaml | to_nice_yaml(indent=2, sort_keys=False) | indent(2,false) }}
     dest: "{{spack_root}}/etc/spack/modules.yaml"
     backup: yes
-    force: no
-  when: spack_root_host | bool
+    force: true
+  when: 
+    - spack_root_host | bool
+    - spack_config_modules_yaml
   tags:
     - spack
 
 - name: Copy spack package configuration file
-  copy:
-    src: files/packages.yaml
+  ansible.builtin.copy:
+    content: |
+      packages:
+        {{ spack_config_packages_yaml | to_nice_yaml(indent=2, sort_keys=False) | indent(2,false) }}
     dest: "{{spack_root}}/etc/spack/packages.yaml"
-    force: no
-  when: spack_root_host | bool
+    force: true
+  when:
+    - spack_root_host | bool
+    - spack_config_packages_yaml
   tags:
     - spack

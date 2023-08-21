@@ -13,10 +13,10 @@
     encrypted: true
     priv: '*.*:ALL'
     state: present
+    login_unix_socket: /var/lib/mysql/mysql.sock
   tags:
     - slurm
     - slurm_install_controller
-
 
 - name: Create slurmdbd configuration file
   ansible.builtin.template:

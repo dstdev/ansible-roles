@@ -1,0 +1,44 @@
+---
+slurm_el_repos: crb
+
+slurm_required_packages:
+  - zlib-devel
+  - zlib
+  - bzip2
+  - bzip2-devel
+  - openssl
+  - openssh-server
+  - git
+  - openssl-devel
+  - pkgconfig
+  - wget
+  - python3
+  - epel-release
+  - "@Development tools"
+  - dbus-devel
+  - kernel-headers
+  - s-nail
+  - lua
+  - lua-devel
+  - pam-devel
+
+slurm_dbd_required_packages:
+  - mariadb-server
+  - mariadb-devel
+  - python3-PyMySQL
+
+slurm_jwt_required_packages:
+  - jansson
+  - jansson-devel
+
+
+slurm_restapi_required_packages:
+  - libyaml
+  - libyaml-devel
+  - json-c
+  - json-c-devel
+  - http-parser
+  - http-parser-devel
+
+slurm_firewalld_packages:
+  - python3-firewall

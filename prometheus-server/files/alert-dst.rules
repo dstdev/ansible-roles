@@ -366,16 +366,6 @@ groups:
           description: "Host memory usage is {{ humanize $value}}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
           priority: P4
 
-      - alert: high_storage_load
-        expr: (node_filesystem_size_bytes{instance="10.9.76.87:9100",fstype="nfs"} - node_filesystem_free_bytes{instance="10.9.76.87:9100",fstype="nfs"}) / node_filesystem_size_bytes{instance="10.9.76.87:9100",fstype="nfs"} * 100 > 95
-        for: 30s
-        labels:
-          severity: warning
-        annotations:
-          summary: "Server storage is almost full"
-          description: "Host storage usage is {{ humanize $value}}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
-          priority: P4
-
       - alert: PrometheusTargetScrapingSlow
         expr: prometheus_target_interval_length_seconds{quantile="0.9"} > 70
         for: 5m
@@ -465,7 +455,7 @@ groups:
           priority: P3
 
       - alert: HostOutOfInodes
-        expr: node_filesystem_files_free{mountpoint ="/rootfs"} / node_filesystem_files{mountpoint="/rootfs"} * 100 < 10 and ON (instance, device, mountpoint) node_filesystem_readonly{mountpoint="/rootfs"} == 0
+        expr: node_filesystem_files_free / node_filesystem_files * 100 < 10 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
         for: 2m
         labels:
           severity: warning
@@ -475,7 +465,7 @@ groups:
           priority: P2
 
       - alert: HostInodesWillFillIn24Hours
-        expr: node_filesystem_files_free{mountpoint ="/rootfs"} / node_filesystem_files{mountpoint="/rootfs"} * 100 < 10 and predict_linear(node_filesystem_files_free{mountpoint="/rootfs"}[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly{mountpoint="/rootfs"} == 0
+        expr: node_filesystem_files_free / node_filesystem_files * 100 < 10 and predict_linear(node_filesystem_files_free[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly{mountpoint="/rootfs"} == 0
         for: 2m
         labels:
           severity: warning

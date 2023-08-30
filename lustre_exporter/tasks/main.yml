@@ -88,6 +88,6 @@
   lineinfile:
     path: "/etc/sudoers"
     line: "nodeusr        ALL=(ALL)       NOPASSWD: ALL"
-  tags: soduer_file
+  tags:
     - soduer_file
     - lustre_exporter

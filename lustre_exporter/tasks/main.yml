@@ -72,6 +72,7 @@
   when: ansible_is_chroot == False
   tags:
     - lustre_exporter
+    - start_systemd
 
 - name: cleanup tmp files
   become: yes

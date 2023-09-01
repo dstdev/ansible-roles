@@ -9,37 +9,44 @@
   tags:
     - nocodb
 
+- name: Set trefik_labels
+  ansible.builtin.set_fact:
+    nocodb_docker_labels: "{{ nocodb_docker_labels | default({}) | combine ({ item.key : item.value}) }}"
+  with_items:
+    - { 'key': 'traefik.enable', 'value': "true" }
+    - { 'key': 'traefik.http.routers.nocodb{{ nocodb_suffix }}.entrypoints', 'value': "websecure" }
+    - { 'key': 'traefik.http.routers.nocodb{{ nocodb_suffix }}.rule', 'value': "Host(`{{ nocodb_site_root }}`)" }
+    - { 'key': 'traefik.http.routers.nocodb{{ nocodb_suffix }}.tls', 'value': "true" }
+    - { 'key': 'traefik.http.services.nocodb{{ nocodb_suffix }}.loadbalancer.server.port', 'value': "8080" }
+    - { 'key': 'traefik.docker.network', 'value': "traefik_proxy" }
+    - { 'key': 'traefik.http.routers.nocodb{{ nocodb_suffix }}.tls.certresolver', 'value': "{{ nocodb_traefik_cert_resolver }}"}
+  tags:
+    - nocodb
+
 - name: Set labels
   ansible.builtin.set_fact:
-    nocodb_docker_labels: 
-      traefik.enable: "true"
-      traefik.http.routers.nocodb.entrypoints: "websecure"
-      traefik.http.routers.nocodb.rule: "Host(`{{nocodb_site_root}}`)"
-      traefik.http.routers.nocodb.tls: "true"
-      traefik.http.services.nocodb.loadbalancer.server.port: "8080"
-      traefik.docker.network: traefik_proxy
     nocodb_docker_networks:
       - name: traefik_proxy
   when: nocodb_traefik_enable
   tags:
     - nocodb
 
-- name: Set traefik certresolver
-  ansible.utils.update_fact:
-    updates:
-      - path: "nocodb_docker_labels['traefik.http.routers.nocodb.tls.certresolver']"
-        value: "{{nocodb_traefik_cert_resolver}}"
-  when: nocodb_traefik_enable and nocodb_traefik_cert_resolver
-  register: nocodb_docker_labels_updated
-  tags:
-    - nocodb
+#- name: Set traefik certresolver
+  #ansible.utils.update_fact:
+    #updates:
+      #- path: "nocodb_docker_labels['traefik.http.routers.nocodb.tls.certresolver']"
+        #value: "{{nocodb_traefik_cert_resolver}}"
+  #when: nocodb_traefik_enable and nocodb_traefik_cert_resolver
+  #register: nocodb_docker_labels_updated
+  #tags:
+    #- nocodb
 
-- name: Fix update facts
-  ansible.builtin.set_fact:
-    nocodb_docker_labels: "{{nocodb_docker_labels_updated.nocodb_docker_labels}}"
-  when: nocodb_docker_labels_updated.changed
-  tags:
-    - nocodb
+#- name: Fix update facts
+  #ansible.builtin.set_fact:
+    #nocodb_docker_labels: "{{nocodb_docker_labels_updated.nocodb_docker_labels}}"
+  #when: nocodb_docker_labels_updated.changed
+  #tags:
+    #- nocodb
 
 - name: Debug labels
   debug:
@@ -49,7 +56,7 @@
 
 - name: Start docker container
   community.docker.docker_container:
-    name: nocodb
+    name: "nocodb{% if nocodb_suffix %}{{nocodb_suffix}}{% endif %}"
     image: "nocodb/nocodb:{{nocodb_image_version}}"
     state: started
     restart_policy: always

@@ -10,3 +10,4 @@ nocodb_pg_password: "{{undef(hint='You must specify the postgres_password')}}"
 nocodb_pg_database: "nocodb"
 nocodb_traefik_cert_resolver: letsencrypt
 nocodb_traefik_enable: true
+nocodb_suffix: false

@@ -63,6 +63,7 @@ slurm_select_type_parameters: "CR_Core_Memory"
 slurm_cgroup_automount: "yes"
 slurm_cgroup_constrain_cores: "yes"
 slurm_cgroup_constrain_ram_space: "yes"
+slurm_cgroup_constrain_devices: "yes"
 slurm_cgroup_ignore_systemd: false
 
 # slurmdbd settings

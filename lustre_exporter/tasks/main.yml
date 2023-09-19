@@ -37,6 +37,7 @@
     state: stopped
   when: ansible_is_chroot == False
   tags:
+    - never
     - lustre_exporte
 
 - name: Compile and install lustre_exporter

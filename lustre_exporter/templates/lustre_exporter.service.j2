@@ -2,8 +2,8 @@
 Description=Lustre Exporter
 After=network.target
 [Service]
-User=nodeusr
-Group=nodeusr
+User=root
+Group=root
 Type=simple
 ExecStart={{ lustre_exporter_executable_path }}/lustre_exporter
 [Install]

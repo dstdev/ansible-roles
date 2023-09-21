@@ -21,6 +21,8 @@ slurm_required_packages:
   - lua
   - lua-devel
   - pam-devel
+  - pmix
+  - pmix-devel
 
 slurm_dbd_required_packages:
   - mariadb-server

@@ -1,0 +1,52 @@
+# tasks file for slurm-controller
+- name: Install required packages EL 8+
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: present
+    enablerepo: "{{ slurm_el_repos }}"
+
+  loop: "{{slurm_pmix_required_packages}}"
+  when: ansible_distribution_major_version | int >= 8
+  tags:
+    - slurm
+    - slurm_install_slurmd
+    - slurm_install_controller
+
+- name: Install required packages EL 7
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{slurm_pmix_required_packages}}"
+  when: ansible_distribution_major_version | int == 7
+  tags:
+    - slurm
+    - slurm_install_slurmd
+    - slurm_install_controller
+
+- name: Download pmix
+  ansible.builtin.unarchive:
+    src: "https://github.com/openpmix/openpmix/releases/download/v{{ slurm_pmix_version }}/pmix-{{ slurm_pmix_version }}.tar.gz"
+    remote_src: true
+    dest: "{{ slurm_tmpdir }}"
+  tags:
+    - slurm
+    - slurm_install_slurmd
+    - slurm_install_controller
+
+- name: Configure pmix
+  command: "./configure --prefix=/{{ slurm_install_directory }}" 
+  args:
+    chdir: "{{slurm_tmpdir}}/pmix-{{ slurm_pmix_version }}"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install pmix
+  shell: "make -j {{slurm_build_jobs}} && make install"
+  args:
+    chdir: "{{slurm_tmpdir}}/pmix-{{ slurm_pmix_version }}"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd

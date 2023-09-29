@@ -128,12 +128,25 @@
     - slurm_install_slurmd
     - slurm_install_restd
 
+- name: To install or not install
+  ansible.builtin.set_fact:
+    install_slurm: "{% if not slurm_force_install and slurm_installed.stat.exists %}false{% else %}true{% endif %}"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+    - slurm_install_restd
+
+- name: debug install
+  ansible.builtin.debug:
+    msg: "{{ install_slurm }}"
+  
 - name: Create temporary source dir
   ansible.builtin.file:
     state: directory
-    path: "{{slurm_tmpdir}}"
+    path: "{{ slurm_tmpdir }}"
     mode: "0777"
-  when: not slurm_installed.stat.exists
+  when: install_slurm
   tags:
     - slurm
     - slurm_install_controller
@@ -141,7 +154,14 @@
     - slurm_install_restd
 
 - ansible.builtin.include_tasks: "jwt.yaml"
-  when: slurm_enable_restd and not slurm_installed.stat.exists
+  when: slurm_enable_restd and install_slurm
+  tags:
+    always
+
+- ansible.builtin.include_tasks: "pmix.yaml"
+  when: slurm_enable_pmix and install_slurm
+  tags:
+    always
 
 - name: Download slurm
   get_url:
@@ -149,7 +169,7 @@
           tags/slurm-{{slurm_download_version}}.zip"
     dest: "{{slurm_tmpdir}}/slurm-{{slurm_download_version}}.zip"
   register: slurm_source
-  when: not slurm_installed.stat.exists
+  when: install_slurm
   tags:
     - slurm
     - slurm_install_controller
@@ -230,7 +250,6 @@
     - slurm_install_controller
     - slurm_install_slurmd
 
-## 
 - name: Create slurm owned directories
   ansible.builtin.file:
     state: directory

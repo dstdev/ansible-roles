@@ -21,8 +21,6 @@ slurm_required_packages:
   - lua
   - lua-devel
   - pam-devel
-  - pmix
-  - pmix-devel
 
 slurm_dbd_required_packages:
   - mariadb-server
@@ -44,3 +42,10 @@ slurm_restapi_required_packages:
 
 slurm_firewalld_packages:
   - python3-firewall
+
+slurm_pmix_required_packages:
+  - "@Development tools"
+  - libevent-devel
+  - hwloc-devel
+  - python3-devel
+  - zlib-devel

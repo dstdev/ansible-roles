@@ -43,7 +43,7 @@
 - name: Include install tasks
   ansible.builtin.include_tasks: "install.yaml"
   tags:
-    - any
+    - always
 
 - name: Include firewall tasks
   ansible.builtin.include_tasks: "firewall.yaml"
@@ -54,23 +54,27 @@
   ansible.builtin.include_tasks: "slurmdbd.yaml"
   when: slurm_controller
   tags:
-    - any
+    - always
 
 - name: Include slurmctld tasks
   ansible.builtin.include_tasks: "slurmctld.yaml"
   when: slurm_controller
   tags:
-    - any
+    - always
 
 - name: Include slurmrestd tasks
   ansible.builtin.include_tasks: "slurmrestd.yaml"
   when: slurm_controller and slurm_enable_restd
   tags:
-    - any
+    - always
     
 - name: Include slurmd tasks
   ansible.builtin.include_tasks: "slurmd.yaml"
   when: slurm_slurmd
   tags:
-    - any
+    - always
     
+- name: Include cleaup tasks
+  ansible.builtin.include_tasks: "cleanup.yaml"
+  tags:
+    - always

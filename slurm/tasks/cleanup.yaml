@@ -1,0 +1,7 @@
+---
+- name: Remove tmpdir
+  ansible.builtin.file:
+    state: absent
+    path: "{{ slurm_tmpdir }}"
+  tags:
+    - always

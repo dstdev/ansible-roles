@@ -121,3 +121,7 @@ slurm_conf_resume_timeout: ""
 slurm_conf_accounting_storage_external_host: ""
 
 slurm_enable_pam_adopt: false
+slurm_enable_pmix: true
+slurm_pmix_version: 5.0.1
+
+slurm_force_install: false

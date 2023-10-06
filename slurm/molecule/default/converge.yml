@@ -21,6 +21,8 @@
     slurm_priority_type: multifactor
     slurm_kill_step_enabled: true
     slurm_enable_pam_adopt: true
+    slurm_groups_allowed: [root, wheel]
+    slurm_enable_pmix: true
     slurm_cgroup_ignore_systemd: true
   tasks:
     - name: Create restd user

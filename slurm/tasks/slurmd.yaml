@@ -63,14 +63,31 @@
     - slurm_configure
 
 - name: Add slurm pam adopt to pam.d/sshd
-  ansible.builtin.lineinfile:
+  ansible.builtin.blockinfile:
     path: /etc/pam.d/sshd
     state: present
-    line: "-account    sufficient   pam_slurm_adopt.so"
+    block: |
+      account    sufficient    pam_listfile.so item=group sense=allow onerr=fail file={{ slurm_groups_allowed_path }}
+      account    required      pam_slurm_adopt.so
     insertafter: "EOF"
+  when: slurm_enable_pam_adopt
   tags:
     - slurm
     - slurm_configure
+
+- name: Populate pam adopt allowed groups
+  ansible.builtin.lineinfile:
+    path: "{{ slurm_groups_allowed_path }}"
+    state: present
+    line: "{{ item }}"
+    insertafter: "EOF"
+    create: true
+  loop: "{{ slurm_groups_allowed }}"
+  when: slurm_enable_pam_adopt
+  tags:
+    - slurm
+    - slurm_configure
+  
 
 - name: Create unkillable step script
   ansible.builtin.template:

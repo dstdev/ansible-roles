@@ -23,10 +23,11 @@ spack_config_config_yaml:
 spack_config_packages_yaml:
   all:
     target: [x86_64]
+
 spack_config_modules_yaml:
   default: 
     roots:
-      tcl:    "{{spack_module_root}}"
+      #tcl:    "{{spack_module_root}}"
       lmod:   "{{spack_module_root}}"
     enable:
       - lmod
@@ -61,8 +62,8 @@ spack_config_modules_yaml:
     lmod:
       hash_length: 0
       naming_scheme: '{name}/{version}-{compiler.name}-{compiler.version}'
-      blacklist_implicits: true
-      whitelist:
+      exclude_implicits: true
+      inclue:
         - gcc
       #blacklist:
         #- '%gcc@8.3.1'

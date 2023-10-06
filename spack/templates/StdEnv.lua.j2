@@ -1,0 +1,1 @@
+load( {% for p in spack_default_modules %}"{{p}}"{%if not loop.last %},{%endif%}{%endfor%})

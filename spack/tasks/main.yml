@@ -111,3 +111,13 @@
     - spack_config_packages_yaml
   tags:
     - spack
+
+- name: Copy StdEnv.lua file if default modules enabled
+  ansible.builtin.template:
+    src: "templates/StdEnv.lua.j2"
+    dest: "{{spack_default_stdenv_path}}"
+  when:
+    - spack_root_host | bool
+    - spack_default_modules
+  tags:
+    - spack

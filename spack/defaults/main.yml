@@ -12,6 +12,7 @@ spack_root_host: false
 spack_bright: true
 spack_unuse_module_paths: []
 spack_default_modules: ""
+spack_default_stdenv_path: "{{ spack_module_root }}/StdEnv.lua"
 spack_prefix_lines: []
 
 spack_config_config_yaml:

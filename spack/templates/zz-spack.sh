@@ -12,3 +12,14 @@ if [ -f $SPACK_ROOT/share/spack/setup-env.sh ]; then
     module use {{default_module}}
     {% endfor %}
 fi
+
+if [ -z "$__Init_Default_Modules" ]; then
+   export __Init_Default_Modules=1;
+
+   ## ability to predefine elsewhere the default list
+   LMOD_SYSTEM_DEFAULT_MODULES=${LMOD_SYSTEM_DEFAULT_MODULES:-"StdEnv"}
+   export LMOD_SYSTEM_DEFAULT_MODULES
+   module --initial_load --no_redirect restore
+else
+   module refresh
+fi

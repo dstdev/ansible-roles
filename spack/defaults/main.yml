@@ -63,7 +63,7 @@ spack_config_modules_yaml:
       hash_length: 0
       naming_scheme: '{name}/{version}-{compiler.name}-{compiler.version}'
       exclude_implicits: true
-      inclue:
+      include:
         - gcc
       #blacklist:
         #- '%gcc@8.3.1'

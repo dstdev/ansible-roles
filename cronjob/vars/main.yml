@@ -1,3 +1,0 @@
----
-# vars file for cronjob
-cronjob_schedule: "{{cronjob_minute}} {{cronjob_hour}} {{cronjob_day}} {{cronjob_month}} {{cronjob_weekday}}"

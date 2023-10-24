@@ -14,6 +14,7 @@
     - slurm_install_controller
     - slurm_install_slurmd
     - slurm_firewall
+    - slurm_configure
 
 - name: Set slurm download version
   ansible.builtin.set_fact:
@@ -22,6 +23,7 @@
     - slurm
     - slurm_install_controller
     - slurm_install_slurmd
+    - slurm_configure
 
 - name: Get slurm download version length
   ansible.builtin.set_fact:
@@ -30,6 +32,7 @@
     - slurm
     - slurm_install_controller
     - slurm_install_slurmd
+    - slurm_configure
 
 - name: Update slurm download version
   ansible.builtin.set_fact:
@@ -39,6 +42,7 @@
     - slurm
     - slurm_install_controller
     - slurm_install_slurmd
+    - slurm_configure
 
 - name: Include install tasks
   ansible.builtin.include_tasks: "install.yaml"

@@ -187,9 +187,11 @@
     - slurm_install_controller
     - slurm_install_slurmd
 
+
 - name: Configure slurm
   command: "./configure --prefix=/{{slurm_install_directory}} --sysconfdir=/etc/slurm \
-            --localstatedir=/var --runstatedir=/run {% if slurm_enable_restd %}--with-jwt={{slurm_install_directory}}{% endif %}"
+            --localstatedir=/var --runstatedir=/run {% if slurm_enable_restd %}--with-jwt={{slurm_install_directory}}{% endif %}\
+            {% if slurm_enable_pmix %} --with-pmix={{slurm_install_directory}}{% endif %}"
   args:
     chdir: "{{slurm_tmpdir}}/slurm-slurm-{{slurm_download_version}}"
   when: slurm_source_unpack is changed
@@ -203,6 +205,16 @@
   shell: "make -j {{slurm_build_jobs}} && make install"
   args:
     chdir: "{{slurm_tmpdir}}/slurm-slurm-{{slurm_download_version}}"
+  when: slurm_configure is changed
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install pmi
+  shell: "make -j {{slurm_build_jobs}} && make install"
+  args:
+    chdir: "{{slurm_tmpdir}}/slurm-slurm-{{slurm_download_version}}/contribs/pmi2"
   when: slurm_configure is changed
   tags:
     - slurm

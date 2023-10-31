@@ -21,6 +21,7 @@
     baseurl: "https://www.beegfs.io/release/beegfs_{{ beegfs_version }}/dists/rhel{{ ansible_distribution_major_version}}"
     gpgcheck: yes
     gpgkey: "https://www.beegfs.io/release/beegfs_{{ beegfs_version }}/gpg/{{ beegfs_gpg_key_name }}"
+  become: true
   tags:
     - beegfs-client
 
@@ -30,6 +31,7 @@
   package: 
     name: "{{item}}"
     state: present
+  become: true
   loop:
     - kmod
     - kernel
@@ -49,6 +51,7 @@
   copy: 
     src: files/beegfs-client-autobuild.conf
     dest: /etc/beegfs/beegfs-client-autobuild.conf
+  become: true
   notify: 
     - rebuild beegfs client
   tags:
@@ -58,6 +61,7 @@
   template:
     src: templates/beegfs-client.conf.j2
     dest: /etc/beegfs/beegfs-client.conf
+  become: true
   notify:
     - restart beegfs client
   tags:
@@ -67,6 +71,7 @@
   copy:
     src: files/beegfs-helperd.conf
     dest: /etc/beegfs/beegfs-helperd.conf
+  become: true
   notify:
     - restart beegfs helperd
   tags:
@@ -76,6 +81,7 @@
   file:
     path: "{{beegfs_mount_point}}"
     state: directory
+  become: true
   tags:
     - beegfs-client
 
@@ -83,6 +89,7 @@
   template:
     src: templates/beegfs-mounts.conf.j2
     dest: /etc/beegfs/beegfs-mounts.conf
+  become: true
   notify:
     - restart beegfs client
   tags:
@@ -92,6 +99,7 @@
   template:
     src: templates/beegfs-client-autobuild.conf.j2
     dest: /etc/beegfs/beegfs-client-autobuild.conf
+  become: true
   notify:
     - restart beegfs client
   tags:
@@ -102,6 +110,7 @@
     name: "{{item}}"
     state: started
     enabled: yes
+  become: true
   when: not ansible_is_chroot
   loop:
     - beegfs-client
@@ -112,6 +121,7 @@
 - name: Enable services
   shell: "systemctl enable  {{item}}"
   when: ansible_is_chroot
+  become: true
   loop:
     - beegfs-client
     - beegfs-helperd

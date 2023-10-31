@@ -1,3 +1,5 @@
+buildArgs=-j8 BEEGFS_OPENTK_IBVERBS=1 OFED_INCLUDE_PATH=/usr/src/ofa_kernel/default/include/
+buildEnabled=true
 {% if beegfs_disable_rdma %}
 BEEGFS_NO_RDMA=1
 {% endif %}

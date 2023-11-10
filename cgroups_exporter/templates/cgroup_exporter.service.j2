@@ -6,5 +6,7 @@ User=nodeusr
 Group=nodeusr
 Type=simple
 ExecStart={{ cgroup_exporter_executable_path }}/cgroups_exporter -method slurm
+Restart=on-failure
+RestartSec=5s
 [Install]
 WantedBy=multi-user.target

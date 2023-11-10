@@ -10,5 +10,7 @@ User=nodeusr
 Group=nodeusr
 Type=simple
 ExecStart=/var/lib/node_exporter/prometheus-slurm-exporter --listen-address=127.0.0.1:{{slurm_exporter_port}}
+Restart=on-failure
+RestartSec=5s
 [Install]
 WantedBy=multi-user.target

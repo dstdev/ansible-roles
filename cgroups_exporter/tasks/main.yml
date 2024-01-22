@@ -28,7 +28,7 @@
 
 - name: Clone a github repository
   ansible.builtin.git:
-    repo: https://github.com/phpHavok/cgroups_exporter
+    repo: https://github.com/dstdev/cgroups_exporter
     dest: /tmp/cgroups_exporter
     clone: yes
     update: yes

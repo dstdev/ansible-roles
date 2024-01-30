@@ -14,3 +14,30 @@
     - name: verify status of loki
       ansible.builtin.assert:
         that: loki_status.status.Result == "success"
+
+     # Additions for Alerting Rules Verification
+    - name: Check if alerting rules file exists
+      ansible.builtin.stat:
+        path: "{{ alerting_rules_deploy_path }}"
+      register: alerting_rules_file
+
+    - name: Verify alerting rules file is present
+      ansible.builtin.assert:
+        that: 
+          - alerting_rules_file.stat.exists
+
+    - name: Read content of the alerting rules file
+      ansible.builtin.slurp:
+        src: "{{ alerting_rules_deploy_path }}"
+      register: alerting_rules_content
+
+    - name: Verify content of the alerting rules file
+      ansible.builtin.assert:
+        that:
+        - "'alert: SlurmNodeDown' in alerting_rules_content['content'] | b64decode"
+        - "'expr: count_over_time({job=\"slurmd\"} |= \"node_state=DOWN\" [5m]) > 0' in alerting_rules_content['content'] | b64decode"
+        - "'alert: SlurmJobFailure' in alerting_rules_content['content'] | b64decode"
+        - "'alert: SlurmDaemonNotResponding' in alerting_rules_content['content'] | b64decode"
+        - "'alert: QuobyteServiceDown' in alerting_rules_content['content'] | b64decode"
+        - "'alert: QuobyteDiskFailure' in alerting_rules_content['content'] | b64decode"
+        - "'alert: QuobyteHighLatency' in alerting_rules_content['content'] | b64decode"

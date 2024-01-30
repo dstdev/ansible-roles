@@ -1,0 +1,56 @@
+
+- alert: SlurmNodeDown
+  expr: count_over_time({job="slurmd"} |= "node_state=DOWN" [5m]) > 0
+  for: 1m
+  labels:
+    severity: critical
+  annotations:
+    summary: "Slurm node is down"
+    description: "A Slurm node has been reported down in the last 5 minutes."
+
+- alert: SlurmJobFailure
+  expr: count_over_time({job="slurmd"} |= "job_state=FAILED" [5m]) > 0
+  for: 1m
+  labels:
+    severity: warning
+  annotations:
+    summary: "Slurm job failure detected"
+    description: "A Slurm job has failed in the last 5 minutes."
+
+
+- alert: SlurmDaemonNotResponding
+  expr: absent(up{job="slurmd"})
+  for: 3m
+  labels:
+    severity: critical
+  annotations:
+    summary: "Slurm daemon not responding"
+    description: "The Slurm daemon has not been responding for the last 3 minutes."
+
+
+- alert: QuobyteServiceDown
+  expr: count_over_time({job="quobyte"} |= "service_state=DOWN" [5m]) > 0
+  for: 1m
+  labels:
+    severity: critical
+  annotations:
+    summary: "Quobyte service is down"
+    description: "A Quobyte service has been reported down in the last 5 minutes."
+
+- alert: QuobyteDiskFailure
+  expr: count_over_time({job="quobyte"} |= "disk_state=FAILED" [5m]) > 0
+  for: 1m
+  labels:
+    severity: warning
+  annotations:
+    summary: "Quobyte disk failure detected"
+    description: "A disk failure has been detected in Quobyte in the last 5 minutes."
+
+- alert: QuobyteHighLatency
+  expr: histogram_quantile(0.95, rate(quobyte_operation_duration_seconds_bucket[5m])) > 1
+  for: 1m
+  labels:
+    severity: warning
+  annotations:
+    summary: "High latency in Quobyte operations"
+    description: "95% of Quobyte operations are taking longer than 1 second in the last 5 minutes."

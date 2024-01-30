@@ -12,3 +12,13 @@ loki_systemd_path: "/etc/systemd/system/loki.service"
 loki_active_index_dir: "{{ loki_storage_directory }}/index"
 loki_cache_location: "{{ loki_storage_directory }}/cache"
 loki_data_dir: "{{ loki_storage_directory }}/chunks"
+
+# Default variables for Quobyte and Slurm
+quobyte_log_path: "/path/to/quobyte/logs" 
+slurm_log_path: "/var/log/slurm/slurmd.log" 
+
+#Variables specific to alerting
+slurm_critical_threshold: 5m
+quobyte_alert_level: critical
+
+alerting_rules_path: "etc/monitoring/alerting_rules.yml"

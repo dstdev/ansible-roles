@@ -14,8 +14,8 @@ loki_cache_location: "{{ loki_storage_directory }}/cache"
 loki_data_dir: "{{ loki_storage_directory }}/chunks"
 
 # Default variables for Quobyte and Slurm
-quobyte_log_path: "/path/to/quobyte/logs" 
-slurm_log_path: "/var/log/slurm/slurmd.log" 
+quobyte_log_path: "/var/log/quobyte/" 
+slurm_log_path: "/var/log/slurmdbd" 
 
 #Variables specific to alerting
 slurm_critical_threshold: 5m

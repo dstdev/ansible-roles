@@ -22,3 +22,13 @@ loki_http_listen_address: "0.0.0.0"
 loki_storage_directory: /var/lib/loki
 loki_cache_ttl: 24h
 loki_shared_store: filesystem
+
+# Default variables for Quobyte and Slurm
+quobyte_log_path: "/var/log/quobyte/" 
+slurm_log_path: "/var/log/slurmdbd" 
+
+#Variables specific to alerting
+slurm_critical_threshold: 5m
+quobyte_alert_level: critical
+
+alerting_rules_path: "/etc/loki/alert_rules.yml"

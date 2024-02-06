@@ -112,6 +112,19 @@
   tags:
     - spack
 
+- name: Copy spack compilers configuration file
+  ansible.builtin.copy:
+    content: |
+      compilers:
+        {{ spack_config_compilers_yaml | to_nice_yaml(indent=2, sort_keys=False) | indent(2,false) }}
+    dest: "{{spack_root}}/etc/spack/compilers.yaml"
+    force: true
+  when:
+    - spack_root_host | bool
+    - spack_config_compilers_yaml
+  tags:
+    - spack
+
 - name: Copy StdEnv.lua file if default modules enabled
   ansible.builtin.template:
     src: "templates/StdEnv.lua.j2"

@@ -25,6 +25,8 @@ spack_config_packages_yaml:
   all:
     target: [x86_64]
 
+spack_config_compilers_yaml: false
+
 spack_config_modules_yaml:
   default: 
     roots:

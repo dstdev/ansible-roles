@@ -1,0 +1,45 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    munge_key: "aslkdjfalskjdfnalskjdnfpsdfunbf97\
+                0gbnsnbsdkfjgnasdlkjfas;lkdfjasdklfj"
+    slurm_slurmd: true
+    slurm_controller: true
+    slurm_enable_systemd_daemon_flag: true
+    slurm_enable_restd: true
+    slurm_restd_host: "0.0.0.0"
+    slurm_restd_port: 9997
+    slurm_restd_user: apiuser
+    slurm_restd_jwt_key: "_%CwxtDt^65i&"
+    slurm_partitions:
+      - PartitionName=defq Default=YES Nodes=localhost
+    slurm_proctrack_type: "linuxproc"
+    slurm_conf_prolog_flags: []
+    slurm_conf_task_plugin:
+      - task/none
+    slurm_conf_job_acct_gather_type: jobacct_gather/none
+    slurm_priority_type: multifactor
+    slurm_kill_step_enabled: true
+    slurm_enable_pam_adopt: true
+    slurm_groups_allowed: [root, wheel]
+    slurm_enable_pmix: true
+    slurm_cgroup_ignore_systemd: true
+    slurm_cgroup_automount: false
+  tasks:
+    - name: Create restd user
+      ansible.builtin.user:
+        name: "{{ slurm_restd_user }}"
+        state: present
+    - name: Set slurm nodes
+      ansible.builtin.set_fact:
+        slurm_nodes:
+          - "NodeName=localhost CPUs={{ ansible_processor_cores }} \
+             CoresPerSocket={{ ansible_processor_cores }} \
+             Boards=1 SocketsPerBoard=1 ThreadsPerCore=1"
+    - name: "Include munge"
+      ansible.builtin.include_role:
+        name: "munge"
+    - name: "Include slurm"
+      ansible.builtin.include_role:
+        name: "slurm"

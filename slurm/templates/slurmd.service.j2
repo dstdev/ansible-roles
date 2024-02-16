@@ -5,9 +5,13 @@ Wants=network-online.target
 #ConditionPathExists=/etc/slurm.conf
 
 [Service]
+{% if slurm_enable_systemd_daemon_flag %}
+Type=notify
+{% else %}
 Type=simple
+{% endif %}
 EnvironmentFile=-/etc/sysconfig/slurmd
-ExecStart={{slurm_install_symlink}}/sbin/slurmd -D -s --conf-server {{slurm_controller_ip}}:{{slurm_controller_port}} $SLURMD_OPTIONS
+ExecStart={{slurm_install_symlink}}/sbin/slurmd -D -s --conf-server {{slurm_controller_ip}}:{{slurm_controller_port}} {% if slurm_enable_systemd_daemon_flag %}--systemd{% endif %} $SLURMD_OPTIONS
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 LimitNOFILE=131072

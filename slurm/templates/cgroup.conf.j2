@@ -9,7 +9,9 @@
 {% if slurm_cgroup_ignore_systemd %}
 IgnoreSystemd=yes
 {% endif %}
-CgroupAutomount={{slurm_cgroup_automount}}
+{% if slurm_cgroup_automount %}
+CgroupAutomount={{ slurm_cgroup_automount }}
+{% endif %}
 ConstrainCores={{slurm_cgroup_constrain_cores}}
 ConstrainRAMSpace={{slurm_cgroup_constrain_ram_space}}
 ConstrainDevices={{ slurm_cgroup_constrain_devices }}

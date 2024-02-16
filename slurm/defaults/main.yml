@@ -2,7 +2,8 @@
 # defaults file for slurm-controller
 slurm_database_password: "default"
 #slurm_version: "21.08.8-2"
-slurm_version: "23.02.4"
+slurm_version: "23.11.3-1"
+slurm_enable_systemd_daemon_flag: false
 slurm_jwt_version: "v1.12.0"
 slurm_slurmd: false
 slurm_controller: false
@@ -55,7 +56,7 @@ slurm_conf_cli_filter_plugins: []
 slurm_job_temporary_directories:
   - "/tmp/$SLURM_JOBID"
 
-slurm_select_type: "select/cons_res"
+slurm_select_type: "select/cons_tres"
 slurm_select_type_parameters: "CR_Core_Memory"
 
 

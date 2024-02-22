@@ -1,6 +1,15 @@
 groups:
   - name: infiniband_rules
     rules:
+      - alert: infiniband icmp ping in blackbox exporter
+        annotations:
+          description: "{{ $labels.instance }} has infiniband IP down."
+          summary: 25 or more infiniband IPs go down.
+          priority: P2
+        expr: count(probe_success{job="blackbox_icmp_ib"}==0) > 25
+        for: 5m
+        labels:
+          severity: critical
       - alert: infiniband_bad_status_error
         annotations:
           description: "{{ $labels.instance }} has infiniband_bad_status_error."

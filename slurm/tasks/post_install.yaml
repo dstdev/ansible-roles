@@ -1,0 +1,85 @@
+---
+## Symlink configuration
+- name: Check if symlink exists
+  ansible.builtin.stat:
+    path: "{{slurm_install_symlink}}"
+  register: current_symlink
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Create current symlink
+  ansible.builtin.file:
+    state: link
+    src: "{{slurm_install_directory}}"
+    dest: "{{slurm_install_symlink}}"
+  when: not current_symlink.stat.exists
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Update current symlink
+  ansible.builtin.file:
+    state: link
+    src: "{{slurm_install_directory}}"
+    dest: "{{slurm_install_symlink}}"
+  when: slurm_update_symlink
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Create slurm owned directories
+  ansible.builtin.file:
+    state: directory
+    path: "{{item}}"
+    owner: slurm
+    group: slurm
+    mode: "0755"
+  loop:
+    - /var/log/slurm
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Create root owned slurm directories
+  ansible.builtin.file:
+    state: directory
+    path: "{{item}}"
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - /var/run/slurm
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Create slurm profile
+  ansible.builtin.template:
+    src: templates/slurm.sh.j2
+    dest: /etc/profile.d/slurm.sh
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Create slurm profile
+  ansible.builtin.template:
+    src: templates/slurm.csh.j2
+    dest: /etc/profile.d/slurm.csh
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+

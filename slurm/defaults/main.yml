@@ -74,9 +74,12 @@ slurm_dbd_address: localhost
 slurm_dbd_host: localhost
 slurm_dbd_password: ""
 
+# installation settings
 slurm_install_root: "/opt/slurm"
 slurm_update_symlink: yes
 slurm_disable_restart: false
+slurm_rpm_install: false
+slurm_rpm_repo: ""
 
 slurm_build_jobs: 4
 slurm_enable_cgroup_conf: true

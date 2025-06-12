@@ -1,0 +1,143 @@
+---
+# tasks file for slurm-controller
+- name: Install required packages EL 8+
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: present
+    enablerepo: "{{ slurm_el_repos }}"
+
+  loop: "{{slurm_required_packages}}"
+  when: ansible_distribution_major_version | int >= 8
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install required packages EL 7
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{slurm_required_packages}}"
+  when: ansible_distribution_major_version | int == 7
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install slurmdbd requirements el8+
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    enablerepo: "{{ slurm_el_repos }}"
+  loop: "{{slurm_dbd_required_packages}}"
+  when: slurm_controller and slurm_enable_restd and ansible_distribution_major_version | int >= 8
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install slurmdbd requirements
+  ansible.builtin.package:
+    name: "{{item}}"
+  when: slurm_controller
+  loop: "{{slurm_dbd_required_packages}}"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install slurm rest api requirements EL8+
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    enablerepo: "{{ slurm_el_repos }}"
+  loop: "{{slurm_restapi_required_packages}}"
+  when: slurm_enable_restd and ansible_distribution_major_version | int >= 8
+  tags:
+    - slurm
+    - slurm_install_restapi
+    - slurm_install_restd
+
+- name: Install slurm rest api requirements EL7
+  ansible.builtin.package:
+    name: "{{item}}"
+  loop: "{{slurm_restapi_required_packages}}"
+  when: slurm_enable_restd and ansible_facts['distribution_major_version'] == "7" 
+  tags:
+    - slurm
+    - slurm_install_restapi
+    - slurm_install_restd
+
+- name: Add slurm group
+  ansible.builtin.group:
+    name: slurm
+    gid: "{{slurm_gid}}"
+    state: present
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Add slurm user
+  ansible.builtin.user:
+    name: slurm
+    comment: "Slurm account"
+    uid: "{{slurm_uid}}"
+    group: slurm
+    state: present
+    home: /var/lib/slurm
+    shell: /sbin/nologin
+  tags:
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Create slurm configuration directory
+  ansible.builtin.file:
+    path: /etc/slurm
+    state: directory
+    owner: slurm
+    group: slurm
+  when: slurm_controller
+  tags:
+    - slurm_install_controller
+
+
+- name: Create Daemon spool dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{slurm_daemon_spool_dir}}"
+    owner: slurm
+    group: slurm
+  tags:
+    - slurm_install_slurmd
+
+- name: Create State Save Directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{slurm_state_save_location}}"
+    owner: slurm
+    group: slurm
+  tags:
+    - slurm_install_controller
+
+- name: Check slurm install
+  ansible.builtin.stat:
+    path: "{{slurm_install_directory}}/bin/srun"
+  register: slurm_installed
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+    - slurm_install_restd
+
+- name: To install or not install
+  ansible.builtin.set_fact:
+    install_slurm: "{% if not slurm_force_install and slurm_installed.stat.exists %}false{% else %}true{% endif %}"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+    - slurm_install_restd
+
+- name: debug install
+  ansible.builtin.debug:
+    msg: "{{ install_slurm }}"
+  

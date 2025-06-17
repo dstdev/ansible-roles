@@ -40,6 +40,17 @@
     - slurm_install_slurmd
     - slurm_configure
 
+- name: Check for version > 24.05.8-0
+  # We'll use this to build the slurmd and slurmctld command line opts
+  ansible.builtin.set_fact:
+    slurm_dash_d: ""
+  when:
+      "slurm_version is version(slurm_dasd_d_ver, '>=')"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+  
 - name: Include pre-install tasks
   ansible.builtin.include_tasks: "pre_install.yaml"
   tags:

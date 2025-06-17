@@ -10,6 +10,11 @@
     - slurm_install_slurmd
     - slurm_configure
 
+# In case another instance of slurmd.service is runnig 
+- name: Restart systemceld
+  systemd:
+    daemon_reexec: yes
+
 - name: Create slurm configuration directory
   ansible.builtin.file:
     path: /etc/slurm

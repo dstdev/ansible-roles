@@ -1,16 +1,26 @@
 ---
 # defaults file for slurm-controller
 slurm_database_password: "default"
-#slurm_version: "21.08.8-2"
-slurm_version: "23.11.5-1"
+# slurm_version: "21.08.8-2"
+# slurm_version: "23.11.5-1"
+# Latest 25.05.0-1
+
+slurm_version: "25.05.0-1"
+ 
+# For Slurm < 24.05.8-0 the slurmd and slurmctld use "-D --systemd"
+# For Slurm >= 24.05.8-0, slurmd and slurmctld use only "--systemd"
+# https://github.com/SchedMD/slurm/blob/slurm-24.05/NEWS 
+slurm_dasd_d_ver: "24.05.8-0"
+slurm_dash_d: "-D"
+
 slurm_enable_systemd_daemon_flag: false
 slurm_jwt_version: "v1.12.0"
-slurm_slurmd: false
+slurm_slurmd: true
 slurm_controller: false
 slurm_uid: 450
 slurm_gid: 450
-slurm_controller_hostname: localhost
-slurm_controller_ip: 127.0.0.1
+slurm_controller_hostname: ajo-h1
+slurm_controller_ip: 192.168.30.132
 slurm_controller_port: 6817
 slurm_daemon_port: 6818
 # this slurm user needs to be investigate?
@@ -110,7 +120,7 @@ slurm_task_epilog_append: ""
 
 # Firewall rules
 slurm_firewalld_enabled: false
-slurm_firewalld_subnet: "10.141.0.0/16"
+slurm_firewalld_subnet: "192.168.30.0/24"
 slurm_firewalld_python_interpreter: "/usr/bin/python"
 
 # Gres information
@@ -133,3 +143,5 @@ slurm_force_install: false
 
 slurm_conf_extra: {}
 slurmdbd_conf_extra: {}
+
+munge_key: "A very long and secure key that is used for authentication it is really long"

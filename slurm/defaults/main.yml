@@ -15,12 +15,12 @@ slurm_dash_d: "-D"
 
 slurm_enable_systemd_daemon_flag: false
 slurm_jwt_version: "v1.12.0"
-slurm_slurmd: true
-slurm_controller: false
+slurm_slurmd: false
+slurm_controller: true
 slurm_uid: 450
 slurm_gid: 450
-slurm_controller_hostname: ajo-h1
-slurm_controller_ip: 192.168.30.132
+slurm_controller_hostname: localhost
+slurm_controller_ip: 127.0.0.1
 slurm_controller_port: 6817
 slurm_daemon_port: 6818
 # this slurm user needs to be investigate?
@@ -120,7 +120,7 @@ slurm_task_epilog_append: ""
 
 # Firewall rules
 slurm_firewalld_enabled: false
-slurm_firewalld_subnet: "192.168.30.0/24"
+slurm_firewalld_subnet: "192.168.114.0/24"
 slurm_firewalld_python_interpreter: "/usr/bin/python"
 
 # Gres information
@@ -143,5 +143,3 @@ slurm_force_install: false
 
 slurm_conf_extra: {}
 slurmdbd_conf_extra: {}
-
-munge_key: "A very long and secure key that is used for authentication it is really long"

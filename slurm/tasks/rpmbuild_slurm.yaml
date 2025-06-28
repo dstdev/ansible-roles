@@ -1,0 +1,53 @@
+---
+- name: Install required development packages 
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: present
+    enablerepo: "{{ slurm_el_repos }}"
+
+  loop: "{{slurm_pmix_required_devel_packages}}"
+  when: ansible_distribution_major_version | int >= 8
+
+- name: Download source bundle 
+  ansible.builtin.get_url:  
+    url: "https://download.schedmd.com/slurm/slurm-{{ slurm_version }}.tar.bz2"
+    dest: "{{ slurm_tmpdir }}/slurm-{{ slurm_version }}.tar.bz2"
+  become: true  
+
+- name: Check if PMix rpm is installed 
+  ansible.builtin.command:
+    cmd: "rpm -qa pmix --queryformat %{VERSION}"
+  register: pmix_rpm_check
+  ignore_errors: true
+
+- name: Debug PMix RPM Check
+  ansible.builtin.debug:
+    var: pmix_rpm_check
+
+- name: Check PMix version 
+  ansible.builtin.set_fact:
+    installed_pmix_version: "{{ pmix_rpm_check.stdout | default('') }}"
+  when: pmix_rpm_check.rc == 0
+
+- name: Check if PMix version is compatible 
+  ansible.builtin.fail:
+    msg: "PMIx version {{ installed_pmix_version }} is not the target version {{ slurm_pmix_version }}"
+  when: pmix_rpm_check.rc == 0 and (installed_pmix_version != slurm_pmix_version)
+
+- name: Debug End Role 
+  ansible.builtin.meta: end_play  
+
+- name: Base rpmbuild command 
+  ansible.builtin.set_fact: 
+    rpmbuild_cmd: "rpmbuild -D '_prefix {{ slurm_install_directory }}'"
+
+- name: rpmbuild pmix option 
+  ansible.builtin.set_fact: 
+    #-D \"_with_pmix --with-pmix=${PMIX_DIR}\""
+    rpmbuild_cmd: " -D '_with_pmix --with-pmix=${{ slurm_install_directory }}'"
+
+- name: rpmbuild from source tabundle rball 
+  command: "{{ rpmbuild_cmd }} -ta slurm-{{ slurm_version }}.tar.bz2" 
+  args:
+    chdir: "{{slurm_tmpdir}}"
+  become: true 

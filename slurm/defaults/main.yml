@@ -1,4 +1,8 @@
 ---
+# Build RPM Packages - when true, this will biuld RPM packages for slurm 
+# and optionally PMIX then exit the role and complete.
+slurm_build_rpms: true 
+
 # defaults file for slurm-controller
 slurm_database_password: "default"
 # slurm_version: "21.08.8-2"

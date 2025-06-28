@@ -13,8 +13,12 @@
     url: "https://github.com/openpmix/openpmix/releases/download/v{{ slurm_pmix_version }}/pmix-{{ slurm_pmix_version }}.tar.bz2"
     dest: "{{ slurm_tmpdir }}/pmix-{{ slurm_pmix_version }}.tar.bz2"
 
-
-- name: rpmbuild from source tabundle rball 
+- name: rpmbuild pmix from source tarball 
   command: "rpmbuild -D \"_prefix {{ slurm_install_directory }}\" -ta pmix-{{ slurm_pmix_version }}.tar.bz2" 
   args:
     chdir: "{{slurm_tmpdir}}"
+
+- name: Check RPM file 
+  ansible.builtin.stat:
+    path: "{{ slurm_pmix_rpm_path }}"
+  register: slurm_pmix_rpm_path_stat

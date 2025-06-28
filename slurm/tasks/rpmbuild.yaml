@@ -1,0 +1,60 @@
+---
+- name: Set PMix RPM path 
+  ansible.builtin.set_fact:
+    slurm_pmix_rpm_path: "/root/rpmbuild/RPMS/{{ ansible_architecture }}/pmix-{{ slurm_pmix_version }}-1.el{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.rpm"
+
+- name: Check if PMix rpm exists 
+  ansible.builtin.stat:
+    path: "{{ slurm_pmix_rpm_path }}"
+  register: slurm_pmix_rpm_path_stat 
+
+- name: Set PMix root path 
+  ansible.builtin.set_fact:
+    slurm_pmix_expected_root_path: "{{ slurm_install_directory }}/bin/pmix_info"
+
+- name: Check if PMix expected root path exists
+  ansible.builtin.stat:
+    path: "{{ slurm_pmix_expected_root_path }}"
+  register: slurm_pmix_expected_root_path_stat  
+
+- name: Get installed RPMs 
+  ansible.builtin.package_facts:
+    manager: auto 
+
+- name: Dump Package-facts
+  ansible.builtin.debug:
+    var: ansible_facts.packages
+
+- name: Check if PMix is installed
+  ansible.builtin.set_fact:
+    slurm_pmix_installed: "{{ 'pmix' in ansible_facts.packages }}"
+
+- name: Check PMix Installed Version 
+  ansible.builtin.set_fact:
+    slurm_pmix_installed_version: "{{ ansible_facts.packages['pmix'][0].version if slurm_pmix_installed else 'not installed' }}"
+
+
+# Show some debug information
+- name: Debug PMix Build vars
+  ansible.builtin.debug:
+    msg: 
+      - "slurm_install_directory: {{ slurm_install_directory }} "
+      - "slurm_version {{ slurm_version  }}"
+      - "slurm_pmix_version {{ slurm_pmix_version  }}" 
+      - " ----------------------------------------------------------------------"
+      - "slurm_pmix_expected_root_path: {{ slurm_pmix_expected_root_path}}"      
+      - "slurm_pmix_expected_root_path_stat.stat.exists: {{ slurm_pmix_expected_root_path_stat.stat.exists }}"
+      - " ----------------------------------------------------------------------"
+      - "slurm_pmix_rpm_path: {{ slurm_pmix_rpm_path }}" 
+      - "slurm_pmix_rpm_path_stat.stat.exists: {{ slurm_pmix_rpm_path_stat.stat.exists }}"
+      - " ----------------------------------------------------------------------"      
+      - "slurm_pmix_installed: {{ slurm_pmix_installed  }}"
+      - "slurm_pmix_installed_version: {{ slurm_pmix_installed_version }}"
+
+- name: Build PMix if required 
+  ansible.builtin.include_tasks: rpmbuild_pmix.yaml 
+  when: slurm_enable_pmix and not slurm_pmix_rpm_path_stat.stat.exists
+
+- name: Build Slurm if required 
+  ansible.builtin.include_tasks: rpmbuild_slurm.yaml 
+

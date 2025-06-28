@@ -12,6 +12,14 @@
   tags:
     - always
 
+##################################################
+# Exits role after the rpmbuildI(s) are complete.
+- name: Build RPM packages if needed 
+  ansible.builtin.include_tasks: "rpmbuild.yaml"
+  when: slurm_build_rpms
+# role exits early if slurm_build_rpms == true 
+##################################################
+
 - name: Set slurm download version
   ansible.builtin.set_fact:
     slurm_download_version: "{{ slurm_version | replace('.', '-')}}"
@@ -50,7 +58,8 @@
     - slurm
     - slurm_install_controller
     - slurm_install_slurmd
-  
+
+
 - name: Include pre-install tasks
   ansible.builtin.include_tasks: "pre_install.yaml"
   tags:

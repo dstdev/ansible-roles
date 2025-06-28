@@ -1,7 +1,10 @@
 ---
 # Build RPM Packages - when true, this will biuld RPM packages for slurm 
 # and optionally PMIX then exit the role and complete.
-slurm_build_rpms: true 
+slurm_build_rpms: true
+slurm_rpmbuild_user: slurmbuild
+slurm_rpmbuild_user_home: "/home/{{ slurm_rpmbuild_user }}"
+
 
 # defaults file for slurm-controller
 slurm_database_password: "default"
@@ -97,7 +100,7 @@ slurm_rpm_repo: ""
 
 slurm_build_jobs: 4
 slurm_enable_cgroup_conf: true
-slurm_enable_restd: true
+slurm_enable_restd: false
 slurm_restd_port: 8911
 slurm_restd_host: "0.0.0.0"
 slurm_restd_user: "{{undef(hint='You must specify the slurm rest api user')}}"

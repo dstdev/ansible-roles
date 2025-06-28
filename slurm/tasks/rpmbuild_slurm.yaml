@@ -12,7 +12,8 @@
   ansible.builtin.get_url:  
     url: "https://download.schedmd.com/slurm/slurm-{{ slurm_version }}.tar.bz2"
     dest: "{{ slurm_tmpdir }}/slurm-{{ slurm_version }}.tar.bz2"
-  become: true  
+  become: true
+  become_user: "{{ slurm_rpmbuild_user }}"
 
 # If PMix is installed it need to be both 
 # the correct version and installed in the expected path
@@ -120,7 +121,8 @@
   command: "{{ rpmbuild_cmd }} {{ rpmbuild_pmix_option }} {{ rpmbuild_restd_option }} -ta slurm-{{ slurm_version }}.tar.bz2"
   args:
     chdir: "{{slurm_tmpdir}}"
-  become: true 
+  become: true
+  become_user: "{{ slurm_rpmbuild_user }}" 
 
 - name: Debug end play
   meta: end_play

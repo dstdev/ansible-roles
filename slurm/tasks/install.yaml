@@ -4,6 +4,8 @@
     state: directory
     path: "{{ slurm_tmpdir }}"
     mode: "0777"
+    ownder: "{{ slurm_user }}"
+    group: "{{ slurm_user }}"
   when: install_slurm
   tags:
     - slurm

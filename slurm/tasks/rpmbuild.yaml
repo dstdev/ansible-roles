@@ -1,7 +1,29 @@
 ---
+- name: Create temporary source dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{ slurm_tmpdir }}"
+    mode: "0777"
+    owner: "{{ slurm_rpmbuild_user }}"
+    group: "{{ slurm_rpmbuild_user }}"
+  
+  
+- name: Add slurmbuild user 
+  ansible.builtin.user:
+    name: "{{ slurm_rpmbuild_user }}"
+    comment: "Slurm Build User"
+    shell: /bin/bash
+    create_home: true
+    home: "{{ slurm_rpmbuild_user_home }}"
+    state: present
+
+- name: Set Slurm RPM build variables
+  ansible.builtin.set_fact:
+    slurm_rpm_base_path: "{{slurm_rpmbuild_user_home}}/rpmbuild/RPMS/{{ ansible_architecture }}"
+
 - name: Set PMix RPM path 
   ansible.builtin.set_fact:
-    slurm_pmix_rpm_path: "/root/rpmbuild/RPMS/{{ ansible_architecture }}/pmix-{{ slurm_pmix_version }}-1.el{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.rpm"
+    slurm_pmix_rpm_path: "{{ slurm_rpm_base_path }}/pmix-{{ slurm_pmix_version }}-1.el{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.rpm"
 
 - name: Check if PMix rpm exists 
   ansible.builtin.stat:

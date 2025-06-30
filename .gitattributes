@@ -1,0 +1,1 @@
+prometheus_dcgm_exporter/files/dcgm-exporter filter=lfs diff=lfs merge=lfs -text

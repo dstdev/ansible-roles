@@ -61,10 +61,6 @@
   ansible.builtin.package_facts:
     manager: auto 
 
-- name: Dump Package-facts
-  ansible.builtin.debug:
-    var: ansible_facts.packages
-
 - name: Check if PMix is installed
   ansible.builtin.set_fact:
     slurm_pmix_installed: "{{ 'pmix' in ansible_facts.packages }}"
@@ -110,7 +106,7 @@
 
 - name: rpmbuild slurmrestd option 
   ansible.builtin.set_fact: 
-    rpmbuild_restd_option: "-D '--with slurmrestd --with jwt'"
+    rpmbuild_restd_option: "--with slurmrestd --with jwt"
   when: slurm_enable_restd 
 
 - name: show build command 
@@ -123,6 +119,3 @@
     chdir: "{{slurm_tmpdir}}"
   become: true
   become_user: "{{ slurm_rpmbuild_user }}" 
-
-- name: Debug end play
-  meta: end_play

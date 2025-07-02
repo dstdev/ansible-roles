@@ -1,10 +1,11 @@
 ---
 # Build RPM Packages - when true, this will biuld RPM packages for slurm 
 # and optionally PMIX then exit the role and complete.
-slurm_build_rpms: true
+slurm_build_rpms: false
 slurm_rpmbuild_user: slurmbuild
 slurm_rpmbuild_user_home: "/home/{{ slurm_rpmbuild_user }}"
-
+slurm_rpm_repo_scp_path: root@yuma-s1:/var/www/html/slurm_repo
+slurm_rpm_final_path: "/home/{{ slurm_rpmbuild_user }}/rpmbuild/RPMS/{{ ansible_architecture }}/"
 
 # defaults file for slurm-controller
 slurm_database_password: "default"
@@ -12,8 +13,8 @@ slurm_database_password: "default"
 # slurm_version: "23.11.5-1"
 # Latest 25.05.0-1
 
-slurm_version: "23.11.11"
- 
+#slurm_version: "23.11.11"
+slurm_version: "24.11.5"
 # For Slurm < 24.05.8-0 the slurmd and slurmctld use "-D --systemd"
 # For Slurm >= 24.05.8-0, slurmd and slurmctld use only "--systemd"
 # https://github.com/SchedMD/slurm/blob/slurm-24.05/NEWS 
@@ -100,7 +101,7 @@ slurm_rpm_repo: ""
 
 slurm_build_jobs: 4
 slurm_enable_cgroup_conf: true
-slurm_enable_restd: false
+slurm_enable_restd: true 
 slurm_restd_port: 8911
 slurm_restd_host: "0.0.0.0"
 slurm_restd_user: "{{undef(hint='You must specify the slurm rest api user')}}"
@@ -144,7 +145,7 @@ slurm_conf_accounting_storage_external_host: ""
 slurm_enable_pam_adopt: false
 slurm_groups_allowed: []
 slurm_enable_pmix: true
-slurm_pmix_version: 5.0.1
+slurm_pmix_version: 5.0.8
 
 slurm_force_install: false
 

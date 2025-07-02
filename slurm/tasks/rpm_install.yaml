@@ -1,17 +1,5 @@
-- name: Create local repo file
-  get_url:
-    url: "{{ slurm_rpm_repo }}"
-    dest: /etc/yum.repos.d/local.repo
-    mode: 0644
-    owner: root
-    group: root
-    force: yes
-  when: not ansible_check_mode
-  tags: 
-    - slurm
-
 - name: Install slurm rpm packages 
-  package:
+  yum:
     state: present
     name:
       - slurm
@@ -23,7 +11,7 @@
     - slurm_install_slurmd
 
 - name: Install slurm controller rpm packages
-  package:
+  yum:
     state: present
     name:
       - slurm-slurmctld
@@ -34,7 +22,7 @@
     - slurm_install_controller
 
 - name: Install slurmd rpm packages
-  package:
+  yum:
     state: present
     name:
       - slurm-slurmd
@@ -45,7 +33,7 @@
     - slurm_install_slurmd
 
 - name: Install slurmrestd rpm packages
-  package:
+  yum:
     state: present
     name:
       - slurm-slurmrestd

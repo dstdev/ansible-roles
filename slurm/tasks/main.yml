@@ -25,15 +25,13 @@
   tags:
     - always
 
-- name: Include install tasks
-  ansible.builtin.include_tasks: "install.yaml"
-  when: not slurm_rpm_install
+- name: Check if Slurm Version is above 24.05.8-0
+  ansible.builtin.include_tasks: "slurm_version_check.yaml"
   tags:
     - always
 
 - name: Include rpm install tasks
   ansible.builtin.include_tasks: "rpm_install.yaml"
-  when: slurm_rpm_install
   tags:
     - always
 

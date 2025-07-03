@@ -6,6 +6,7 @@ slurm_rpmbuild_user: slurmbuild
 slurm_rpmbuild_user_home: "/home/{{ slurm_rpmbuild_user }}"
 slurm_rpm_repo_scp_path: root@yuma-s1:/var/www/html/slurm_repo
 slurm_rpm_final_path: "/home/{{ slurm_rpmbuild_user }}/rpmbuild/RPMS/{{ ansible_architecture }}/"
+slurm_configure: 1
 
 # defaults file for slurm-controller
 slurm_database_password: "default"
@@ -14,7 +15,7 @@ slurm_database_password: "default"
 # Latest 25.05.0-1
 
 #slurm_version: "23.11.11"
-slurm_version: "24.11.5"
+slurm_version: "24.05.8-1"
 # For Slurm < 24.05.8-0 the slurmd and slurmctld use "-D --systemd"
 # For Slurm >= 24.05.8-0, slurmd and slurmctld use only "--systemd"
 # https://github.com/SchedMD/slurm/blob/slurm-24.05/NEWS 
@@ -104,8 +105,8 @@ slurm_enable_cgroup_conf: true
 slurm_enable_restd: true 
 slurm_restd_port: 8911
 slurm_restd_host: "0.0.0.0"
-slurm_restd_user: "{{undef(hint='You must specify the slurm rest api user')}}"
-slurm_restd_jwt_key: "{{undef(hint='You must specify the jwt key value')}}"
+slurm_restd_user: srestd
+slurm_restd_jwt_key: /var/spool/slurmctld/jwt_hs256.key
 
 
 # Slurm profile variables

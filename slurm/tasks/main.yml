@@ -30,10 +30,17 @@
   tags:
     - always
 
+- name: Include  install tasks
+  ansible.builtin.include_tasks: "install.yaml"
+  tags:
+    - always
+  when: true 
+
 - name: Include rpm install tasks
   ansible.builtin.include_tasks: "rpm_install.yaml"
   tags:
     - always
+  when: false 
 
 - name: Include post-install tasks
   ansible.builtin.include_tasks: "post_install.yaml"

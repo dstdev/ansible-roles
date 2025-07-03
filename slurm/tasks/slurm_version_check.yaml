@@ -27,7 +27,8 @@
     - slurm_install_slurmd
     - slurm_configure
 
-- name: Check for version > 24.05.8-0
+
+- name: Check for version greater then '24.05.8-0'
   # We'll use this to build the slurmd and slurmctld command line opts
   ansible.builtin.set_fact:
     slurm_dash_d: ""

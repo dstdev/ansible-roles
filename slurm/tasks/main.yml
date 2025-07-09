@@ -30,17 +30,24 @@
   tags:
     - always
 
-- name: Include  install tasks
+- name: Fail if both slurm_rpm_install and slurm_source_install 
+  ansible.builtin.fail:
+    msg: "slurm_rpm_install and slurm_source_install are mutually exclusive"
+  when: slurm_rpm_install and slurm_source_install
+
+- name: Include install tasks
   ansible.builtin.include_tasks: "install.yaml"
   tags:
     - always
-  when: true 
+#  when: slurm_source_install
+  when: false 
 
 - name: Include rpm install tasks
   ansible.builtin.include_tasks: "rpm_install.yaml"
   tags:
     - always
-  when: false 
+  when: true 
+#  when: slurm_rpm_install 
 
 - name: Include post-install tasks
   ansible.builtin.include_tasks: "post_install.yaml"

@@ -1,3 +1,18 @@
+- name: Check Command
+  ansible.builtin.shell: 
+    cmd: "dnf repoquery --repo slurm-repo slurm | awk -F: '{print $2}' | awk -F- '{print $1}'"
+  register: slurm_repo_version
+
+- name: Verify repo vs expected version 
+  debug:
+    msg: 
+      - "{{ slurm_repo_version.stdout }}"
+
+- name: Fail on Version mismatch 
+  ansible.builtin.fail: 
+    msg: "Required Slurm Version {{ slurm_version }} does not match available RPM on repo {{ slurm_repo_version.stdout }}" 
+  when: slurm_repo_version.stdout != slurm_version
+
 - name: Install slurm rpm packages 
   yum:
     state: present

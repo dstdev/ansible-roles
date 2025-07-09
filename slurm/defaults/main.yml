@@ -2,7 +2,6 @@
 # Build RPM Packages - when true, this will biuld RPM packages for slurm 
 # and optionally PMIX then exit the role and complete.
 slurm_build_rpms: false
-slurm_source_build: false 
 
 slurm_rpmbuild_user: slurmbuild
 slurm_rpmbuild_user_home: "/home/{{ slurm_rpmbuild_user }}"

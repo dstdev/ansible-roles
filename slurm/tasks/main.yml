@@ -39,15 +39,13 @@
   ansible.builtin.include_tasks: "install.yaml"
   tags:
     - always
-#  when: slurm_source_install
-  when: false 
+  when: slurm_source_install
 
 - name: Include rpm install tasks
   ansible.builtin.include_tasks: "rpm_install.yaml"
   tags:
     - always
-  when: true 
-#  when: slurm_rpm_install 
+  when: slurm_rpm_install 
 
 - name: Include post-install tasks
   ansible.builtin.include_tasks: "post_install.yaml"

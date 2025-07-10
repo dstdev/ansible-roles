@@ -7,17 +7,16 @@ slurm_rpmbuild_user: slurmbuild
 slurm_rpmbuild_user_home: "/home/{{ slurm_rpmbuild_user }}"
 slurm_local_repo_name: slurm-repo 
 slurm_local_repo_host: yuma-s1 
-slurm_rpm_repo_scp_path: "root@{{ slurm_local_repo_host }}:/var/www/html/slurm_repo
-slurm_rpm_final_path: "/home/{{ slurm_rpmbuild_user }}/rpmbuild/RPMS/{{ ansible_architecture }}/"
+slurm_rpm_repo_scp_path: "root@{{ slurm_local_repo_host }}:/var/www/html/{{ slurm_local_repo_name }}"
+slurm_rpm_final_path: "/home/{{ slurm_rpmbuild_user }}/rpmbuild/RPMS/{{ ansible_architecture }}"
 
 
 # defaults file for slurm-controller
 slurm_database_password: "default"
-# slurm_version: "21.08.8-2"
-# slurm_version: "23.11.5-1"
-# Latest 25.05.0-1
-
-#slurm_version: "23.11.11"
+# Github slurm versions are nn.nn.nn-1 
+# ShedMD release versions are nn.nn.nn 
+# slurm_version: "21.08.8-2"   # Git Hub 
+# slurm_version: "23.11.11"    # SchedMD Hub 
 slurm_version: "24.11.5"
 
 # For Slurm < 24.05.8-0 the slurmd and slurmctld use "-D --systemd"
@@ -29,7 +28,7 @@ slurm_dash_d: "-D"
 slurm_enable_systemd_daemon_flag: false
 slurm_jwt_version: "v1.12.0"
 slurm_slurmd: false
-slurm_controller: true
+slurm_controller: false
 slurm_uid: 450
 slurm_gid: 450
 slurm_controller_hostname: localhost
@@ -107,7 +106,7 @@ slurm_rpm_repo: ""
 
 slurm_build_jobs: 4
 slurm_enable_cgroup_conf: true
-slurm_enable_restd: true 
+slurm_enable_restd: false 
 slurm_restd_port: 8911
 slurm_restd_host: "0.0.0.0"
 slurm_restd_user: srestd

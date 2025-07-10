@@ -81,12 +81,11 @@
 - name: Build Slurm if required 
   ansible.builtin.include_tasks: rpmbuild_slurm.yaml 
 
-#- name: scp completed RPMs to repo 
-#  ansible.builtin.command:
-#    cmd: "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i {{ slurm_rpmbuild_user_home }}/.ssh/id_ed25519 {{ slurm_rpm_final_path }}* {{ slurm_rpm_repo_scp_path }}"
-#  when: slurm_build_rpms and slurm_rpm_final_path is defined and slurm_rpm_repo_scp_path is defined
-#  become: true
-#  become_user: "{{ slurm_rpmbuild_user_home }}"
+- name: scp completed RPMs to repo 
+  ansible.builtin.command:
+    cmd: "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ slurm_rpm_final_path }}/* {{ slurm_rpm_repo_scp_path }}"
+  when: slurm_build_rpms and slurm_rpm_final_path is defined and slurm_rpm_repo_scp_path is defined
+  become_user: "{{ slurm_rpmbuild_user }}"
 
 - name: rpmbuild end play
   meta: end_play

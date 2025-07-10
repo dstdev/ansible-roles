@@ -1,6 +1,6 @@
 - name: Check Command
   ansible.builtin.shell: 
-    cmd: "dnf repoquery --repo slurm-repo slurm | awk -F: '{print $2}' | awk -F- '{print $1}'"
+    cmd: "dnf repoquery --repo {{ slurm_local_repo_name }} slurm | awk -F: '{print $2}' | awk -F- '{print $1}'"
   register: slurm_repo_version
 
 - name: Verify repo vs expected version 

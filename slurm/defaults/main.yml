@@ -43,7 +43,7 @@ slurm_daemon_debug: 3
 slurm_proctrack_type: "cgroup"
 slurm_nodes: []
 slurm_partitions: []
-slurm_daemon_spool_dir: /var/spool/slurmd/
+slurm_daemon_spool_dir: /var/spool/slurmd
 slurm_state_save_location: /var/spool/slurmctld
 slurm_scheduler_type: backfill
 slurm_accounting_storage_enforce: 0

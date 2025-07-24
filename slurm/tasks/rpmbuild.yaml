@@ -43,10 +43,6 @@
   ansible.builtin.package_facts:
     manager: auto 
 
-- name: Dump Package-facts
-  ansible.builtin.debug:
-    var: ansible_facts.packages
-
 - name: Check if PMix is installed
   ansible.builtin.set_fact:
     slurm_pmix_installed: "{{ 'pmix' in ansible_facts.packages }}"
@@ -72,20 +68,30 @@
       - " ----------------------------------------------------------------------"      
       - "slurm_pmix_installed: {{ slurm_pmix_installed  }}"
       - "slurm_pmix_installed_version: {{ slurm_pmix_installed_version }}"
+      - " ----------------------------------------------------------------------"       
+      - "slurm_enable_pmix: {{ slurm_enable_pmix  }}"
+      - "slurm_pmix_rpm_path_stat.stat.exists: {{ slurm_pmix_rpm_path_stat.stat.exists }}"
+      - " ----------------------------------------------------------------------"         
 
 - name: Build PMix if required 
   ansible.builtin.include_tasks: rpmbuild_pmix.yaml 
-  when: slurm_enable_pmix and not slurm_pmix_rpm_path_stat.stat.exists
-
+  when: slurm_enable_pmix
 
 - name: Build Slurm if required 
   ansible.builtin.include_tasks: rpmbuild_slurm.yaml 
 
 - name: scp completed RPMs to repo 
-  ansible.builtin.command:
-    cmd: "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ slurm_rpm_final_path }}/* {{ slurm_rpm_repo_scp_path }}"
+  ansible.builtin.shell: "scp {{ slurm_rpm_final_path }}/*.rpm {{ slurm_rpm_repo_scp_path }}"
   when: slurm_build_rpms and slurm_rpm_final_path is defined and slurm_rpm_repo_scp_path is defined
   become_user: "{{ slurm_rpmbuild_user }}"
+
+- name: Run createrepo
+  ansible.builtin.command:
+    argv: 
+      - ssh 
+      - "{{ slurm_local_repo_host}}"
+      - createrepo
+      - "/var/www/html/{{ slurm_local_repo_name }}"
 
 - name: rpmbuild end play
   meta: end_play

@@ -59,3 +59,18 @@
     - slurm_install_restd
 
 
+- name: Add jwt key
+  command:  "dd if=/dev/random of=/var/spool/slurmctld/jwt_hs256.key bs=32 count=1"
+  when: slurm_controller and slurm_enable_restd 
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_restd
+
+- name: Change file ownership, group and permissions
+  ansible.builtin.file:
+    path: /var/spool/slurmctld/jwt_hs256.key
+    owner: "{{ slurm_user }}"
+    group: "{{ slurm_user }}"
+    mode: '0600'
+  when: slurm_controller and slurm_enable_restd 

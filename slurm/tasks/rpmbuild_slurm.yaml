@@ -35,6 +35,12 @@
     msg: "PMIx RPM path {{ slurm_pmix_rpm_path }} does not exist. Please ensure the RPM is available for installation."
   when: slurm_enable_pmix and slurm_pmix_installed and not slurm_pmix_rpm_path_stat.stat.exists
 
+- name: debug out 
+  debug:
+    msg: 
+      - "slurm_enable_pmix: {{ slurm_enable_pmix  }}"
+      - "slurm_pmix_installed_version: {{ slurm_pmix_installed_version }}"
+
 # Yum Install PMix RPM
 - name: Install PMix RPM
   ansible.builtin.yum:

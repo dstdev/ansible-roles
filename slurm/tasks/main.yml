@@ -1,5 +1,4 @@
 ---
-
 - name: Gather os specific variables
   ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
@@ -11,6 +10,7 @@
         - "{{ role_path }}/vars"
   tags:
     - always
+
 
 ##################################################
 # Exits role after the rpmbuildI(s) are complete.

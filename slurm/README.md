@@ -1,4 +1,4 @@
-Role Name
+Slurm
 =========
 
 Install and configures slurm controller, daemons, and database.
@@ -7,6 +7,29 @@ Requirements
 ------------
 
 Running Mariadb/MySQL Role or instance and munge development libraries must be installed.
+
+Example Build Command
+---------------------
+``` 
+ansible-playbook -i inventory.ini -c local -e @test_install.json slurm.yml
+``` 
+
+Example Vars File
+-----------------
+slurm_install.json
+```
+{
+    "slurm_build_rpms": false,
+    "slurm_source_install": true,
+    "slurm_rpm_install": false,
+    "slurm_version": "23.11.11",
+    "slurm_enable_pmix": true,
+    "slurm_pmix_version": "5.0.8",
+    "slurm_enable_restd": true,
+    "slurm_jwt_version": "v2.1.2"
+
+}
+```
 
 Role Variables
 --------------

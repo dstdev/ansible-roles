@@ -9,7 +9,6 @@ slurm_local_repo_name: slurm_repo
 slurm_local_repo_host: yuma-s1 
 slurm_rpm_repo_scp_path: "root@{{ slurm_local_repo_host }}:/var/www/html/{{ slurm_local_repo_name }}"
 slurm_rpm_final_path: "/home/{{ slurm_rpmbuild_user }}/rpmbuild/RPMS/{{ ansible_architecture }}"
-slurm_code_source: schedmd # [schedmd | github]
 
 # defaults file for slurm-controller
 slurm_database_password: "default"
@@ -101,7 +100,7 @@ slurm_install_root: "/opt/slurm"
 slurm_update_symlink: yes
 slurm_disable_restart: false
 slurm_rpm_install: true
-slurm_source_install: false
+slurm_source_install: true
 slurm_rpm_repo: ""
 
 slurm_build_jobs: 8

@@ -20,6 +20,13 @@
 # role exits early if slurm_build_rpms == true 
 ##################################################
 
+
+- name: Check install method
+  fail: 
+    msg:
+      - "slurm_rpm_install and slurm_source_install are mutually exclusive."
+  when: slurm_rpm_install and slurm_source_install
+
 - name: Include pre-install tasks
   ansible.builtin.include_tasks: "pre_install.yaml"
   tags:

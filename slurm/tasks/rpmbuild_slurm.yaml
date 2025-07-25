@@ -4,11 +4,10 @@
     name: "{{item}}"
     state: present
     enablerepo: "{{ slurm_el_repos }}"
-
-  loop: "{ {slurm_required_devel_packages }}"
+  loop: "{{ slurm_required_devel_packages }}"
   when: ansible_distribution_major_version | int >= 8
 
-- name: Download source bundle 
+- name: Download source bundle
   ansible.builtin.get_url:  
     url: "https://download.schedmd.com/slurm/slurm-{{ slurm_version }}.tar.bz2"
     dest: "{{ slurm_tmpdir }}/slurm-{{ slurm_version }}.tar.bz2"

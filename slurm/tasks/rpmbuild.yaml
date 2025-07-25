@@ -1,13 +1,4 @@
 ---
-- name: Create temporary source dir
-  ansible.builtin.file:
-    state: directory
-    path: "{{ slurm_tmpdir }}"
-    mode: "0777"
-    owner: "{{ slurm_rpmbuild_user }}"
-    group: "{{ slurm_rpmbuild_user }}"
-  
-  
 - name: Add slurmbuild user 
   ansible.builtin.user:
     name: "{{ slurm_rpmbuild_user }}"
@@ -17,6 +8,16 @@
     home: "{{ slurm_rpmbuild_user_home }}"
     state: present
 
+
+- name: Create temporary source dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{ slurm_tmpdir }}"
+    mode: "0777"
+    owner: "{{ slurm_rpmbuild_user }}"
+    group: "{{ slurm_rpmbuild_user }}"
+  
+  
 - name: Set Slurm RPM build variables
   ansible.builtin.set_fact:
     slurm_rpm_base_path: "{{slurm_rpmbuild_user_home}}/rpmbuild/RPMS/{{ ansible_architecture }}"

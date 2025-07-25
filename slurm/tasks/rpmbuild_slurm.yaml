@@ -5,7 +5,7 @@
     state: present
     enablerepo: "{{ slurm_el_repos }}"
 
-  loop: "{{slurm_pmix_required_devel_packages}}"
+  loop: "{ {slurm_required_devel_packages }}"
   when: ansible_distribution_major_version | int >= 8
 
 - name: Download source bundle 

@@ -31,6 +31,12 @@ slurm_required_devel_packages:
   - json-c-devel  
   - http-parser
   - http-parser-devel  
+  - libjwt-devel
+  - munge-devel
+  - munge-libs
+  - perl-ExtUtils-MakeMaker
+  - readline-devel
+
 
 slurm_dbd_required_packages:
   - mariadb-server

@@ -3,6 +3,10 @@ Slurm
 
 Install and configures slurm controller, daemons, and database.
 
+RPMBuild Execution Path 
+-----------------------
+When `slurm_build_rpms` is true, Slurm and optionally PMix rpms are build and copied out to the local RPM repo hosting Slurm and PMix packages. The role exits after the packages are copies over to the repo.
+
 Requirements
 ------------
 
@@ -11,17 +15,17 @@ Running Mariadb/MySQL Role or instance and munge development libraries must be i
 Example Build Command
 ---------------------
 ``` 
-ansible-playbook -i inventory.ini -c local -e @test_install.json slurm.yml
+ansible-playbook -i inventory.ini -c local -e @slurm_opts.json slurm.yml
 ``` 
 
 Example Vars File
 -----------------
-slurm_install.json
+slurm_opts.json
 ```
 {
     "slurm_build_rpms": false,
-    "slurm_source_install": true,
-    "slurm_rpm_install": false,
+    "slurm_source_install": false,
+    "slurm_rpm_install": true,
     "slurm_version": "23.11.11",
     "slurm_enable_pmix": true,
     "slurm_pmix_version": "5.0.8",
@@ -32,17 +36,25 @@ slurm_install.json
 ```
 
 Role Variables
---------------
+==============
 
+rpmbuild
+--------
 
 | Name                                        | Default Value         | Description                                                                       |
 |---------------------------------------------|-----------------------|-----------------------------------------------------------------------------------|
-| mounts                                      | []                    | List of dictionaries defining the mount                                           |
+| slurm_rpmbuild_user                         | slurmbuild            | Non-privileged user for rpmbuilds. This user will be created if necessary. 
+| slurm_rpmbuild_user_home                    |/home/{{ slurm_rpmbuild_user }}|  rpmbuild root
+| slurm_local_repo_name                       | ""                    | Name of Slurm RPM Repo 
+| slurm_local_repo_host                       | ""                    | Hostname for slrum RPM Repo
+| slurm_rpm_repo_scp_path                     |root@{{ slurm_local_repo_host }}:/var/www/html/{{ slurm_local_repo_name }} | scp command to put packages
+| slurm_rpm_final_path                        |                       | Path to local final rpm packages
 | slurm_accounting_storage_enforce            | 0                     | Accounting enforcement                                                            |
 | slurm_cgroup_automount                      | yes                   | Automount cgroups                                                                 |
 | slurm_cgroup_constrain_cores                | yes                   | Constrain cores available                                                         |
 | slurm_cgroup_constrain_ram_space            | yes                   | Constrain ram space                                                               |
-| slurm_cluster_name                          | cluster               | Name for this cluster install                                                     |
+| slurm_cluster_name                          | cluster               | Name for this cluster install 
+| slurm_conf_max_job_count                    | 10000 | slurm.conf MaxJobCount
 | slurm_conf_accounting_storage_external_host | ""                    | External Accounting DB host ip and port                                           |
 | slurm_conf_accouting_storage_tres           | []                    | AccoutingStorageTres Parameter                                                    |
 | slurm_conf_cli_filter_plugins               | []                    | List of filter/modification plugins                                               |

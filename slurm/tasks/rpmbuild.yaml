@@ -92,7 +92,8 @@
       - ssh 
       - "{{ slurm_local_repo_host}}"
       - createrepo
-      - "/var/www/html/{{ slurm_local_repo_name }}"
+      - "{{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }}"
+
 
 - name: rpmbuild end play
   meta: end_play

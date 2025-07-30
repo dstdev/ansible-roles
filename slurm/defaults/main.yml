@@ -1,21 +1,34 @@
 ---
 # Build RPM Packages - when true, this will biuld RPM packages for slurm 
 # and optionally PMIX then exit the role and complete.
-slurm_build_rpms: false
 
+# RPM Build Details 
+#======================
+slurm_build_rpms: false
 slurm_rpmbuild_user: slurmbuild
 slurm_rpmbuild_user_home: "/home/{{ slurm_rpmbuild_user }}"
+slurm_rpm_final_path: "/home/{{ slurm_rpmbuild_user }}/rpmbuild/RPMS/{{ ansible_architecture }}"
+
+# Local Slurm Repo Details
+#==========================
+# This assumes an HTTP based RPM Repo 
+slurm_local_repo_description: "Slurm RPM Repository"
+# Path to HTTP server document root 
+slurm_rpm_server_path_base: "/var/www/html"
 slurm_local_repo_name: slurm_repo 
 slurm_local_repo_host: yuma-s1 
-slurm_rpm_repo_scp_path: "root@{{ slurm_local_repo_host }}:/var/www/html/{{ slurm_local_repo_name }}"
-slurm_rpm_final_path: "/home/{{ slurm_rpmbuild_user }}/rpmbuild/RPMS/{{ ansible_architecture }}"
+slurm_rpm_local_repo_url: "http://{{ slurm_local_repo_host }}/{{ slurm_local_repo_name }}"
+slurm_rpm_repo_scp_path: "root@{{ slurm_local_repo_host }}:{{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }}"
+
 
 # defaults file for slurm-controller
 slurm_database_password: "default"
+
+# Code hosted at Github and SchedMD have different filename formats
 # Github slurm versions are nn.nn.nn-1 
 # ShedMD release versions are nn.nn.nn 
-# slurm_version: "21.08.8-1"   # Git Hub 
-# slurm_version: "23.11.11"    # SchedMD Hub 
+# slurm_version: "21.08.8-1"   # GitHub 
+# slurm_version: "23.11.11"    # SchedMD
 slurm_version: "24.11.6"
 
 # For Slurm < 24.05.8-0 the slurmd and slurmctld use "-D --systemd"
@@ -99,8 +112,8 @@ slurm_dbd_password: ""
 slurm_install_root: "/opt/slurm"
 slurm_update_symlink: yes
 slurm_disable_restart: false
-slurm_rpm_install: true
-slurm_source_install: true
+slurm_rpm_install: false
+slurm_source_install: false
 slurm_rpm_repo: ""
 
 slurm_build_jobs: 8

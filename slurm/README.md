@@ -5,7 +5,8 @@ Install and configures slurm controller, daemons, and database.
 
 RPMBuild Execution Path 
 -----------------------
-When `slurm_build_rpms` is true, Slurm and optionally PMix rpms are build and copied out to the local RPM repo hosting Slurm and PMix packages. The role exits after the packages are copies over to the repo.
+When `slurm_build_rpms` is true, Slurm and optionally PMix rpms are build and copied out to the local RPM repo hosting Slurm and PMix packages. The role exits after the packages are copies over to the repo.  
+Running `rpmbuild` using the code bundle from github is often problematic.  For this reason, the rpmbuild path downloads the source bundle from SchedMD, not GitHub.   
 
 Requirements
 ------------
@@ -47,7 +48,7 @@ rpmbuild
 | slurm_rpmbuild_user_home                    |/home/{{ slurm_rpmbuild_user }}|  rpmbuild root
 | slurm_local_repo_name                       | ""                    | Name of Slurm RPM Repo 
 | slurm_local_repo_host                       | ""                    | Hostname for slrum RPM Repo
-| slurm_rpm_repo_scp_path                     |root@{{ slurm_local_repo_host }}:/var/www/html/{{ slurm_local_repo_name }} | scp command to put packages
+| slurm_rpm_repo_scp_path                     |root@{{ slurm_local_repo_host }}:{{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }} | scp command to put packages
 | slurm_rpm_final_path                        |                       | Path to local final rpm packages
 | slurm_accounting_storage_enforce            | 0                     | Accounting enforcement                                                            |
 | slurm_cgroup_automount                      | yes                   | Automount cgroups                                                                 |

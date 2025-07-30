@@ -1,3 +1,10 @@
+- name: Add local custom repo
+  yum_repository:
+    name: "{{ slurm_local_repo_name }}"
+    description: "{{ slurm_local_repo_description }}"
+    baseurl: "{{ slurm_rpm_local_repo_url }}"
+    gpgcheck: no
+
 - name: Check Command
   ansible.builtin.shell: 
     cmd: "dnf repoquery --repo {{ slurm_local_repo_name }} slurm | awk -F: '{print $2}' | awk -F- '{print $1}'"

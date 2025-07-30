@@ -87,8 +87,6 @@
 - name: scp completed RPMs to repo 
   ansible.builtin.shell: "scp {{ slurm_rpm_final_path }}/*.rpm {{ slurm_rpm_repo_scp_path }}"
   
-  
-
 - name: Run createrepo
   ansible.builtin.command:
     argv: 

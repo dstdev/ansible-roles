@@ -81,10 +81,13 @@
 - name: Build Slurm if required 
   ansible.builtin.include_tasks: rpmbuild_slurm.yaml 
 
+- name: Make sure remote slurm repo path exists 
+  ansible.builtin.shell: "ssh root@{{ slurm_local_repo_host }} mkdir -p {{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }}"
+  
 - name: scp completed RPMs to repo 
   ansible.builtin.shell: "scp {{ slurm_rpm_final_path }}/*.rpm {{ slurm_rpm_repo_scp_path }}"
-  when: slurm_build_rpms and slurm_rpm_final_path is defined and slurm_rpm_repo_scp_path is defined
-  become_user: "{{ slurm_rpmbuild_user }}"
+  
+  
 
 - name: Run createrepo
   ansible.builtin.command:

@@ -74,9 +74,11 @@
       - "slurm_pmix_rpm_path_stat.stat.exists: {{ slurm_pmix_rpm_path_stat.stat.exists }}"
       - " ----------------------------------------------------------------------"         
 
+
 - name: Build PMix if required 
   ansible.builtin.include_tasks: rpmbuild_pmix.yaml 
   when: slurm_enable_pmix
+
 
 - name: Build Slurm if required 
   ansible.builtin.include_tasks: rpmbuild_slurm.yaml 
@@ -86,7 +88,7 @@
   
 - name: scp completed RPMs to repo 
   ansible.builtin.shell: "scp {{ slurm_rpm_final_path }}/*.rpm {{ slurm_rpm_repo_scp_path }}"
-  
+
 - name: Run createrepo
   ansible.builtin.command:
     argv: 
@@ -95,6 +97,19 @@
       - createrepo
       - "{{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }}"
 
+- name: set permissions on remote repo path
+  ansible.builtin.shell: "ssh root@{{ slurm_local_repo_host }} chown -R apache:apache {{ slurm_rpm_repo_path }}" 
+
+- name: Stat slurm repo
+  ansible.builtin.stat:
+    path: "{{slurm_local_repo_def_path}}"
+  register: slurm_repo_check
+
+- name: Setup local slurm repo definition
+  ansible.builtin.template:
+    src: slurm.repo.j2
+    dest: "{{slurm_local_repo_def_path}}"
+  when: not slurm_repo_check.stat.exists
 
 - name: rpmbuild end play
   meta: end_play

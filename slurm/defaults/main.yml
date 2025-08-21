@@ -8,6 +8,7 @@ slurm_build_rpms: false
 slurm_rpmbuild_user: slurmbuild
 slurm_rpmbuild_user_home: "/home/{{ slurm_rpmbuild_user }}"
 slurm_rpm_final_path: "/home/{{ slurm_rpmbuild_user }}/rpmbuild/RPMS/{{ ansible_architecture }}"
+slurm_local_repo_def_path: /etc/yum.repos.d/slurm.repo
 
 # Local Slurm Repo Details
 #==========================
@@ -18,7 +19,8 @@ slurm_rpm_server_path_base: "/var/www/html"
 slurm_local_repo_name: slurm_repo 
 slurm_local_repo_host: yuma-s1 
 slurm_rpm_local_repo_url: "http://{{ slurm_local_repo_host }}/{{ slurm_local_repo_name }}"
-slurm_rpm_repo_scp_path: "root@{{ slurm_local_repo_host }}:{{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }}"
+slurm_rpm_repo_path: "{{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }}"
+slurm_rpm_repo_scp_path: "root@{{ slurm_local_repo_host }}:{{ slurm_rpm_repo_path }}"
 
 
 # defaults file for slurm-controller
@@ -40,7 +42,7 @@ slurm_dash_d: "-D"
 slurm_enable_systemd_daemon_flag: false
 slurm_jwt_version: "v2.1.2"
 slurm_slurmd: false
-slurm_controller: true
+slurm_controller: false
 slurm_uid: 450
 slurm_gid: 450
 slurm_controller_hostname: localhost
@@ -168,3 +170,7 @@ slurm_force_install: false
 
 slurm_conf_extra: {}
 slurmdbd_conf_extra: {}
+
+
+slurm_rpm_check_path: "{{ slurm_rpmbuild_user_home }}/rpmbuild/RPMS/{{ ansible_architecture }}/slurm-{{ slurm_version }}-1.el{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.rpm"
+pmix_rpm_check_path: "{{ slurm_rpmbuild_user_home }}/rpmbuild/RPMS/{{ ansible_architecture }}/pmix-{{ slurm_pmix_version }}-1.el{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.rpm"

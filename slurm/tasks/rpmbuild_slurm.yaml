@@ -95,7 +95,7 @@
 - name: Base rpmbuild command 
   ansible.builtin.set_fact: 
     rpmbuild_cmd: "rpmbuild -D '_prefix {{ slurm_install_directory }}'"
-
+  
 - name: rpmbuild pmix option default to ""
   ansible.builtin.set_fact: 
     rpmbuild_pmix_option: ""

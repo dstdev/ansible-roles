@@ -10,6 +10,19 @@
     - slurm_install_slurmd
     - slurm_configure
 
+
+- name: create slurmd sysconfig file
+  ansible.builtin.template:
+    src: templates/slurmd.sysconfig.j2
+    dest: /etc/sysconfig/slurmd
+    owner: root
+    group: root
+    mode: "0644"
+  when: slurm_rpm_install
+  tags:
+    - slurm
+    - slurm_install_slurmd
+
 # In case another instance of slurmd.service is runnig 
 - name: Restart systemceld
   systemd:

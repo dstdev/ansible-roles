@@ -9,6 +9,7 @@
     - slurm
     - slurm_install_slurmd
     - slurm_configure
+  when: slurm_source_install
 
 
 - name: create slurmd sysconfig file
@@ -22,6 +23,7 @@
   tags:
     - slurm
     - slurm_install_slurmd
+  when: slurm_rpm_install
 
 # In case another instance of slurmd.service is runnig 
 - name: Restart systemceld

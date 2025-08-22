@@ -91,6 +91,7 @@
   tags:
     - slurm
     - slurm_install_controller
+  when: slurm_source_install
 
 - name: Start slurmdbd service
   ansible.builtin.service:

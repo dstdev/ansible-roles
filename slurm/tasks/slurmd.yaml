@@ -23,7 +23,6 @@
   tags:
     - slurm
     - slurm_install_slurmd
-  when: slurm_rpm_install
 
 # In case another instance of slurmd.service is runnig 
 - name: Restart systemceld

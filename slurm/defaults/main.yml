@@ -16,7 +16,7 @@ slurm_local_repo_def_path: /etc/yum.repos.d/slurm.repo
 slurm_local_repo_description: "Slurm RPM Repository"
 # Path to HTTP server document root 
 slurm_rpm_server_path_base: "/var/www/html"
-slurm_local_repo_name: slurm_repo 
+slurm_local_repo_name: slurm
 slurm_local_repo_host: yuma-s1 
 slurm_rpm_local_repo_url: "http://{{ slurm_local_repo_host }}/{{ slurm_local_repo_name }}"
 slurm_rpm_repo_path: "{{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }}"

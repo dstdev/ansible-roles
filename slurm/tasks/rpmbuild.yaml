@@ -100,16 +100,5 @@
 - name: set permissions on remote repo path
   ansible.builtin.shell: "ssh root@{{ slurm_local_repo_host }} chown -R apache:apache {{ slurm_rpm_repo_path }}" 
 
-- name: Stat slurm repo
-  ansible.builtin.stat:
-    path: "{{slurm_local_repo_def_path}}"
-  register: slurm_repo_check
-
-- name: Setup local slurm repo definition
-  ansible.builtin.template:
-    src: slurm.repo.j2
-    dest: "{{slurm_local_repo_def_path}}"
-  when: not slurm_repo_check.stat.exists
-
 - name: rpmbuild end play
   meta: end_play

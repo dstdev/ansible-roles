@@ -11,8 +11,24 @@
     - slurm_install_slurmd
     - slurm_install_restd
 
+- name: Install required development packages 
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: present
+    enablerepo: "{{ slurm_el_repos }}"
+  loop: "{{ slurm_required_devel_packages }}"
+  when: ansible_distribution_major_version | int >= 8
+
+# Fail if slurm_build_jwt_source is true and jwt is installed
+- ansible.builtin.fail:
+    msg: 
+      - "JWT is already installed via RPM - installing from source is not supported."
+      - "remove jwt rpm packages before building from source."
+  when: slurm_build_jwt_source and jwt_packages | length > 0
+
+# Build and install JWT from source 
 - ansible.builtin.include_tasks: "jwt.yaml"
-  when: slurm_enable_restd and install_slurm
+  when: slurm_enable_restd and install_slurm and slurm_build_jwt_source
   tags:
     always
 
@@ -77,7 +93,7 @@
 
 - name: Configure slurm
   command: "./configure --prefix=/{{slurm_install_directory}} --sysconfdir=/etc/slurm \
-            --localstatedir=/var --runstatedir=/run {% if slurm_enable_restd %}--with-jwt={{slurm_install_directory}}{% endif %}\
+            --localstatedir=/var --runstatedir=/run {% if slurm_enable_restd and slurm_build_jwt_source %}--with-jwt={{slurm_install_directory}}{% endif %}\
             {% if slurm_enable_pmix %} --with-pmix={{slurm_install_directory}}{% endif %}"
   args:
     chdir: "{{slurm_tmpdir}}/slurm-slurm-{{slurm_download_version}}"

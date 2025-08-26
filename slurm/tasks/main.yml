@@ -11,9 +11,12 @@
   tags:
     - always
 
-
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: "auto"
+    
 ##################################################
-# Exits role after the rpmbuildI(s) are complete.
+# Exits role after the rpmbuild(s) are complete.
 - name: Build RPM packages if needed 
   ansible.builtin.include_tasks: "rpmbuild.yaml"
   when: slurm_build_rpms

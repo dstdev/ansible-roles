@@ -40,6 +40,7 @@ slurm_dasd_d_ver: "24.05.8"
 slurm_dash_d: "-D"
 
 slurm_enable_systemd_daemon_flag: false
+slurm_build_jwt_source: false   
 slurm_jwt_version: "v2.1.2"
 slurm_slurmd: false
 slurm_controller: false

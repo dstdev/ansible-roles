@@ -40,10 +40,6 @@
     path: "{{ slurm_pmix_expected_root_path }}"
   register: slurm_pmix_expected_root_path_stat  
 
-- name: Get installed RPMs 
-  ansible.builtin.package_facts:
-    manager: auto 
-
 - name: Check if PMix is installed
   ansible.builtin.set_fact:
     slurm_pmix_installed: "{{ 'pmix' in ansible_facts.packages }}"

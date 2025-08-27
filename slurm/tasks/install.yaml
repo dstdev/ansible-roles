@@ -19,6 +19,15 @@
   loop: "{{ slurm_required_devel_packages }}"
   when: ansible_distribution_major_version | int >= 8
 
+# Check if JWT RPM is installed 
+- name: Check if JWT RPM is installed 
+  ansible.builtin.set_fact:
+    jwt_packages: "{{ ansible_facts.packages['libjwt'] | default([]) }}"
+  tags:
+    - slurm
+    - slurm_install_restd
+  when: slurm_enable_restd and slurm_build_jwt_source
+
 # Fail if slurm_build_jwt_source is true and jwt is installed
 - ansible.builtin.fail:
     msg: 
@@ -144,7 +153,7 @@
   tags:
     - slurm_install_restd
   when: slurm_enable_restd 
-  
+
 # TODO: Cleanup tmp spaces
 #- name: Clean up tmp space
   #ansible.builtin.file:

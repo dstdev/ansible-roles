@@ -11,14 +11,6 @@
     - slurm_install_slurmd
     - slurm_install_restd
 
-- name: Install required development packages 
-  ansible.builtin.dnf:
-    name: "{{item}}"
-    state: present
-    enablerepo: "{{ slurm_el_repos }}"
-  loop: "{{ slurm_required_devel_packages }}"
-  when: ansible_distribution_major_version | int >= 8
-
 # Check if JWT RPM is installed 
 - name: Check if JWT RPM is installed 
   ansible.builtin.set_fact:

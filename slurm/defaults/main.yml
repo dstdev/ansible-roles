@@ -1,10 +1,47 @@
 ---
+# Build RPM Packages - when true, this will biuld RPM packages for slurm 
+# and optionally PMIX then exit the role and complete.
+
+# RPM Build Details 
+#======================
+slurm_build_rpms: false
+slurm_rpmbuild_user: slurmbuild
+slurm_rpmbuild_user_home: "/home/{{ slurm_rpmbuild_user }}"
+slurm_rpm_final_path: "/home/{{ slurm_rpmbuild_user }}/rpmbuild/RPMS/{{ ansible_architecture }}"
+slurm_local_repo_def_path: /etc/yum.repos.d/slurm.repo
+
+# Local Slurm Repo Details
+#==========================
+# This assumes an HTTP based RPM Repo 
+slurm_local_repo_description: "Slurm RPM Repository"
+# Path to HTTP server document root 
+slurm_rpm_server_path_base: "/var/www/html"
+slurm_local_repo_name: slurm
+slurm_local_repo_host: yuma-s1 
+slurm_rpm_local_repo_url: "http://{{ slurm_local_repo_host }}/{{ slurm_local_repo_name }}"
+slurm_rpm_repo_path: "{{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }}"
+slurm_rpm_repo_scp_path: "root@{{ slurm_local_repo_host }}:{{ slurm_rpm_repo_path }}"
+
+
 # defaults file for slurm-controller
 slurm_database_password: "default"
-#slurm_version: "21.08.8-2"
-slurm_version: "23.11.5-1"
+
+# Code hosted at Github and SchedMD have different filename formats
+# Github slurm versions are nn.nn.nn-1 
+# ShedMD release versions are nn.nn.nn 
+# slurm_version: "21.08.8-1"   # GitHub 
+# slurm_version: "23.11.11"    # SchedMD
+slurm_version: "24.11.6"
+
+# For Slurm < 24.05.8-0 the slurmd and slurmctld use "-D --systemd"
+# For Slurm >= 24.05.8-0, slurmd and slurmctld use only "--systemd"
+# https://github.com/SchedMD/slurm/blob/slurm-24.05/NEWS 
+slurm_dasd_d_ver: "24.05.8"
+slurm_dash_d: "-D"
+
 slurm_enable_systemd_daemon_flag: false
-slurm_jwt_version: "v1.12.0"
+slurm_build_jwt_source: false   
+slurm_jwt_version: "v2.1.2"
 slurm_slurmd: false
 slurm_controller: false
 slurm_uid: 450
@@ -21,7 +58,7 @@ slurm_daemon_debug: 3
 slurm_proctrack_type: "cgroup"
 slurm_nodes: []
 slurm_partitions: []
-slurm_daemon_spool_dir: /var/spool/slurmd/
+slurm_daemon_spool_dir: /var/spool/slurmd
 slurm_state_save_location: /var/spool/slurmctld
 slurm_scheduler_type: backfill
 slurm_accounting_storage_enforce: 0
@@ -79,15 +116,16 @@ slurm_install_root: "/opt/slurm"
 slurm_update_symlink: yes
 slurm_disable_restart: false
 slurm_rpm_install: false
+slurm_source_install: false
 slurm_rpm_repo: ""
 
-slurm_build_jobs: 4
+slurm_build_jobs: 8
 slurm_enable_cgroup_conf: true
-slurm_enable_restd: false
+slurm_enable_restd: true 
 slurm_restd_port: 8911
 slurm_restd_host: "0.0.0.0"
-slurm_restd_user: "{{undef(hint='You must specify the slurm rest api user')}}"
-slurm_restd_jwt_key: "{{undef(hint='You must specify the jwt key value')}}"
+slurm_restd_user: srestd
+slurm_restd_jwt_key: /var/spool/slurmctld/jwt_hs256.key
 
 
 # Slurm profile variables
@@ -110,7 +148,7 @@ slurm_task_epilog_append: ""
 
 # Firewall rules
 slurm_firewalld_enabled: false
-slurm_firewalld_subnet: "10.141.0.0/16"
+slurm_firewalld_subnet: "192.168.114.0/24"
 slurm_firewalld_python_interpreter: "/usr/bin/python"
 
 # Gres information
@@ -127,9 +165,13 @@ slurm_conf_accounting_storage_external_host: ""
 slurm_enable_pam_adopt: false
 slurm_groups_allowed: []
 slurm_enable_pmix: true
-slurm_pmix_version: 5.0.1
+slurm_pmix_version: 5.0.8
 
 slurm_force_install: false
 
 slurm_conf_extra: {}
 slurmdbd_conf_extra: {}
+
+
+slurm_rpm_check_path: "{{ slurm_rpmbuild_user_home }}/rpmbuild/RPMS/{{ ansible_architecture }}/slurm-{{ slurm_version }}-1.el{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.rpm"
+pmix_rpm_check_path: "{{ slurm_rpmbuild_user_home }}/rpmbuild/RPMS/{{ ansible_architecture }}/pmix-{{ slurm_pmix_version }}-1.el{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.rpm"

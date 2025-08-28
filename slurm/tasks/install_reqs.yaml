@@ -1,0 +1,66 @@
+---
+- name: Install required packages EL 8+
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: present
+    enablerepo: "{{ slurm_el_repos }}"
+
+  loop: "{{slurm_required_packages}}"
+  when: ansible_distribution_major_version | int >= 8
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install required packages EL 7
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop: "{{slurm_required_packages}}"
+  when: ansible_distribution_major_version | int == 7
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install slurmdbd requirements el8+
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    enablerepo: "{{ slurm_el_repos }}"
+  loop: "{{slurm_dbd_required_packages}}"
+  when: slurm_controller and slurm_enable_restd and ansible_distribution_major_version | int >= 8
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install slurmdbd requirements
+  ansible.builtin.package:
+    name: "{{item}}"
+  when: slurm_controller
+  loop: "{{slurm_dbd_required_packages}}"
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install slurm rest api requirements EL8+
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    enablerepo: "{{ slurm_el_repos }}"
+  loop: "{{slurm_restapi_required_packages}}"
+  when: slurm_enable_restd and ansible_distribution_major_version | int >= 8
+  tags:
+    - slurm
+    - slurm_install_restapi
+    - slurm_install_restd
+
+- name: Install slurm rest api requirements EL7
+  ansible.builtin.package:
+    name: "{{item}}"
+  loop: "{{slurm_restapi_required_packages}}"
+  when: slurm_enable_restd and ansible_facts['distribution_major_version'] == "7" 
+  tags:
+    - slurm
+    - slurm_install_restapi
+    - slurm_install_restd

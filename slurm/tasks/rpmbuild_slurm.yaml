@@ -1,0 +1,122 @@
+---
+- name: Install required development packages 
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: present
+    enablerepo: "{{ slurm_el_repos }}"
+  loop: "{{ slurm_required_devel_packages }}"
+  when: ansible_distribution_major_version | int >= 8
+
+- name: Download source bundle
+  ansible.builtin.get_url:  
+    url: "https://download.schedmd.com/slurm/slurm-{{ slurm_version }}.tar.bz2"
+    dest: "{{ slurm_tmpdir }}/slurm-{{ slurm_version }}.tar.bz2"
+  become: true
+  become_user: "{{ slurm_rpmbuild_user }}"
+
+# If PMix is installed it need to be both 
+# the correct version and installed in the expected path
+# Error Case 1 - slurm_enable_pmix is true and wrong pmix version is installed 
+- name: Check if PMix version is compatible
+  ansible.builtin.fail:
+    msg: "PMIx version {{ slurm_pmix_installed_version }} is not the target version {{ slurm_pmix_version }}"
+  when: slurm_enable_pmix and slurm_pmix_installed and (slurm_pmix_installed_version != slurm_pmix_version)
+
+# Error Case 2 - slurm_enable_pmix is true and PMix expected root path does not exist
+- name: Fail if PMix expected root path does not exist
+  ansible.builtin.fail:
+    msg: "PMIx expected root path {{ slurm_pmix_expected_root_path }} does not exist. Please ensure PMIx is installed correctly."
+  when: slurm_enable_pmix and slurm_pmix_installed and not slurm_pmix_expected_root_path_stat.stat.exists
+
+# Error Case 3 - slurm_enable_pmix is true and PMix RPM path does not exist
+- name: Fail if PMix RPM path does not exist
+  ansible.builtin.fail:
+    msg: "PMIx RPM path {{ slurm_pmix_rpm_path }} does not exist. Please ensure the RPM is available for installation."
+  when: slurm_enable_pmix and slurm_pmix_installed and not slurm_pmix_rpm_path_stat.stat.exists
+
+- name: debug out 
+  debug:
+    msg: 
+      - "slurm_enable_pmix: {{ slurm_enable_pmix  }}"
+      - "slurm_pmix_installed_version: {{ slurm_pmix_installed_version }}"
+
+# Yum Install PMix RPM
+- name: Install PMix RPM
+  ansible.builtin.yum:
+    name: "{{ slurm_pmix_rpm_path }}"
+    state: present
+    disable_gpg_check: true
+  when: slurm_enable_pmix
+
+- name: Check if PMix rpm exists 
+  ansible.builtin.stat:
+    path: "{{ slurm_pmix_rpm_path }}"
+  register: slurm_pmix_rpm_path_stat 
+
+- name: Set PMix root path 
+  ansible.builtin.set_fact:
+    slurm_pmix_expected_root_path: "{{ slurm_install_directory }}/bin/pmix_info"
+
+- name: Check if PMix expected root path exists
+  ansible.builtin.stat:
+    path: "{{ slurm_pmix_expected_root_path }}"
+  register: slurm_pmix_expected_root_path_stat  
+
+- name: Check if PMix is installed
+  ansible.builtin.set_fact:
+    slurm_pmix_installed: "{{ 'pmix' in ansible_facts.packages }}"
+
+- name: Check PMix Installed Version 
+  ansible.builtin.set_fact:
+    slurm_pmix_installed_version: "{{ ansible_facts.packages['pmix'][0].version if slurm_pmix_installed else 'not installed' }}"
+
+
+# Show some debug information
+- name: Debug PMix Build vars
+  ansible.builtin.debug:
+    msg: 
+      - "slurm_install_directory: {{ slurm_install_directory }} "
+      - "slurm_version {{ slurm_version  }}"
+      - "slurm_pmix_version {{ slurm_pmix_version  }}" 
+      - " ----------------------------------------------------------------------"
+      - "slurm_pmix_expected_root_path: {{ slurm_pmix_expected_root_path}}"      
+      - "slurm_pmix_expected_root_path_stat.stat.exists: {{ slurm_pmix_expected_root_path_stat.stat.exists }}"
+      - " ----------------------------------------------------------------------"
+      - "slurm_pmix_rpm_path: {{ slurm_pmix_rpm_path }}" 
+      - "slurm_pmix_rpm_path_stat.stat.exists: {{ slurm_pmix_rpm_path_stat.stat.exists }}"
+      - " ----------------------------------------------------------------------"      
+      - "slurm_pmix_installed: {{ slurm_pmix_installed  }}"
+      - "slurm_pmix_installed_version: {{ slurm_pmix_installed_version }}"
+
+- name: Base rpmbuild command 
+  ansible.builtin.set_fact: 
+    rpmbuild_cmd: "rpmbuild -D '_prefix {{ slurm_install_directory }}'"
+  
+- name: rpmbuild pmix option default to ""
+  ansible.builtin.set_fact: 
+    rpmbuild_pmix_option: ""
+  
+- name: rpmbuild pmix option 
+  ansible.builtin.set_fact: 
+    rpmbuild_pmix_option: "-D '_with_pmix --with-pmix={{ slurm_install_directory }}'"
+  when: slurm_enable_pmix 
+
+- name: rpmbuild slurmrestd option default to ""
+  ansible.builtin.set_fact: 
+    rpmbuild_restd_option: ""
+
+- name: rpmbuild slurmrestd option 
+  ansible.builtin.set_fact: 
+    rpmbuild_restd_option: "--with slurmrestd --with jwt"
+  when: slurm_enable_restd 
+
+- name: show build command 
+  ansible.builtin.debug:
+    msg: "rpmbuild command: {{ rpmbuild_cmd }} {{ rpmbuild_pmix_option }} {{ rpmbuild_restd_option }} -ta slurm-{{ slurm_version }}.tar.bz2"  
+
+- name: rpmbuild from source tarball
+  command: "{{ rpmbuild_cmd }} {{ rpmbuild_pmix_option }} {{ rpmbuild_restd_option }} -ta slurm-{{ slurm_version }}.tar.bz2"
+  args:
+    chdir: "{{slurm_tmpdir}}"
+  become: true
+  become_user: "{{ slurm_rpmbuild_user }}" 

@@ -1,0 +1,11 @@
+---
+- name: Install required development packages 
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: present
+    enablerepo: "{{ slurm_el_repos }}"
+
+  loop: "{{slurm_required_devel_packages}}"
+  when: ansible_distribution_major_version | int >= 8
+  tags:
+    - slurm_build_rpms

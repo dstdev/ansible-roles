@@ -1,0 +1,100 @@
+---
+- name: Add slurmbuild user 
+  ansible.builtin.user:
+    name: "{{ slurm_rpmbuild_user }}"
+    comment: "Slurm Build User"
+    shell: /bin/bash
+    create_home: true
+    home: "{{ slurm_rpmbuild_user_home }}"
+    state: present
+
+
+- name: Create temporary source dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{ slurm_tmpdir }}"
+    mode: "0777"
+    owner: "{{ slurm_rpmbuild_user }}"
+    group: "{{ slurm_rpmbuild_user }}"
+  
+  
+- name: Set Slurm RPM build variables
+  ansible.builtin.set_fact:
+    slurm_rpm_base_path: "{{slurm_rpmbuild_user_home}}/rpmbuild/RPMS/{{ ansible_architecture }}"
+
+- name: Set PMix RPM path 
+  ansible.builtin.set_fact:
+    slurm_pmix_rpm_path: "{{ slurm_rpm_base_path }}/pmix-{{ slurm_pmix_version }}-1.el{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.rpm"
+
+- name: Check if PMix rpm exists 
+  ansible.builtin.stat:
+    path: "{{ slurm_pmix_rpm_path }}"
+  register: slurm_pmix_rpm_path_stat 
+
+- name: Set PMix root path 
+  ansible.builtin.set_fact:
+    slurm_pmix_expected_root_path: "{{ slurm_install_directory }}/bin/pmix_info"
+
+- name: Check if PMix expected root path exists
+  ansible.builtin.stat:
+    path: "{{ slurm_pmix_expected_root_path }}"
+  register: slurm_pmix_expected_root_path_stat  
+
+- name: Check if PMix is installed
+  ansible.builtin.set_fact:
+    slurm_pmix_installed: "{{ 'pmix' in ansible_facts.packages }}"
+
+- name: Check PMix Installed Version 
+  ansible.builtin.set_fact:
+    slurm_pmix_installed_version: "{{ ansible_facts.packages['pmix'][0].version if slurm_pmix_installed else 'not installed' }}"
+
+
+# Show some debug information
+- name: Debug PMix Build vars
+  ansible.builtin.debug:
+    msg: 
+      - "slurm_install_directory: {{ slurm_install_directory }} "
+      - "slurm_version {{ slurm_version  }}"
+      - "slurm_pmix_version {{ slurm_pmix_version  }}" 
+      - " ----------------------------------------------------------------------"
+      - "slurm_pmix_expected_root_path: {{ slurm_pmix_expected_root_path}}"      
+      - "slurm_pmix_expected_root_path_stat.stat.exists: {{ slurm_pmix_expected_root_path_stat.stat.exists }}"
+      - " ----------------------------------------------------------------------"
+      - "slurm_pmix_rpm_path: {{ slurm_pmix_rpm_path }}" 
+      - "slurm_pmix_rpm_path_stat.stat.exists: {{ slurm_pmix_rpm_path_stat.stat.exists }}"
+      - " ----------------------------------------------------------------------"      
+      - "slurm_pmix_installed: {{ slurm_pmix_installed  }}"
+      - "slurm_pmix_installed_version: {{ slurm_pmix_installed_version }}"
+      - " ----------------------------------------------------------------------"       
+      - "slurm_enable_pmix: {{ slurm_enable_pmix  }}"
+      - "slurm_pmix_rpm_path_stat.stat.exists: {{ slurm_pmix_rpm_path_stat.stat.exists }}"
+      - " ----------------------------------------------------------------------"         
+
+
+- name: Build PMix if required 
+  ansible.builtin.include_tasks: rpmbuild_pmix.yaml 
+  when: slurm_enable_pmix
+
+
+- name: Build Slurm if required 
+  ansible.builtin.include_tasks: rpmbuild_slurm.yaml 
+
+- name: Make sure remote slurm repo path exists 
+  ansible.builtin.shell: "ssh root@{{ slurm_local_repo_host }} mkdir -p {{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }}"
+  
+- name: scp completed RPMs to repo 
+  ansible.builtin.shell: "scp {{ slurm_rpm_final_path }}/*.rpm {{ slurm_rpm_repo_scp_path }}"
+
+- name: Run createrepo
+  ansible.builtin.command:
+    argv: 
+      - ssh 
+      - "{{ slurm_local_repo_host}}"
+      - createrepo
+      - "{{ slurm_rpm_server_path_base }}/{{ slurm_local_repo_name }}"
+
+- name: set permissions on remote repo path
+  ansible.builtin.shell: "ssh root@{{ slurm_local_repo_host }} chown -R apache:apache {{ slurm_rpm_repo_path }}" 
+
+- name: rpmbuild end play
+  meta: end_play

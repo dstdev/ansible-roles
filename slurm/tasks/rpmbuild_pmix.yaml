@@ -1,0 +1,29 @@
+---
+- name: Install required development packages 
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: present
+    enablerepo: "{{ slurm_el_repos }}"
+
+  loop: "{{slurm_pmix_required_devel_packages}}"
+  when: ansible_distribution_major_version | int >= 8
+
+- name: Download source bundle 
+  ansible.builtin.get_url:
+    url: "https://github.com/openpmix/openpmix/releases/download/v{{ slurm_pmix_version }}/pmix-{{ slurm_pmix_version }}.tar.bz2"
+    dest: "{{ slurm_tmpdir }}/pmix-{{ slurm_pmix_version }}.tar.bz2"
+    owner: "{{ slurm_rpmbuild_user }}"
+    group: "{{ slurm_rpmbuild_user }}"
+    mode: '0644'
+
+- name: rpmbuild pmix from source tarball 
+  command: "rpmbuild -D \"_prefix {{ slurm_install_directory }}\" -ta pmix-{{ slurm_pmix_version }}.tar.bz2" 
+  args:
+    chdir: "{{slurm_tmpdir}}"
+  become: true
+  become_user: "{{ slurm_rpmbuild_user }}"
+
+- name: Check RPM file 
+  ansible.builtin.stat:
+    path: "{{ slurm_pmix_rpm_path }}"
+  register: slurm_pmix_rpm_path_stat

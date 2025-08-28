@@ -1,17 +1,27 @@
-- name: Create local repo file
-  get_url:
-    url: "{{ slurm_rpm_repo }}"
-    dest: /etc/yum.repos.d/local.repo
-    mode: 0644
-    owner: root
-    group: root
-    force: yes
-  when: not ansible_check_mode
-  tags: 
-    - slurm
+- name: Add local custom repo
+  yum_repository:
+    name: "{{ slurm_local_repo_name }}"
+    description: "{{ slurm_local_repo_description }}"
+    baseurl: "{{ slurm_rpm_local_repo_url }}"
+    gpgcheck: no
+
+- name: Check Command
+  ansible.builtin.shell: 
+    cmd: "dnf repoquery --repo {{ slurm_local_repo_name }} slurm | awk -F: '{print $2}' | awk -F- '{print $1}'"
+  register: slurm_repo_version
+
+- name: Verify repo vs expected version 
+  debug:
+    msg: 
+      - "{{ slurm_repo_version.stdout }}"
+
+- name: Fail on Version mismatch 
+  ansible.builtin.fail: 
+    msg: "Required Slurm Version {{ slurm_version }} does not match available RPM on repo {{ slurm_repo_version.stdout }}" 
+  when: slurm_repo_version.stdout != slurm_version
 
 - name: Install slurm rpm packages 
-  package:
+  yum:
     state: present
     name:
       - slurm
@@ -23,7 +33,7 @@
     - slurm_install_slurmd
 
 - name: Install slurm controller rpm packages
-  package:
+  yum:
     state: present
     name:
       - slurm-slurmctld
@@ -34,7 +44,7 @@
     - slurm_install_controller
 
 - name: Install slurmd rpm packages
-  package:
+  yum:
     state: present
     name:
       - slurm-slurmd
@@ -45,7 +55,7 @@
     - slurm_install_slurmd
 
 - name: Install slurmrestd rpm packages
-  package:
+  yum:
     state: present
     name:
       - slurm-slurmrestd
@@ -56,3 +66,18 @@
     - slurm_install_restd
 
 
+- name: Add jwt key
+  command:  "dd if=/dev/random of=/var/spool/slurmctld/jwt_hs256.key bs=32 count=1"
+  when: slurm_controller and slurm_enable_restd 
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_restd
+
+- name: Change file ownership, group and permissions
+  ansible.builtin.file:
+    path: /var/spool/slurmctld/jwt_hs256.key
+    owner: "{{ slurm_user }}"
+    group: "{{ slurm_user }}"
+    mode: '0600'
+  when: slurm_controller and slurm_enable_restd 

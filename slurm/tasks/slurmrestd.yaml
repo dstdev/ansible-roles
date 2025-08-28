@@ -9,6 +9,19 @@
   tags:
     - slurm
     - slurm_install_slurmd
+  when: slurm_source_install
+
+- name: create slurmrestd service file
+  ansible.builtin.template:
+    src: templates/slurmrestd.sysconfig.j2
+    dest: /etc/sysconfig/slurmrestd
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - slurm
+    - slurm_install_slurmd
+  when: slurm_rpm_install
 
 - name: Start slurmrestd service
   ansible.builtin.service:

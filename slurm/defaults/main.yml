@@ -10,6 +10,10 @@ slurm_rpmbuild_user_home: "/home/{{ slurm_rpmbuild_user }}"
 slurm_rpm_final_path: "/home/{{ slurm_rpmbuild_user }}/rpmbuild/RPMS/{{ ansible_architecture }}"
 slurm_local_repo_def_path: /etc/yum.repos.d/slurm.repo
 
+# RPM build: optional NVML support. When set and slurm_enable_nvml is true,
+# the rpmbuild command will be passed --with-nvml=<path> so Slurm builds with NVML.
+slurm_rpmbuild_nvml_path: ""
+
 # Local Slurm Repo Details
 #==========================
 # This assumes an HTTP based RPM Repo 
@@ -122,6 +126,7 @@ slurm_rpm_repo: ""
 slurm_build_jobs: 8
 slurm_enable_cgroup_conf: true
 slurm_enable_restd: true 
+slurm_enable_nvml: false
 slurm_restd_port: 8911
 slurm_restd_host: "0.0.0.0"
 slurm_restd_user: srestd

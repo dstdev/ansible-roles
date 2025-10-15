@@ -22,6 +22,11 @@ slurm_required_packages:
   - lua-devel
   - pam-devel
 
+slurm_cuda_packages:
+  - nvidia-driver-cuda
+  - nvidia-driver-cuda-libs
+  - cuda-toolkit-12-8
+
 slurm_dbd_required_packages:
   - mariadb-server
   - mariadb-devel

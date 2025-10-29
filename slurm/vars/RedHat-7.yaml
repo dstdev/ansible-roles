@@ -22,9 +22,7 @@ slurm_required_packages:
   - pmix-devel
 
 slurm_cuda_packages:
-  - nvidia-driver-cuda
-  - nvidia-driver-cuda-libs
-  - cuda-toolkit-12-8
+  - "{{ slurm_cuda_toolkit }}"
 
 slurm_dbd_required_packages:
   - mariadb-server

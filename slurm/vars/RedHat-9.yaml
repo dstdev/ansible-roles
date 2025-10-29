@@ -15,9 +15,7 @@ slurm_required_packages:
   - lua
 
 slurm_cuda_packages:
-  - nvidia-driver-cuda
-  - nvidia-driver-cuda-libs
-  - cuda-toolkit-{{ slurm_cuda_toolkit_version }}
+  - "{{ slurm_cuda_toolkit }}"
 
 slurm_required_devel_packages:
   - zlib-devel

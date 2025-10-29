@@ -2,6 +2,11 @@
 # Build RPM Packages - when true, this will biuld RPM packages for slurm 
 # and optionally PMIX then exit the role and complete.
 
+# CUDA Details
+slurm_cuda_toolkit: "cuda-toolkit-13.0"
+slurm_cuda_driver: "nvidia-driver-cuda-580.95.05-1.el9.x86_64"  
+slurm_cuda_toolkit_version: "13-0"
+
 # RPM Build Details 
 #======================
 slurm_build_rpms: false
@@ -12,7 +17,7 @@ slurm_local_repo_def_path: /etc/yum.repos.d/slurm.repo
 
 # RPM build: optional NVML support. When set and slurm_enable_nvml is true,
 # the rpmbuild command will be passed --with-nvml=<path> so Slurm builds with NVML.
-slurm_rpmbuild_nvml_path: ""
+slurm_rpmbuild_nvml_path: "/usr/local/cuda-{{ slurm_cuda_toolkit_version|replace('-', '.') }}"
 
 # Local Slurm Repo Details
 #==========================

@@ -120,8 +120,8 @@
 
 - name: rpmbuild nvml option
   ansible.builtin.set_fact:
-    rpmbuild_nvml_option: "--with-nvml={{ slurm_rpmbuild_nvml_path }}"
-  when: slurm_enable_nvml and slurm_rpmbuild_nvml_path | length > 0
+    rpmbuild_nvml_option: "-D '_with_nvml --with-nvml={{ slurm_rpmbuild_nvml_path }}'"
+  when: slurm_enable_nvml 
 
 - name: show build command with nvml
   ansible.builtin.debug:
@@ -132,4 +132,4 @@
   args:
     chdir: "{{slurm_tmpdir}}"
   become: true
-  become_user: "{{ slurm_rpmbuild_user }}" 
+  become_user: "{{ slurm_rpmbuild_user }}"

@@ -2,9 +2,9 @@
 # Build RPM Packages - when true, this will biuld RPM packages for slurm 
 # and optionally PMIX then exit the role and complete.
 
+# You can use cuda-toolkit or cuda-nvml-devel
 # CUDA Details
 slurm_cuda_toolkit: "cuda-toolkit-13.0"
-slurm_cuda_driver: "nvidia-driver-cuda-580.95.05-1.el9.x86_64"  
 slurm_cuda_toolkit_version: "13-0"
 
 # RPM Build Details 

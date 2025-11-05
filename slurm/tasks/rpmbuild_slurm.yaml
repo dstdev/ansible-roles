@@ -114,9 +114,22 @@
   ansible.builtin.debug:
     msg: "rpmbuild command: {{ rpmbuild_cmd }} {{ rpmbuild_pmix_option }} {{ rpmbuild_restd_option }} -ta slurm-{{ slurm_version }}.tar.bz2"  
 
+- name: rpmbuild nvml option default to ""
+  ansible.builtin.set_fact:
+    rpmbuild_nvml_option: ""
+
+- name: rpmbuild nvml option
+  ansible.builtin.set_fact:
+    rpmbuild_nvml_option: "-D '_with_nvml --with-nvml={{ slurm_rpmbuild_nvml_path }}'"
+  when: slurm_enable_nvml 
+
+- name: show build command with nvml
+  ansible.builtin.debug:
+    msg: "rpmbuild command: {{ rpmbuild_cmd }} {{ rpmbuild_pmix_option }} {{ rpmbuild_restd_option }} {{ rpmbuild_nvml_option }} -ta slurm-{{ slurm_version }}.tar.bz2"
+
 - name: rpmbuild from source tarball
-  command: "{{ rpmbuild_cmd }} {{ rpmbuild_pmix_option }} {{ rpmbuild_restd_option }} -ta slurm-{{ slurm_version }}.tar.bz2"
+  command: "{{ rpmbuild_cmd }} {{ rpmbuild_pmix_option }} {{ rpmbuild_restd_option }} {{ rpmbuild_nvml_option }} -ta slurm-{{ slurm_version }}.tar.bz2"
   args:
     chdir: "{{slurm_tmpdir}}"
   become: true
-  become_user: "{{ slurm_rpmbuild_user }}" 
+  become_user: "{{ slurm_rpmbuild_user }}"

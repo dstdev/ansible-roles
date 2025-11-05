@@ -14,6 +14,9 @@ slurm_required_packages:
   - s-nail
   - lua
 
+slurm_cuda_packages:
+  - "{{ slurm_cuda_toolkit }}"
+
 slurm_required_devel_packages:
   - zlib-devel
   - bzip2-devel

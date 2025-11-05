@@ -21,6 +21,9 @@ slurm_required_packages:
   - pmix
   - pmix-devel
 
+slurm_cuda_packages:
+  - "{{ slurm_cuda_toolkit }}"
+
 slurm_dbd_required_packages:
   - mariadb-server
   - mariadb-devel

@@ -15,6 +15,11 @@
   ansible.builtin.package_facts:
     manager: "auto"
     
+#- name: Include NVML validation tasks
+#  ansible.builtin.include_tasks: "validate_nvml.yml"
+#  tags:
+#    - always
+    
 ##################################################
 # Exits role after the rpmbuild(s) are complete.
 - name: Build RPM packages if needed 

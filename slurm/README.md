@@ -134,6 +134,26 @@ To create the jwt key, use the following command:
 
     dd if=/dev/random of=/var/spool/slurmctld/jwt_hs256.key bs=32 count=1
 
+CUDA / NVML Configuration
+-------------------------
+
+The role can configure NVIDIA's CUDA repository and install NVML-related packages when `slurm_enable_nvml` is set to true.
+
+- **slurm_enable_nvml**: when true, CUDA repo configuration and NVML package installation are enabled.
+- **slurm_cuda_repos**: a mapping keyed by the RHEL major version (as a string). Example:
+
+```yaml
+slurm_cuda_repos:
+  "8":
+    baseurl: "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64"
+    gpgkey: "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/D42D0685.pub"
+  "9":
+    baseurl: "https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64"
+    gpgkey: "https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/D42D0685.pub"
+```
+
+The role will create a repository named `cuda-rhel<MAJOR>-x86_64` (for example `cuda-rhel9-x86_64`) and install packages from that repo when `slurm_enable_nvml` is true and the host is RHEL 8 or 9.
+
 Tags
 ----
 

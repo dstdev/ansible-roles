@@ -4,8 +4,8 @@
 
 # You can use cuda-toolkit or cuda-nvml-devel
 # CUDA Details
-slurm_cuda_toolkit: "cuda-toolkit-13.0"
-slurm_cuda_toolkit_version: "13-0"
+slurm_cuda_toolkit: "cuda-toolkit-12.8"
+slurm_cuda_toolkit_version: "12-8"
 
 # RPM Build Details 
 #======================
@@ -17,7 +17,9 @@ slurm_local_repo_def_path: /etc/yum.repos.d/slurm.repo
 
 # RPM build: optional NVML support. When set and slurm_enable_nvml is true,
 # the rpmbuild command will be passed --with-nvml=<path> so Slurm builds with NVML.
-slurm_rpmbuild_nvml_path: "/usr/local/cuda-{{ slurm_cuda_toolkit_version|replace('-', '.') }}"
+## Explicit NVML path (set to CUDA 13 installed on this host).
+# Overridden from the toolkit-derived default to match the system CUDA install.
+slurm_rpmbuild_nvml_path: "/usr/local/cuda-13.0"
 
 # Local Slurm Repo Details
 #==========================
@@ -136,6 +138,24 @@ slurm_restd_port: 8911
 slurm_restd_host: "0.0.0.0"
 slurm_restd_user: srestd
 slurm_restd_jwt_key: /var/spool/slurmctld/jwt_hs256.key
+
+# NVIDIA CUDA repository settings (used when slurm_enable_nvml is true).
+# Mapping of per-RHEL-major-version repo configuration. Use as:
+# slurm_cuda_repos[ansible_distribution_major_version | string].baseurl
+# and .gpgkey
+slurm_cuda_repos:
+  "8":
+    baseurl: "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64"
+    gpgkey: "https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/D42D0685.pub"
+  "9":
+    baseurl: "https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64"
+    gpgkey: "https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/D42D0685.pub"
+
+# Packages to install for GPU / NVML support. Populate per-platform vars or override in inventory.
+slurm_gpu_packages: []
+
+# Whether to install GPU packages automatically when NVML is enabled
+slurm_install_gpu_packages: true
 
 
 # Slurm profile variables

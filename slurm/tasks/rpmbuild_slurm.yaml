@@ -94,42 +94,88 @@
   
 - name: rpmbuild pmix option default to ""
   ansible.builtin.set_fact: 
-    rpmbuild_pmix_option: ""
+    rpmbuild_pmix_macro: ""
   
 - name: rpmbuild pmix option 
   ansible.builtin.set_fact: 
-    rpmbuild_pmix_option: "-D '_with_pmix --with-pmix={{ slurm_install_directory }}'"
+    rpmbuild_pmix_macro: "_with_pmix --with-pmix={{ slurm_install_directory }}"
   when: slurm_enable_pmix 
 
 - name: rpmbuild slurmrestd option default to ""
   ansible.builtin.set_fact: 
-    rpmbuild_restd_option: ""
+    rpmbuild_restd_list: []
 
 - name: rpmbuild slurmrestd option 
   ansible.builtin.set_fact: 
-    rpmbuild_restd_option: "--with slurmrestd --with jwt"
+    rpmbuild_restd_list: ['--with','slurmrestd','--with','jwt']
   when: slurm_enable_restd 
 
 - name: show build command 
   ansible.builtin.debug:
-    msg: "rpmbuild command: {{ rpmbuild_cmd }} {{ rpmbuild_pmix_option }} {{ rpmbuild_restd_option }} -ta slurm-{{ slurm_version }}.tar.bz2"  
+    msg: "rpmbuild command: {{ rpmbuild_cmd }} (macros may be shown separately) -ta slurm-{{ slurm_version }}.tar.bz2"  
 
 - name: rpmbuild nvml option default to ""
   ansible.builtin.set_fact:
-    rpmbuild_nvml_option: ""
-
+    rpmbuild_nvml_macro: ""
+ 
 - name: rpmbuild nvml option
   ansible.builtin.set_fact:
-    rpmbuild_nvml_option: "-D '_with_nvml --with-nvml={{ slurm_rpmbuild_nvml_path }}'"
-  when: slurm_enable_nvml 
+    rpmbuild_nvml_macro: "_with_nvml --with-nvml={{ slurm_rpmbuild_nvml_path }}"
+  when: slurm_enable_nvml
+
+- name: Stat configured slurm_rpmbuild_nvml_path if present
+  ansible.builtin.stat:
+    path: "{{ slurm_rpmbuild_nvml_path }}"
+  register: _rpmbuild_configured_nvml_stat
+  when: slurm_enable_nvml and (slurm_rpmbuild_nvml_path is defined and slurm_rpmbuild_nvml_path != "")
+
+- name: Stat CUDA 13 prefix
+  ansible.builtin.stat:
+    path: /usr/local/cuda-13.0
+  register: _rpmbuild_cuda_13_stat
+  when: slurm_enable_nvml and (slurm_rpmbuild_nvml_path is not defined or slurm_rpmbuild_nvml_path == "" or (_rpmbuild_configured_nvml_stat is defined and not _rpmbuild_configured_nvml_stat.stat.exists))
+
+- name: Stat CUDA 12.8 prefix
+  ansible.builtin.stat:
+    path: /usr/local/cuda-12.8
+  register: _rpmbuild_cuda_128_stat
+  when: slurm_enable_nvml and (slurm_rpmbuild_nvml_path is not defined or slurm_rpmbuild_nvml_path == "" or (_rpmbuild_configured_nvml_stat is defined and not _rpmbuild_configured_nvml_stat.stat.exists))
+
+- name: Stat generic /usr/local/cuda prefix
+  ansible.builtin.stat:
+    path: /usr/local/cuda
+  register: _rpmbuild_cuda_local_stat
+  when: slurm_enable_nvml and (slurm_rpmbuild_nvml_path is not defined or slurm_rpmbuild_nvml_path == "" or (_rpmbuild_configured_nvml_stat is defined and not _rpmbuild_configured_nvml_stat.stat.exists))
+
+- name: Set detected slurm_rpmbuild_nvml_path if found
+  ansible.builtin.set_fact:
+    slurm_rpmbuild_nvml_path: >-
+      {% if _rpmbuild_cuda_13_stat is defined and _rpmbuild_cuda_13_stat.stat.exists %}/usr/local/cuda-13.0
+      {% elif _rpmbuild_cuda_128_stat is defined and _rpmbuild_cuda_128_stat.stat.exists %}/usr/local/cuda-12.8
+      {% elif _rpmbuild_cuda_local_stat is defined and _rpmbuild_cuda_local_stat.stat.exists %}/usr/local/cuda
+      {% else %}{{ slurm_rpmbuild_nvml_path | default('') }}{% endif %}
+  when: slurm_enable_nvml and (slurm_rpmbuild_nvml_path is not defined or slurm_rpmbuild_nvml_path == "" or (_rpmbuild_configured_nvml_stat is defined and not _rpmbuild_configured_nvml_stat.stat.exists))
+
 
 - name: show build command with nvml
   ansible.builtin.debug:
-    msg: "rpmbuild command: {{ rpmbuild_cmd }} {{ rpmbuild_pmix_option }} {{ rpmbuild_restd_option }} {{ rpmbuild_nvml_option }} -ta slurm-{{ slurm_version }}.tar.bz2"
+    msg: "rpmbuild argv preview: rpmbuild -D '_prefix <path>' [optional -D macros] --with options -ta slurm-{{ slurm_version }}.tar.bz2"
+ 
+- name: Assemble rpmbuild argv
+  ansible.builtin.set_fact:
+    rpmbuild_argv: >-
+      {{ ['rpmbuild','-D','_prefix ' ~ slurm_install_directory] +
+         (rpmbuild_pmix_macro|default('') != '' and ['-D', rpmbuild_pmix_macro] or []) +
+         (rpmbuild_restd_list|default([])) +
+         (rpmbuild_nvml_macro|default('') != '' and ['-D', rpmbuild_nvml_macro] or []) +
+         ['-ta','slurm-' ~ slurm_version ~ '.tar.bz2'] }}
+  when: slurm_enable_pmix or slurm_enable_restd or slurm_enable_nvml
 
 - name: rpmbuild from source tarball
-  command: "{{ rpmbuild_cmd }} {{ rpmbuild_pmix_option }} {{ rpmbuild_restd_option }} {{ rpmbuild_nvml_option }} -ta slurm-{{ slurm_version }}.tar.bz2"
+  ansible.builtin.command:
+    argv: "{{ rpmbuild_argv }}"
   args:
-    chdir: "{{slurm_tmpdir}}"
+    chdir: "{{ slurm_tmpdir }}"
   become: true
   become_user: "{{ slurm_rpmbuild_user }}"
+  when: rpmbuild_argv is defined

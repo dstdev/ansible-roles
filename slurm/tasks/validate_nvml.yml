@@ -1,0 +1,21 @@
+---
+# Validation tasks for NVML/CUDA configuration
+# These assertions only run when `slurm_enable_nvml` is true.
+
+- name: Assert CUDA repo mapping exists for this OS version
+  ansible.builtin.assert:
+    that:
+      - "not slurm_enable_nvml or (slurm_cuda_repos is defined and (ansible_distribution_major_version | string) in slurm_cuda_repos)"
+    fail_msg: "slurm_enable_nvml is true but `slurm_cuda_repos` does not contain an entry for this OS major version ({{ ansible_distribution_major_version }}). Add a mapping to `roles/slurm/defaults/main.yml` or your inventory."
+
+- name: Assert GPU package list is present when NVML enabled
+  ansible.builtin.assert:
+    that:
+      - "not slurm_enable_nvml or (slurm_gpu_packages is defined and (slurm_gpu_packages | length) > 0)"
+    fail_msg: "slurm_enable_nvml is true but `slurm_gpu_packages` is undefined or empty. Define the GPU package names in `slurm_gpu_packages` (defaults or inventory)."
+
+- name: Assert rpmbuild NVML path set when building rpms with NVML
+  ansible.builtin.assert:
+    that:
+      - "not (slurm_enable_nvml and slurm_build_rpms) or (slurm_rpmbuild_nvml_path is defined and (slurm_rpmbuild_nvml_path | length) > 0)"
+    fail_msg: "Building Slurm RPMs with NVML requires `slurm_rpmbuild_nvml_path` to be set (path to NVML/lib)."

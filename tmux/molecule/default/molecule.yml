@@ -2,19 +2,16 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: podman
 platforms:
   - name: r8instance
-    image: rockylinux:8
-    privileged: true
-    command: "/usr/sbin/init"
-    pre_build_image: true
-  - name: c7instance
-    image: centos:7
+    image: quay.io/rockylinux/rockylinux:8
     privileged: true
     command: "/usr/sbin/init"
     pre_build_image: true
 provisioner:
   name: ansible
+  playbooks:
+    prepare: prepare.yml
 verifier:
   name: ansible

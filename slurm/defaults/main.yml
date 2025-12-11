@@ -19,7 +19,7 @@ slurm_local_repo_def_path: /etc/yum.repos.d/slurm.repo
 # the rpmbuild command will be passed --with-nvml=<path> so Slurm builds with NVML.
 ## Explicit NVML path (set to CUDA 13 installed on this host).
 # Overridden from the toolkit-derived default to match the system CUDA install.
-slurm_rpmbuild_nvml_path: "/usr/local/cuda-13.0"
+slurm_rpmbuild_nvml_path: "/usr/local/cuda-12.8"
 
 # Local Slurm Repo Details
 #==========================

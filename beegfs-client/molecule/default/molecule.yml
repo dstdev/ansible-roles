@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: podman
 platforms:
   - name: instance7
     image: centos:7
@@ -29,6 +29,9 @@ platforms:
     pre_build_image: true
     cgroupns_mode: host
 provisioner:
+  playbooks:
+    prepare: prepare.yml
   name: ansible
 verifier:
+
   name: ansible

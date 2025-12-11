@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: podman
 #lint: |
   #set -e
   #yamllint .
@@ -17,6 +17,9 @@ platforms:
     privileged: true
     pre_build_image: true
 provisioner:
+  playbooks:
+    prepare: prepare.yml
   name: ansible
 verifier:
+
   name: ansible

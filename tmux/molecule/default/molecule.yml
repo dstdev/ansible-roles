@@ -15,3 +15,5 @@ provisioner:
     prepare: prepare.yml
 verifier:
   name: ansible
+
+  name: ansible

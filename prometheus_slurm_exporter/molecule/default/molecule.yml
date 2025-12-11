@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: podman
 platforms:
   - name: instance-el8
     image: rockylinux:8
@@ -14,6 +14,9 @@ platforms:
     cgroupns_mode: host
 
 provisioner:
+  playbooks:
+    prepare: prepare.yml
   name: ansible
 verifier:
+
   name: ansible

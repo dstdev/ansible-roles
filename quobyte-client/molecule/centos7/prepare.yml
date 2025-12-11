@@ -1,0 +1,14 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install python3 on EL-based systems
+      block:
+        - name: Install python3 with yum
+          raw: yum install -y python3
+          changed_when: false
+      rescue:
+        - name: Try dnf as fallback
+          raw: dnf install -y python3
+          changed_when: false

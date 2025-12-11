@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: podman
 #lint: |
   #set -e
   #yamllint .
@@ -27,6 +27,9 @@ platforms:
       #- "/sys/fs/cgroup:/sys/fs/cgroup:ro"
     #command: "/usr/sbin/init"
 provisioner:
+  playbooks:
+    prepare: prepare.yml
   name: ansible
 verifier:
+
   name: ansible

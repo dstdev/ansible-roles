@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: podman
 platforms:
   - name: instance
     image: centos:7
@@ -12,6 +12,9 @@ platforms:
     command: "/usr/sbin/init"
     pre_build_image: true
 provisioner:
+  playbooks:
+    prepare: prepare.yml
   name: ansible
 verifier:
+
   name: ansible

@@ -38,7 +38,7 @@ slurm_rpm_install and slurm_source_install are mutually exclusive
 slurm_rpm_install will install rpms from local RPM repo 
 slurm_source_install follows the existing source install path 
 
-New falure check
+New failure check
 the latest version of slurm on the rpm repo must match the stated 
 install path on the 
 

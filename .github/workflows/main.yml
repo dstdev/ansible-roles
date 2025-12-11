@@ -49,10 +49,17 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies.
-        run: pip3 install yamllint ansible molecule 'molecule-plugins[docker]' docker
+        run: pip3 install yamllint ansible molecule 'molecule-plugins[podman]'
+
+      - name: Install Podman CLI
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y podman
 
       - name: Install Galaxy dependencies.
         run: ansible-galaxy collection install community.docker
 
       - name: Run molecule
+        env:
+          ANSIBLE_ROLES_PATH: "${{ github.workspace }}/${{ github.repository }}/roles"
         run: "cd dstdev/ansible-roles/${{matrix.folder}} && molecule test"

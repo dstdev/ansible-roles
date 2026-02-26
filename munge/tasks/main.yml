@@ -2,30 +2,68 @@
 # tasks file for munge
 #
 - name: Gather os specific variables
-  include_vars: "{{item}}"
+  ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
     - files:
-      - "{{ansible_os_family}}.yaml"
-      - "{{ansible_os_family}}-{{ansible_distribution_major_version}}.yaml"
+        - "{{ansible_os_family}}.yaml"
+        - "{{ansible_os_family}}-{{ansible_distribution_major_version}}.yaml"
       paths:
-        - "{{role_path}}/vars"
+        - "{{ role_path }}/vars"
   tags:
     - munge
 
-- name: Install munge-devel for EL8+
+# --- Custom repo setup (when munge_custom_repo_url is set) ---
+- name: Configure custom munge RPM repository
+  ansible.builtin.yum_repository:
+    name: "{{ munge_custom_repo_name }}"
+    description: "{{ munge_custom_repo_description }}"
+    baseurl: "{{ munge_custom_repo_url }}"
+    gpgcheck: "{{ munge_custom_repo_gpgcheck }}"
+    gpgkey: "{{ munge_custom_repo_gpgkey | default(omit, true) }}"
+    enabled: true
+  when: munge_custom_repo_url != ""
+  tags:
+    - munge
+
+# --- Default path: install from EPEL ---
+- name: Install munge bootstrap packages (EPEL)
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ munge_bootstrap_packages }}"
+  when: munge_custom_repo_url == ""
+  tags:
+    - munge
+
+- name: Install munge-devel for EL8+ (powertools/crb)
   ansible.builtin.dnf:
     name: munge-devel
     enablerepo: "{{ munge_el_repo }}"
     state: present
-  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version >= '8'
+  when:
+    - munge_custom_repo_url == ""
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version | int >= 8
   tags:
     - munge
 
-- name: Install packages for Munge
+- name: Install munge packages (default repos)
   ansible.builtin.package:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
-  loop: "{{munge_packages}}"
+  loop: "{{ munge_install_packages }}"
+  when: munge_custom_repo_url == ""
+  tags:
+    - munge
+
+# --- Custom repo path: install from custom repo ---
+- name: Install munge packages (custom repo)
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    enablerepo: "{{ munge_custom_repo_name }}"
+  loop: "{{ munge_install_packages }}"
+  when: munge_custom_repo_url != ""
   tags:
     - munge
 

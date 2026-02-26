@@ -1,0 +1,11 @@
+---
+- name: Converge with custom repo
+  hosts: all
+  vars:
+    munge_key: "test-custom-repo-key-value-long-enough"
+    munge_custom_repo_url: "file:///opt/munge-repo"
+    munge_custom_repo_name: "munge-repo"
+  tasks:
+    - name: "Include munge"
+      ansible.builtin.include_role:
+        name: "munge"

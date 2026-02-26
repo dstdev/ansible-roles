@@ -2,3 +2,12 @@
 # defaults file for munge
 munge_key: "{{undef(hint='You must specify the munge key value')}}"
 munge_user: "munge"
+
+# Custom munge RPM repository settings
+# Set munge_custom_repo_url to enable installation from a custom repo.
+# When set, the role creates a .repo file and installs munge from it.
+munge_custom_repo_url: ""
+munge_custom_repo_name: "munge-repo"
+munge_custom_repo_description: "Custom Munge RPM Repository"
+munge_custom_repo_gpgcheck: false
+munge_custom_repo_gpgkey: ""

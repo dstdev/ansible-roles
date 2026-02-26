@@ -71,13 +71,26 @@
       slurm_required_devel_packages: "{{ slurm_required_devel_packages | difference(['libjwt-devel']) }}"
   when: slurm_enable_restd and slurm_build_jwt_source 
 
-- name: Install required development packages 
+- name: Configure custom munge RPM repository for Slurm build
+  ansible.builtin.yum_repository:
+    name: "{{ slurm_munge_repo_name }}"
+    description: "Custom Munge RPM Repository"
+    baseurl: "{{ slurm_munge_repo_url }}"
+    gpgcheck: false
+    enabled: true
+  when: slurm_munge_repo_url != ""
+  tags:
+    - slurm
+    - slurm_install_controller
+    - slurm_install_slurmd
+
+- name: Install required development packages
   ansible.builtin.dnf:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
     enablerepo: "{{ slurm_el_repos }}"
   loop: "{{ slurm_required_devel_packages }}"
-  when: slurm_source_install 
+  when: slurm_source_install
   tags:
     - slurm
     - slurm_install_controller

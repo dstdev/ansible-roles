@@ -1,0 +1,38 @@
+---
+- name: Prepare custom repo
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install python3
+      raw: dnf install -y python3
+      changed_when: false
+
+    - name: Install createrepo_c and dnf-utils
+      ansible.builtin.dnf:
+        name:
+          - createrepo_c
+          - dnf-utils
+          - epel-release
+        state: present
+
+    - name: Create local repo directory
+      ansible.builtin.file:
+        path: /opt/munge-repo
+        state: directory
+        mode: "0755"
+
+    - name: Download munge RPMs from EPEL
+      ansible.builtin.shell: >
+        dnf download --destdir=/opt/munge-repo
+        --enablerepo=epel --enablerepo=crb
+        munge munge-devel munge-libs
+      changed_when: true
+
+    - name: Create repo metadata
+      ansible.builtin.command: createrepo_c /opt/munge-repo
+      changed_when: true
+
+    - name: Remove epel-release so it won't interfere
+      ansible.builtin.dnf:
+        name: epel-release
+        state: absent

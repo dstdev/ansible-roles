@@ -1,4 +1,7 @@
-munge_packages:
+---
+munge_bootstrap_packages:
   - epel-release
+
+munge_install_packages:
   - munge
   - munge-devel

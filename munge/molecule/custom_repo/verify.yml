@@ -1,8 +1,35 @@
 ---
-- name: Verify
+- name: Verify custom repo install
   hosts: all
   gather_facts: false
   tasks:
+    - name: Stat repo file
+      ansible.builtin.stat:
+        path: /etc/yum.repos.d/munge-repo.repo
+      register: repo_file
+
+    - name: Assert repo file exists
+      ansible.builtin.assert:
+        that:
+          - repo_file.stat.exists
+        fail_msg: >-
+          Custom repo file not created at
+          /etc/yum.repos.d/munge-repo.repo
+
+    - name: Read repo file content
+      ansible.builtin.slurp:
+        src: /etc/yum.repos.d/munge-repo.repo
+      register: repo_content
+
+    - name: Assert repo file contains expected values
+      ansible.builtin.assert:
+        that:
+          - "'munge-repo' in content"
+          - "'file:///opt/munge-repo' in content"
+        fail_msg: "Repo file content does not match"
+      vars:
+        content: "{{ repo_content.content | b64decode }}"
+
     - name: Stat munge key file
       ansible.builtin.stat:
         path: /etc/munge/munge.key
@@ -45,14 +72,3 @@
       ansible.builtin.assert:
         that: munge_decode.rc == 0
         fail_msg: "munge encode/decode round-trip failed"
-
-    - name: Stat custom repo file (should not exist)
-      ansible.builtin.stat:
-        path: /etc/yum.repos.d/munge-repo.repo
-      register: repo_file
-
-    - name: Assert no custom repo file on default path
-      ansible.builtin.assert:
-        that:
-          - not repo_file.stat.exists
-        fail_msg: "munge-repo.repo should not exist on default path"

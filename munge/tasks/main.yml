@@ -2,30 +2,62 @@
 # tasks file for munge
 #
 - name: Gather os specific variables
-  include_vars: "{{item}}"
+  ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
     - files:
-      - "{{ansible_os_family}}.yaml"
-      - "{{ansible_os_family}}-{{ansible_distribution_major_version}}.yaml"
+        - "{{ansible_os_family}}.yaml"
+        - "{{ansible_os_family}}-{{ansible_distribution_major_version}}.yaml"
       paths:
-        - "{{role_path}}/vars"
+        - "{{ role_path }}/vars"
   tags:
     - munge
 
-- name: Install munge-devel for EL8+
+# --- Default path: install from EPEL ---
+- name: Install munge bootstrap packages (EPEL)
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ munge_bootstrap_packages }}"
+  when: munge_custom_repo_url == ""
+  tags:
+    - munge
+
+- name: Install munge-devel for EL8+ (powertools/crb)
   ansible.builtin.dnf:
     name: munge-devel
     enablerepo: "{{ munge_el_repo }}"
     state: present
-  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version >= '8'
+  when:
+    - munge_custom_repo_url == ""
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version | int >= 8
   tags:
     - munge
 
-- name: Install packages for Munge
+- name: Install munge packages (default repos)
   ansible.builtin.package:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
-  loop: "{{munge_packages}}"
+  loop: "{{ munge_install_packages }}"
+  when: munge_custom_repo_url == ""
+  tags:
+    - munge
+
+# --- Custom repo path: install directly from URL (no .repo file created) ---
+- name: Install munge packages (custom repo URL)
+  ansible.builtin.command:
+    argv:
+      - dnf
+      - install
+      - -y
+      - "--repofrompath=munge-custom,{{ munge_custom_repo_url }}"
+      - --repo=munge-custom
+      - "--setopt=munge-custom.gpgcheck={{ '1' if munge_custom_repo_gpgcheck else '0' }}"
+      - "{{ item }}"
+  loop: "{{ munge_install_packages }}"
+  register: dnf_custom_result
+  changed_when: "'Nothing to do' not in dnf_custom_result.stdout"
+  when: munge_custom_repo_url != ""
   tags:
     - munge
 

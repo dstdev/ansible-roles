@@ -205,3 +205,9 @@ slurmdbd_conf_extra: {}
 
 slurm_rpm_check_path: "{{ slurm_rpmbuild_user_home }}/rpmbuild/RPMS/{{ ansible_architecture }}/slurm-{{ slurm_version }}-1.el{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.rpm"
 pmix_rpm_check_path: "{{ slurm_rpmbuild_user_home }}/rpmbuild/RPMS/{{ ansible_architecture }}/pmix-{{ slurm_pmix_version }}-1.el{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.rpm"
+
+# Custom munge repo — when set, slurm pre-install will add this repo
+# and use it for munge-devel/munge-libs installation.
+# Should match the munge role's munge_custom_repo_* settings.
+slurm_munge_repo_url: ""
+slurm_munge_repo_name: "munge-repo"

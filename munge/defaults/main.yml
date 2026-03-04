@@ -2,3 +2,9 @@
 # defaults file for munge
 munge_key: "{{undef(hint='You must specify the munge key value')}}"
 munge_user: "munge"
+
+# Custom munge RPM repository settings
+# Set munge_custom_repo_url to install from a custom repo URL directly
+# (uses dnf --repofrompath, no .repo file is created on the target).
+munge_custom_repo_url: ""
+munge_custom_repo_gpgcheck: false

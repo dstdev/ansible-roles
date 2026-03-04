@@ -12,19 +12,6 @@
   tags:
     - munge
 
-# --- Custom repo setup (when munge_custom_repo_url is set) ---
-- name: Configure custom munge RPM repository
-  ansible.builtin.yum_repository:
-    name: "{{ munge_custom_repo_name }}"
-    description: "{{ munge_custom_repo_description }}"
-    baseurl: "{{ munge_custom_repo_url }}"
-    gpgcheck: "{{ munge_custom_repo_gpgcheck }}"
-    gpgkey: "{{ munge_custom_repo_gpgkey | default(omit, true) }}"
-    enabled: true
-  when: munge_custom_repo_url != ""
-  tags:
-    - munge
-
 # --- Default path: install from EPEL ---
 - name: Install munge bootstrap packages (EPEL)
   ansible.builtin.package:
@@ -56,13 +43,20 @@
   tags:
     - munge
 
-# --- Custom repo path: install from custom repo ---
-- name: Install munge packages (custom repo)
-  ansible.builtin.dnf:
-    name: "{{ item }}"
-    state: present
-    enablerepo: "{{ munge_custom_repo_name }}"
+# --- Custom repo path: install directly from URL (no .repo file created) ---
+- name: Install munge packages (custom repo URL)
+  ansible.builtin.command:
+    argv:
+      - dnf
+      - install
+      - -y
+      - "--repofrompath=munge-custom,{{ munge_custom_repo_url }}"
+      - --repo=munge-custom
+      - "--setopt=munge-custom.gpgcheck={{ '1' if munge_custom_repo_gpgcheck else '0' }}"
+      - "{{ item }}"
   loop: "{{ munge_install_packages }}"
+  register: dnf_custom_result
+  changed_when: "'Nothing to do' not in dnf_custom_result.stdout"
   when: munge_custom_repo_url != ""
   tags:
     - munge
